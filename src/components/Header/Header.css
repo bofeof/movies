@@ -28,11 +28,11 @@
   line-height: 133%;
   text-align: center;
   border-radius: 3px;
-  transition: opacity .5s ease-in-out;
+  transition: opacity 0.5s ease-in-out;
 }
 
-.header__button:hover{
-  opacity: .8;
+.header__button:hover {
+  opacity: 0.5;
   cursor: pointer;
 }
 

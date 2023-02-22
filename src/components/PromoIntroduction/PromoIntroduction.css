@@ -1,15 +1,12 @@
 .promo__header {
-  display: flex;
-  flex-direction: column;
-  margin: 0 auto;
-
-  position: absolute;
-  left: 0;
-  right: 0;
-
-  min-height: 598px;
-  box-sizing: content-box;
+  position: relative;
   background: #073042;
+  margin: 0 auto;
+  min-height: 598px;
+  width: calc(100% + 70px * 2);
+  height: 100%;
+  left: -70px;
+  bottom: 74px;
 }
 
 .promo__header-img {
@@ -21,6 +18,7 @@
   background-position: center center;
   background-size: 320px 320px;
   margin: 156px auto 122px;
+  z-index: 1;
 }
 
 .promo__header-text {
@@ -38,4 +36,5 @@
   top: 53%;
   left: 50%;
   transform: translate(-50%, -50%);
+  z-index: 2;
 }

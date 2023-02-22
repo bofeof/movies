@@ -1,0 +1,11 @@
+.about-project{
+  display: flex;
+
+  flex-direction: column;
+  margin: 0 auto;
+  color: #FFFFFF;
+}
+
+.about-project__header{
+
+}
