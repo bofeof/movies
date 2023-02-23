@@ -2,7 +2,7 @@ import './NavTab.css';
 
 export default function NavTab() {
   return (
-    <div className="navtab">
+    <nav className="navtab">
       <ul className="navtab__bar">
         <li >
           <a className='navtab__link' href="/">О проекте</a>
@@ -14,6 +14,6 @@ export default function NavTab() {
           <a className='navtab__link' href="/">Студент</a>
         </li>
       </ul>
-    </div>
+    </nav>
   );
 }

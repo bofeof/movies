@@ -3,7 +3,7 @@ import headerLogo from '../../images/logo/logo.svg';
 
 export default function Header() {
   return (
-    <div className="header">
+    <header className="header">
       <div className="header__logo">
         <img className="header__logo-img" src={headerLogo} alt="Логотип сайта" />
       </div>
@@ -15,6 +15,6 @@ export default function Header() {
           Войти
         </button>
       </div>
-    </div>
+    </header>
   );
 }

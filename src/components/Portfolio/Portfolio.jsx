@@ -2,7 +2,7 @@ import './Portfolio.css';
 
 export default function Portfolio() {
   return (
-    <div className="portfolio">
+    <section className="portfolio">
       <h3 className="portfolio__header">Портфолио</h3>
       <ul className="portfolio__list">
         <li className="portfolio__item">
@@ -24,6 +24,6 @@ export default function Portfolio() {
           </a>
         </li>
       </ul>
-    </div>
+    </section>
   );
 }
