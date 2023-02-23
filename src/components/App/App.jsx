@@ -4,6 +4,7 @@ import Header from '../Header/Header';
 import PromoIntroduction from '../PromoIntroduction/PromoIntroduction';
 import NavTab from '../NavTab/NavTab';
 import AboutProject from '../AboutProject/AboutProject';
+import Techs from '../Techs/Techs';
 
 function App() {
   return (
@@ -12,6 +13,7 @@ function App() {
       <PromoIntroduction />
       <NavTab />
       <AboutProject />
+      <Techs />
     </div>
   );
 }
