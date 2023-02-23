@@ -44,10 +44,10 @@
   line-height: 16px;
   text-align: right;
   text-decoration: none;
-  transition: opacity .5s ease-in-out
+  transition: opacity 0.5s ease-in-out;
 }
 
-.footer__link:hover{
+.footer__link:hover {
   cursor: pointer;
-  opacity: .5;
+  opacity: 0.5;
 }
