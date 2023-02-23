@@ -56,7 +56,7 @@
 .techs__list {
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
+  justify-content: center;
   width: 100%;
 
   list-style: none;
@@ -65,7 +65,7 @@
 }
 
 .techs__item {
-  margin: 0 auto;
+  margin: 0 5px 0;
   padding: 21px 0;
   background: #303030;
   min-width: 90px;

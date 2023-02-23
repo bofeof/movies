@@ -1,0 +1,71 @@
+.aboutme {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  color: #ffffff;
+  margin: 0 auto;
+}
+
+.aboutme__header {
+  margin: 0;
+  padding: 100px 0 23px;
+  border-bottom: 1px solid #dadada;
+  font-weight: 400;
+  font-size: 22px;
+  line-height: 27px;
+  letter-spacing: -0.04em;
+}
+
+.aboutme__info {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 60px 0 0;
+}
+
+.aboutme__student {
+  margin: 0;
+  max-width: 600px;
+}
+
+.aboutme__name {
+  margin: 0 0 18px;
+  padding: 0;
+  font-weight: 400;
+  font-size: 50px;
+  line-height: 116%;
+  letter-spacing: -0.04em;
+}
+
+.aboutme__job {
+  margin: 0 0 26px;
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 111%;
+  mix-blend-mode: normal;
+}
+
+.aboutme__bio {
+  margin: 0 0 99px;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 157%;
+  mix-blend-mode: normal;
+}
+
+.aboutme__github{
+  color: #ffffff;
+  text-decoration: none;
+  transition: opacity .5s ease-in-out;
+}
+
+.aboutme__github:hover{
+  cursor: pointer;
+  opacity: .5;
+}
+
+.aboutme__photo{
+  width: 270px;
+  height: 327px;
+  border-radius: 10px;
+}
