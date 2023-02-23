@@ -4,6 +4,7 @@
   width: 100%;
   color: #ffffff;
   margin: 0 auto;
+  box-sizing: content-box;
 }
 
 .techs__background{
@@ -23,6 +24,7 @@
   font-size: 22px;
   line-height: 27px;
   letter-spacing: -0.04em;
+  box-sizing: border-box;
 }
 
 .techs__description {

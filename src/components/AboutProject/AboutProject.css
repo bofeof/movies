@@ -4,6 +4,7 @@
   flex-direction: column;
   margin: 36px auto 0;
   color: #ffffff;
+  box-sizing: border-box;
 }
 
 .proj__header {
