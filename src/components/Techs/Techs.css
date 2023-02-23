@@ -1,7 +1,6 @@
 .techs {
   display: flex;
   flex-direction: column;
-  width: 100%;
   color: #ffffff;
   margin: 0 auto;
   box-sizing: content-box;
@@ -11,7 +10,7 @@
   width: 100%;
   background-color: #272727;
   position: relative;
-  padding: 70px;
+  padding: 0 70px;
   left: -70px;
 }
 

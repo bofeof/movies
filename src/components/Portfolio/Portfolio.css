@@ -25,7 +25,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0;
+  padding: 20px 0 20px;
   margin: 0;
   border-bottom: 1px solid #424242;
   box-sizing: border-box;
@@ -33,11 +33,12 @@
 
 .portfolio__item:last-child {
   border: none;
+  padding-bottom: 0;
 }
 
 .portfolio__project {
-  padding: 20px 0 20px;
   margin: 0;
+  padding: 0;
   font-weight: 400;
   font-size: 30px;
   line-height: 167%;
@@ -45,6 +46,7 @@
 }
 
 .portfolio__link {
+  text-align: center;
   text-decoration: none;
   font-weight: 400;
   font-size: 30px;

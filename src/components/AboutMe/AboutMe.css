@@ -9,7 +9,7 @@
 
 .aboutme__header {
   margin: 0;
-  padding: 100px 0 23px;
+  padding: 110px 0 23px;
   border-bottom: 1px solid #dadada;
   font-weight: 400;
   font-size: 22px;
@@ -21,7 +21,7 @@
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  padding: 60px 0 100px;
+  padding: 66px 0 100px;
 }
 
 .aboutme__student {

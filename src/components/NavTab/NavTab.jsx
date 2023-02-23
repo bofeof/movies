@@ -5,13 +5,13 @@ export default function NavTab() {
     <nav className="navtab">
       <ul className="navtab__bar">
         <li >
-          <a className='navtab__link' href="/">О проекте</a>
+          <a className='navtab__link' href="#proj">О проекте</a>
         </li>
         <li >
-          <a className='navtab__link' href="/">Технологии</a>
+          <a className='navtab__link' href="#techs">Технологии</a>
         </li>
         <li >
-          <a className='navtab__link' href="/">Студент</a>
+          <a className='navtab__link' href="#aboutme">Студент</a>
         </li>
       </ul>
     </nav>
