@@ -40,3 +40,11 @@
   opacity: 0.5;
   cursor: pointer;
 }
+
+@media screen and (max-width: 800px) {
+  .navtab {
+    width: calc(100% + 30px * 2);
+    height: 100%;
+    left: -30px;
+  }
+}

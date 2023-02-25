@@ -54,19 +54,56 @@
   mix-blend-mode: normal;
 }
 
-.aboutme__github{
+.aboutme__github {
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 17px;
   color: #ffffff;
   text-decoration: none;
-  transition: opacity .5s ease-in-out;
+  transition: opacity 0.5s ease-in-out;
 }
 
-.aboutme__github:hover{
+.aboutme__github:hover {
   cursor: pointer;
-  opacity: .5;
+  opacity: 0.5;
 }
 
-.aboutme__photo{
+.aboutme__photo {
   width: 270px;
   height: 327px;
   border-radius: 10px;
+}
+
+@media screen and (max-width: 800px) {
+  .aboutme {
+    padding: 0 20px;
+  }
+  .aboutme__header {
+    padding: 90px 0 23px;
+  }
+  .aboutme__info {
+    padding: 66px 0 90px;
+  }
+  .aboutme__student {
+    max-width: 364px;
+  }
+  .aboutme__name {
+    font-size: 40px;
+    line-height: 100%;
+    margin: 0 0 16px;
+  }
+  .aboutme__job {
+    font-size: 12px;
+    line-height: 150%;
+    margin: 0 0 20px;
+  }
+  .aboutme__bio {
+    margin: 0 0 87px;
+    font-size: 12px;
+    line-height: 150%;
+  }
+  .aboutme__photo {
+    width: 255px;
+    height: 307px;
+  }
 }

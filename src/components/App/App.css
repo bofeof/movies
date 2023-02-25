@@ -11,3 +11,9 @@
   font-family: 'Inter', Arial, Helvetica, sans-serif;
   background-color: #202020;
 }
+
+@media screen and (max-width: 800px){
+  .app {
+    padding: 0px 30px 20px;
+  }
+}
