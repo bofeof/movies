@@ -10,10 +10,17 @@
   padding: 0px 70px 20px;
   font-family: 'Inter', Arial, Helvetica, sans-serif;
   background-color: #202020;
+  box-sizing: border-box;
 }
 
 @media screen and (max-width: 800px){
   .app {
     padding: 0px 30px 20px;
+  }
+}
+
+@media screen and (max-width: 500px){
+  .app {
+    padding: 0px 14px 20px;
   }
 }

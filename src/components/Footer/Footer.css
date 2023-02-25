@@ -52,3 +52,39 @@
   cursor: pointer;
   opacity: 0.5;
 }
+
+@media screen and (max-width: 500px) {
+  .footer {
+    padding: 0;
+    margin: 0 auto;
+  }
+
+  .footer__paragraph {
+    margin: 79px 0 0;
+    font-size: 12px;
+    line-height: 15px;
+  }
+
+  .footer__description {
+    flex-direction: column-reverse;
+    align-items: center;
+  }
+
+  .footer__links {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 24px auto 30px;
+  }
+
+  .footer__link {
+    margin: 6px auto 0;
+    font-size: 12px;
+    line-height: 15px;
+  }
+  .footer__year {
+    color: #8b8b8b;
+    font-size: 12px;
+    line-height: 15px;
+  }
+}

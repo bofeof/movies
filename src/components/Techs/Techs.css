@@ -86,7 +86,6 @@
   }
 
   .techs__background {
-    width: 100%;
     padding: 0 30px;
     left: -30px;
   }
@@ -104,6 +103,7 @@
   }
 
   .techs__list {
+    flex-wrap: wrap;
     padding: 83px 0 90px;
   }
 
@@ -112,5 +112,47 @@
     max-width: 84px;
     font-size: 12px;
     line-height: 15px;
+    margin: 5px;
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .techs__header {
+    font-size: 18px;
+    line-height: 22px;
+    padding: 70px 0 27px;
+    margin: 0 4px;
+    border-bottom: 1px solid #000000;
+  }
+
+  .techs__background {
+    width: 100%;
+    background: none;
+    padding: 0;
+    position: static;
+  }
+
+  .techs__description {
+    margin: 0;
+  }
+
+  .techs__description-header {
+    font-size: 30px;
+    line-height: 36px;
+    padding: 60px 0 0;
+  }
+
+  .techs__description-parargraph {
+    margin: 0 auto;
+    padding: 24px 0 0;
+    font-size: 11px;
+    line-height: 145%;
+  }
+
+  .techs__list {
+    max-width: 188px;
+    padding: 50px 0 70px;
+    justify-content: flex-start;
+    margin: 0 auto;
   }
 }

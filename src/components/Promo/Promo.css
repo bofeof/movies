@@ -57,3 +57,24 @@
     min-width: 300px;
   }
 }
+
+@media screen and (max-width: 500px) {
+  .promo__header {
+    width: calc(100% + 14px * 2);
+    left: -14px;
+    bottom: 74px;
+  }
+
+  .promo__header-img {
+    height: 248px;
+    width: 248px;
+    background-size: 248px 248px;
+    margin: 216px auto 180px;
+  }
+
+  .promo__header-text {
+    max-width: 300px;
+    font-size: 31px;
+    line-height: 126%;
+  }
+}

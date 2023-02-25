@@ -19,6 +19,7 @@
 
 .proj__steps {
   display: flex;
+  width: 100%;
   justify-content: space-between;
   margin: 70px 0 110px;
 }
@@ -126,5 +127,59 @@
   .proj__back {
     min-width: 140px;
     width: 140px;
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .proj {
+    margin: 0 auto 0;
+    padding: 0 4px;
+  }
+
+  .proj__header {
+    font-size: 18px;
+    line-height: 22px;
+    padding-bottom: 27px;
+    position: relative;
+    bottom: 4px;
+  }
+
+  .proj__steps {
+    display: block;
+    margin: 56px 0 4px;
+  }
+
+  .proj__step {
+    margin: 0 auto 56px;
+  }
+
+  .proj__step-header {
+    margin: 0 0 16px;
+    font-size: 18px;
+    line-height: 22px;
+  }
+
+  .proj__step-paragraph {
+    font-size: 11px;
+    line-height: 145%;
+  }
+
+  .proj__web {
+    margin: 0 auto 70px;
+  }
+
+  .proj__back {
+    min-width: 100px;
+    width: 100px;
+  }
+
+  .proj__duration {
+    font-size: 11px;
+    line-height: 13px;
+  }
+
+  .proj__web-paragraph {
+    font-size: 11px;
+    line-height: 13px;
   }
 }

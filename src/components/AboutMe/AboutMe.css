@@ -69,8 +69,8 @@
 }
 
 .aboutme__photo {
-  width: 270px;
-  height: 327px;
+  max-width: 270px;
+  max-height: 327px;
   border-radius: 10px;
 }
 
@@ -78,32 +78,96 @@
   .aboutme {
     padding: 0 20px;
   }
+
   .aboutme__header {
     padding: 90px 0 23px;
   }
+
   .aboutme__info {
     padding: 66px 0 90px;
   }
+
   .aboutme__student {
     max-width: 364px;
   }
+
   .aboutme__name {
     font-size: 40px;
     line-height: 100%;
     margin: 0 0 16px;
   }
+
   .aboutme__job {
     font-size: 12px;
     line-height: 150%;
     margin: 0 0 20px;
   }
+
   .aboutme__bio {
     margin: 0 0 87px;
     font-size: 12px;
     line-height: 150%;
   }
+
   .aboutme__photo {
-    width: 255px;
+    min-width: 255px;
     height: 307px;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .aboutme__info {
+    flex-direction: column-reverse;
+    align-items: center;
+    padding: 60px 0 70px;
+  }
+
+  .aboutme__student {
+    max-width: 292px;
+  }
+
+  .aboutme__name {
+    margin: 0 0 20px;
+  }
+
+  .aboutme__job {
+    margin: 0 0 20px;
+  }
+
+  .aboutme__bio {
+    margin: 0 0 40px;
+  }
+
+  .aboutme__photo {
+    min-width: 292px;
+    min-height: 352px;
+    margin-bottom: 40px;
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .aboutme {
+    padding: 0 4px;
+  }
+
+  .aboutme__header {
+    padding: 70px 0 27px;
+    font-size: 18px;
+    line-height: 22px;
+  }
+
+  .aboutme__name {
+    font-size: 30px;
+    line-height: 36px;
+  }
+
+  .aboutme__job {
+    font-size: 11px;
+    line-height: 145%;
+  }
+
+  .aboutme__bio {
+    font-size: 11px;
+    line-height: 145%;
   }
 }

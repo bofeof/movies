@@ -26,7 +26,9 @@
   display: flex;
   min-width: 276px;
   justify-content: space-between;
+  align-items: center;
   padding: 0;
+  margin: 0 auto;
   list-style: none;
 }
 
@@ -46,5 +48,20 @@
     width: calc(100% + 30px * 2);
     height: 100%;
     left: -30px;
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .navtab {
+    width: calc(100% + 14px * 2);
+    height: 100%;
+    left: -14px;
+
+    font-size: 11px;
+    line-height: 145%;
+  }
+
+  .navtab__bar {
+    min-width: 214px;
   }
 }
