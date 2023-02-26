@@ -1,0 +1,69 @@
+.header__movies-button {
+  padding: 0;
+  border: none;
+  background: none;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 129%;
+  color: #ffffff;
+  transition: opacity 0.5s ease-in-out;
+}
+
+.header__saved-button {
+  padding: 0;
+  margin-left: 20px;
+  border: none;
+  background: none;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 129%;
+  color: #ffffff;
+  transition: opacity 0.5s ease-in-out;
+}
+
+.header__account-button {
+  box-sizing: border-box;
+  width: 100px;
+  height: 32px;
+  padding-left: 31px;
+  margin-left: 50px;
+  background: url(../../../images/account-logo/account-logo.svg);
+  background-repeat: no-repeat;
+  background-position: left 12px center;
+  background-size: 12px 14px;
+
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 114%;
+  align-items: center;
+  color: #ffffff;
+
+  border: 2px solid rgba(170, 170, 170, 0.2);
+  border-radius: 50px;
+
+  transition: opacity 0.5s ease-in-out;
+}
+
+.header__menu{
+  height: 28px;
+  width: 28px;
+  margin-top: 5px;
+  transition: opacity 0.5s ease-in-out;
+}
+
+.header__menu-line {
+  display: block;
+  width: 100%;
+  margin-bottom: 7px;
+  height: 3px;
+  background: white;
+}
+
+
+.header__account-button:hover,
+.header__movies-button:hover,
+.header__saved-button:hover,
+.header__menu:hover {
+  opacity: 0.5;
+  cursor: pointer;
+}
