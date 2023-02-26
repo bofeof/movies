@@ -2,13 +2,25 @@ import './App.css';
 
 import Header from '../Header/Header';
 import Main from '../Main/Main';
-import Footer from '../Footer/Footer'
+import Movies from '../Movies/Movies';
+import Footer from '../Footer/Footer';
+
+// const userLogIn = useContext(LoggedInContext);
+const userLogIn = true;
 
 function App() {
   return (
     <div className="app">
       <Header />
-      <Main />
+
+      {userLogIn ? (
+        <Movies/>
+        // SavedMovies
+        //
+        //
+        )  : (
+          <Main />
+        )}
       <Footer />
     </div>
   );

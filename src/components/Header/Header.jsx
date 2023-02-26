@@ -1,13 +1,13 @@
 
 import './Header.css';
 
-import HeaderLoggedIn from './HeaderLoggedIn/HeaderLoggedIn';
+import HeaderLoggedIn from '../HeaderLoggedIn/HeaderLoggedIn';
 import headerLogo from '../../images/logo/logo.svg';
 
 export default function Header() {
 
   // const userLogIn = useContext(LoggedInContext);
-  const userLogIn = false;
+  const userLogIn = true;
 
   return (
     <header className="header">
