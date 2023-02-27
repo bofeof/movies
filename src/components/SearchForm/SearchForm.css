@@ -7,7 +7,7 @@
   width: 100%;
   height: 237px;
   max-height: 236px;
-  border-bottom: 1px solid white;
+  border-bottom: 1px solid rgba(66, 66, 66, 1);
   box-sizing: border-box;
 }
 
@@ -30,13 +30,18 @@
   background: #2f2f2f;
   border: none;
   border-radius: 40px;
-  color:#ffffff;
+  color: #ffffff;
+
+  font-weight: 400;
+  font-size: 13px;
+  line-height: 131%;
 }
 
 .search-form__submit {
   width: 59px;
   height: 34px;
   margin-right: 6px;
+  padding: 8px 10px;
   background: #4285f4;
   border-radius: 48px;
   border: none;
@@ -47,10 +52,10 @@
   text-align: center;
   color: #ffffff;
 
-  transition: opacity .5s ease-in-out;
+  transition: opacity 0.5s ease-in-out;
 }
 
-.search-form__submit:hover{
-  opacity: .5;
+.search-form__submit:hover {
+  opacity: 0.5;
   cursor: pointer;
 }

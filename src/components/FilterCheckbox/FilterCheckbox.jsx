@@ -2,7 +2,7 @@ import './FilterCheckbox.css';
 
 export default function FilterCheckbox() {
   return (
-    <div className='filter'>
+    <div className="filter">
       <div className="filter__item">
         <label className="filter__label" htmlFor="filter-checkbox">
           <input className="filter__checkbox_hidden" type="checkbox" id="filter-checkbox" />
@@ -11,7 +11,7 @@ export default function FilterCheckbox() {
           </span>
         </label>
       </div>
-      <p className='filter__caption'>Короткометражки</p>
+      <p className="filter__caption">Короткометражки</p>
     </div>
   );
 }

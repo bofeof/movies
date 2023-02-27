@@ -1,12 +1,12 @@
-import './Movies.css';
+import './SavedMovies.css';
 import SearchForm from '../SearchForm/SearchForm';
 import MoviesCardList from '../MoviesCardList/MoviesCardList';
 import ShowMoreButton from '../ShowMoreButton/ShowMoreButton';
 // import Preloader from '../Preloader/Preloader';
 
-export default function Movies({ isSavedSection }) {
+export default function SavedMovies({ isSavedSection }) {
   return (
-    <div className="movies">
+    <div className="saved-movies">
       <SearchForm />
       <MoviesCardList isSavedSection={isSavedSection} />
       <ShowMoreButton />

@@ -1,5 +1,4 @@
-
-.preloader{
+.movies-preloader {
   display: block;
   width: 100%;
   margin: 0 auto;
@@ -16,9 +15,43 @@
 
   display: grid;
   justify-content: space-between;
-
   justify-items: stretch;
   grid-template-columns: repeat(auto-fit, minmax(0, 270px));
   grid-auto-flow: row;
-  grid-gap: 35px 10px;
+  grid-gap: 32px 20px;
+}
+
+@media screen and (max-width: 800px) {
+  .movies-preloader {
+    height: 1236px;
+  }
+
+  .movies-list {
+    grid-template-columns: repeat(auto-fit, minmax(0, 339px));
+    grid-gap: 36px 30px;
+  }
+}
+
+@media screen and (max-width: 760px) {
+  .movies-list {
+    justify-content: center;
+    justify-items: center;
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .movies-list {
+    margin: 40px 0 auto;
+  }
+
+  .movies-preloader {
+    height: 1315px;
+    margin: 0 auto 10px;
+  }
+
+  .movies-list {
+    grid-template-columns: repeat(auto-fit, minmax(0, 300px));
+    grid-gap: 20px 0px;
+    justify-content: center;
+  }
 }

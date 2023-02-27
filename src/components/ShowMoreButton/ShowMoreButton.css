@@ -1,0 +1,38 @@
+.show-more {
+  width: 100%;
+  min-height: 166px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.show-more__button {
+  width: 320px;
+  height: 36px;
+  padding: 0;
+  margin: 0 auto;
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 15px;
+
+  align-items: center;
+  text-align: center;
+
+  color: #ffffff;
+
+  background: #2f2f2f;
+  border-radius: 6px;
+  border: none;
+  transition: opacity 0.5s ease-in-out;
+}
+
+.show-more__button:hover {
+  opacity: 0.5;
+  cursor: pointer;
+}
+
+@media screen and (max-width: 500px) {
+  .show-more__button {
+    width: 240px;
+  }
+}
