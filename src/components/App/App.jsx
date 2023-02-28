@@ -3,10 +3,10 @@ import './App.css';
 import Header from '../Header/Header';
 import Main from '../Main/Main';
 // import Movies from '../Movies/Movies';
-import SavedMovies from '../SavedMovies/SavedMovies';
+// import SavedMovies from '../SavedMovies/SavedMovies';
+import Profile from '../Profile/Profile';
 import Footer from '../Footer/Footer';
 
-// const userLogIn = useContext(LoggedInContext);
 const userLogIn = true;
 
 function App() {
@@ -16,10 +16,12 @@ function App() {
 
       {userLogIn ? (
         // <Movies isSavedSection={false} />
-        <SavedMovies isSavedSection />
+        // <SavedMovies isSavedSection />
+        <Profile />
       ) : (
         <Main />
       )}
+
       <Footer />
     </div>
   );
