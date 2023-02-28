@@ -4,8 +4,9 @@ import './App.css';
 import Main from '../Main/Main';
 // import Movies from '../Movies/Movies';
 // import SavedMovies from '../SavedMovies/SavedMovies';
-import Profile from '../Profile/Profile';
+// import Profile from '../Profile/Profile';
 // import Login from '../Login/Login';
+import PageNotFound from '../NotFoundPage/PageNotFound';
 // import Register from '../Register/Register';
 
 // import Footer from '../Footer/Footer';
@@ -20,9 +21,10 @@ function App() {
       {userLogIn ? (
         // <Movies isSavedSection={false} />
         // <SavedMovies isSavedSection />
-        <Profile />
+        // <Profile />
         // <Login />
         // <Register />
+        <PageNotFound/>
 
       ) : (
         <Main />
