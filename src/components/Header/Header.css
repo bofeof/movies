@@ -10,9 +10,11 @@
   height: 38px;
   width: 38px;
 }
+
 .header__logo-img {
   height: 100%;
   width: 100%;
+  object-fit: cover;
 }
 
 .header__button {

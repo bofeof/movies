@@ -1,0 +1,153 @@
+.identity__container {
+  display: flex;
+  width: 396px;
+  height: 560px;
+  max-height: 560px;
+  max-width: 396px;
+  flex-direction: column;
+  margin: 70px auto 50px;
+}
+
+.identity__logo-img {
+  height: 38px;
+  width: 38px;
+  object-fit: cover;
+}
+
+.identity__header {
+  padding: 0;
+  margin: 40px 0;
+  font-weight: 500;
+  font-size: 24px;
+  line-height: 29px;
+  color: #ffffff;
+}
+
+.identity__form {
+  display: flex;
+  flex-direction: column;
+}
+
+.identity__form-label {
+  display: flex;
+  flex-direction: column;
+  font-weight: 400;
+  font-size: 10px;
+  line-height: 12px;
+  color: #8b8b8b;
+}
+
+.identity__form-input {
+  padding: 15px;
+  margin: 10px 0 0;
+  background: #2f2f2f;
+  border: none;
+  border-radius: 8px;
+
+  font-weight: 500;
+  font-size: 13px;
+  line-height: 16px;
+  color: #ffffff;
+}
+
+.identity__input-error {
+  width: 100%;
+  height: 20px;
+  padding: 6px 0;
+  box-sizing: border-box;
+  font-weight: 400;
+  font-size: 10px;
+  line-height: 12px;
+  color: #ee3465;
+  text-overflow: ellipsis;
+  white-space: wrap;
+}
+
+.identity__form-button {
+  width: 100%;
+  height: 45px;
+  margin: 0 0 16px;
+  padding: 0;
+  border: none;
+  background: #4285f4;
+  border-radius: 3px;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 17px;
+  text-align: center;
+  color: #ffffff;
+
+  transition: opacity 0.5s ease-in-out;
+}
+
+.identity__buttons {
+  margin-top: auto;
+}
+
+.identity__question {
+  margin: 0 auto;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 17px;
+  text-align: center;
+  color: #8b8b8b;
+}
+
+.identity__question-link {
+  text-decoration: none;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 17px;
+  text-align: center;
+  color: #4285f4;
+  transition: opacity 0.5s ease-in-out;
+}
+
+.identity__form-button:hover,
+.identity__question-link:hover {
+  opacity: 0.5;
+  cursor: pointer;
+}
+
+@media screen and (max-width: 800px) {
+  .identity__container {
+    margin: 232px auto 212px;
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .identity__container {
+    display: flex;
+    width: 260px;
+    max-width: 260px;
+    height: 694px;
+    max-height: 694px;
+    margin: 56px auto 10px;
+  }
+
+  .identity__header {
+    margin: 50px auto 80px ;
+    text-align: center;
+  }
+
+  .identity__logo-img{
+    display: block;
+    margin: 0 auto;
+  }
+
+  .identity__form-button {
+    margin: 0 0 14px;
+    font-size: 12px;
+    line-height: 15px;
+  }
+
+  .identity__question {
+    font-size: 12px;
+    line-height: 15px;
+  }
+
+  .identity__question-link {
+    font-size: 12px;
+    line-height: 15px;
+  }
+}
