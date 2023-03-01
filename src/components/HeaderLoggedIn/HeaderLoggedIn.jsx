@@ -1,10 +1,14 @@
 import './HeaderLoggedIn.css';
-
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
+import BurgerMenu from '../BurgerMenu/BurgerMenu';
 
 export default function HeaderLoggedIn() {
-  // check window size
+  const [menuOpened, setMenuOpened] = useState(false);
   const [windowWidth, setWindowWidth] = useState();
+
+  const handleOpenMenu = useCallback(() => {
+    setMenuOpened(!menuOpened);
+  }, [menuOpened]);
 
   function updateSize() {
     setWindowWidth(window.innerWidth);
@@ -16,7 +20,7 @@ export default function HeaderLoggedIn() {
     return () => window.removeEventListener('resize', updateSize);
   }, []);
 
-  return windowWidth >= 768 ? (
+  return windowWidth > 768 ? (
     <>
       <button type="button" className="header__movies-button">
         Фильмы
@@ -29,10 +33,14 @@ export default function HeaderLoggedIn() {
       </button>
     </>
   ) : (
-    <div className="header__menu">
-      <span className="header__menu-line" />
-      <span className="header__menu-line" />
-      <span className="header__menu-line" />
-    </div>
+    // burger menu
+    <>
+      <button type="button" className="header__menu" onClick={handleOpenMenu}>
+        <span className="header__menu-line" />
+        <span className="header__menu-line" />
+        <span className="header__menu-line" />
+      </button>
+      <BurgerMenu menuOpened={menuOpened} onCloseMenu={handleOpenMenu} />
+    </>
   );
 }

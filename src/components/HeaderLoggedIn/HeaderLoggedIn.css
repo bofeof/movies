@@ -45,6 +45,9 @@
 }
 
 .header__menu{
+  background: none;
+  border: none;
+  padding: 0;
   height: 28px;
   width: 28px;
   margin-top: 5px;

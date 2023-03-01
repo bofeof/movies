@@ -1,0 +1,128 @@
+.burger-menu {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+
+  background-color: rgba(0, 0, 0, 0.3);
+
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+
+  visibility: hidden;
+  opacity: 0;
+  transition: visibility 0.5s ease, opacity 1s ease;
+}
+
+.burger-menu_opened {
+  opacity: 1;
+  visibility: visible;
+}
+
+.burger-menu__container {
+  width: 520px;
+  min-width: 320px;
+  height: 100%;
+  padding: 22.44px;
+  margin-left: auto;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  box-sizing: border-box;
+  background: #202020;
+}
+
+.burger-menu__close-button {
+  align-self: flex-end;
+  min-width: 22px;
+  min-height: 22px;
+  padding: 0;
+  margin-bottom: 105.44px;
+  background-color: transparent;
+  background-image: url(../../images/close/close.svg);
+  background-position: 50%;
+  background-repeat: no-repeat;
+  background-size: 22px 22px;
+  border: none;
+  object-fit: cover;
+
+  transition: opacity 0.5s ease-in-out;
+}
+
+.burger-menu__button {
+  border: none;
+  background: none;
+  padding: 0 0 4px;
+  margin: 0 auto 22px;
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 22px;
+  text-align: center;
+  color: #ffffff;
+  transition: opacity 0.5s ease-in-out;
+  box-sizing: border-box;
+}
+
+.burger-menu__account-button {
+  box-sizing: border-box;
+  width: 100px;
+  height: 32px;
+  padding-left: 31px;
+  margin: 614px auto 93px;
+  background: url(../../images/account-logo/account-logo.svg);
+  background-repeat: no-repeat;
+  background-position: left 12px center;
+  background-size: 12px 14px;
+
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 114%;
+  align-items: center;
+  color: #ffffff;
+
+  border: 2px solid rgba(170, 170, 170, 0.2);
+  border-radius: 50px;
+
+  transition: opacity 0.5s ease-in-out;
+}
+
+.burger-menu__button:hover,
+.burger-menu__close-button:hover,
+.burger-menu__account-button:hover {
+  opacity: 0.5;
+  cursor: pointer;
+}
+
+.burger-menu__button:hover {
+  padding: 0 0 2px;
+  border-bottom: 2px solid #ffffff;
+}
+
+@media screen and (max-width: 500px) {
+  .burger-menu__container {
+    padding: 13.44px;
+  }
+
+  .burger-menu__close-button {
+    margin-bottom: 99.44px;
+  }
+
+  .burger-menu__button {
+    padding: 0 0 7px;
+    margin: 0 auto 15px;
+  }
+
+  .burger-menu__account-button {
+    margin: 437px auto 46px;
+  }
+
+  .burger-menu__button:hover {
+    padding: 0 0 5px;
+  }
+}
+
+
