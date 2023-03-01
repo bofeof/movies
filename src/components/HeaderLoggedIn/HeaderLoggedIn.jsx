@@ -2,7 +2,12 @@ import './HeaderLoggedIn.css';
 import { useCallback, useEffect, useState } from 'react';
 import BurgerMenu from '../BurgerMenu/BurgerMenu';
 
-export default function HeaderLoggedIn() {
+export default function HeaderLoggedIn({
+  onRedirectToMain,
+  onRedirectToMovies,
+  onRedirectToSavedMovies,
+  onRedirectToProfile,
+}) {
   const [menuOpened, setMenuOpened] = useState(false);
   const [windowWidth, setWindowWidth] = useState();
 
@@ -22,13 +27,13 @@ export default function HeaderLoggedIn() {
 
   return windowWidth > 768 ? (
     <>
-      <button type="button" className="header__movies-button">
+      <button type="button" className="header__movies-button" onClick={onRedirectToMovies}>
         Фильмы
       </button>
-      <button type="button" className="header__saved-button">
+      <button type="button" className="header__saved-button" onClick={onRedirectToSavedMovies}>
         Сохранённые фильмы
       </button>
-      <button type="button" className="header__account-button">
+      <button type="button" className="header__account-button" onClick={onRedirectToProfile}>
         Аккаунт
       </button>
     </>
@@ -40,7 +45,14 @@ export default function HeaderLoggedIn() {
         <span className="header__menu-line" />
         <span className="header__menu-line" />
       </button>
-      <BurgerMenu menuOpened={menuOpened} onCloseMenu={handleOpenMenu} />
+      <BurgerMenu
+        menuOpened={menuOpened}
+        onCloseMenu={handleOpenMenu}
+        onRedirectToMain={onRedirectToMain}
+        onRedirectToMovies={onRedirectToMovies}
+        onRedirectToSavedMovies={onRedirectToSavedMovies}
+        onRedirectToProfile={onRedirectToProfile}
+      />
     </>
   );
 }

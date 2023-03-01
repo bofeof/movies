@@ -1,4 +1,4 @@
-.identity__container {
+.identity {
   display: flex;
   width: 396px;
   height: 560px;
@@ -12,6 +12,13 @@
   height: 38px;
   width: 38px;
   object-fit: cover;
+  transition: opacity 0.5s ease-in-out;
+}
+
+.identity__logo-button{
+  border: none;
+  background: none;
+  padding: 0;
 }
 
 .identity__header {
@@ -94,7 +101,7 @@
 }
 
 .identity__question-button {
-  border:none;
+  border: none;
   background: none;
   padding: 0;
   text-decoration: none;
@@ -106,6 +113,7 @@
   transition: opacity 0.5s ease-in-out;
 }
 
+.identity__logo-img:hover,
 .identity__form-button:hover,
 .identity__question-button:hover {
   opacity: 0.5;
@@ -129,11 +137,11 @@
   }
 
   .identity__header {
-    margin: 50px auto 80px ;
+    margin: 50px auto 80px;
     text-align: center;
   }
 
-  .identity__logo-img{
+  .identity__logo-img {
     display: block;
     margin: 0 auto;
   }

@@ -44,7 +44,7 @@
   transition: opacity 0.5s ease-in-out;
 }
 
-.header__menu{
+.header__menu {
   background: none;
   border: none;
   padding: 0;
@@ -61,7 +61,6 @@
   height: 3px;
   background: white;
 }
-
 
 .header__account-button:hover,
 .header__movies-button:hover,

@@ -1,7 +1,7 @@
 import './Register.css';
 import IdentityForm from '../IdentityForm/IdentityForm';
 
-export default function Login() {
+export default function Register({ onRedirectToMain }) {
   return (
     <div className="register">
       <IdentityForm
@@ -16,6 +16,7 @@ export default function Login() {
           </p>
         }
         isRegisterForm
+        onRedirectToMain={onRedirectToMain}
       />
     </div>
   );

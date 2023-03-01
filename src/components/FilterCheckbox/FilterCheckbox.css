@@ -68,13 +68,12 @@
 
 .filter__checkbox_visible {
   width: 100%;
-  transition: opacity .5s ease-in-out;
+  transition: opacity 0.5s ease-in-out;
 }
 
 .filter__checkbox_visible:hover {
   cursor: pointer;
-  opacity: .5;
-
+  opacity: 0.5;
 }
 
 .filter__checkbox_hidden:checked + .filter__checkbox_visible .filter__dot {

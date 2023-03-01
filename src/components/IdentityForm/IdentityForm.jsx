@@ -1,11 +1,14 @@
 import './IdentityForm.css';
 import headerLogo from '../../images/logo/logo.svg';
 
-export default function IdentityForm({ header, buttonName, askSignIn, isRegisterForm }) {
+export default function IdentityForm({ header, buttonName, askSignIn, isRegisterForm, onRedirectToMain }) {
   return (
-    <div className="identity__container">
+    <div className="identity">
       <div className="identity__greeting">
-        <img className="identity__logo-img" src={headerLogo} alt="Логотип сайта" />
+        <button className="identity__logo-button" type='button' onClick={onRedirectToMain}>
+          <img className="identity__logo-img" src={headerLogo} alt="Логотип сайта" />
+        </button>
+
         <h3 className="identity__header">{header}</h3>
       </div>
 

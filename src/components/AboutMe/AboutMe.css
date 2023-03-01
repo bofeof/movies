@@ -63,15 +63,15 @@
   transition: opacity 0.5s ease-in-out;
 }
 
-.aboutme__github:hover {
-  cursor: pointer;
-  opacity: 0.5;
-}
-
 .aboutme__photo {
   max-width: 270px;
   max-height: 327px;
   border-radius: 10px;
+}
+
+.aboutme__github:hover {
+  cursor: pointer;
+  opacity: 0.5;
 }
 
 @media screen and (max-width: 800px) {
