@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import { Route, Routes } from 'react-router-dom';
 
 import './App.css';
@@ -32,12 +31,11 @@ function App() {
             <Route path="/signin" element={<Login />} />
             <Route path="/signup" element={<Register />} />
           </>
-      ) : (
-        <Main />
-      )}
+        ) : (
+          <Main />
+        )}
 
-      <Route path="*" element={<PageNotFound/>} />
-
+        <Route path="*" element={<PageNotFound />} />
       </Routes>
 
       <Footer />
