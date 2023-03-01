@@ -57,7 +57,7 @@ function App() {
 
   return (
     <div className="app">
-      {/* <div className='app__container'> */}
+      <div className='app__container'>
         <Routes>
           <Route
             path="/"
@@ -145,7 +145,7 @@ function App() {
             <Route path="*" element={<Navigate to="/" />} />
           )}
         </Routes>
-      {/* </div> */}
+      </div>
     </div>
   );
 }
