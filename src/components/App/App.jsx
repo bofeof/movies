@@ -13,7 +13,7 @@ import Register from '../Register/Register';
 import Footer from '../Footer/Footer';
 
 // tmp user context
-const userLogIn = true;
+const userLogIn = false;
 
 function App() {
   return (
@@ -23,7 +23,7 @@ function App() {
           path="/"
           element={
             <>
-              <Header />
+              <Header userLogIn={userLogIn}/>
               <Main />
               <Footer />
             </>
@@ -39,7 +39,7 @@ function App() {
               path="/movies"
               element={
                 <>
-                  <Header />
+                  <Header userLogIn={userLogIn} />
                   <Movies isSavedSection={false} />
                   <Footer />
                 </>
@@ -50,7 +50,7 @@ function App() {
               path="/saved-movies"
               element={
                 <>
-                  <Header />
+                  <Header userLogIn={userLogIn}/>
                   <SavedMovies isSavedSection />
                   <Footer />
                 </>
@@ -61,7 +61,7 @@ function App() {
               path="/profile"
               element={
                 <>
-                  <Header />
+                  <Header userLogIn={userLogIn}/>
                   <Profile />
                 </>
               }
@@ -74,7 +74,6 @@ function App() {
         )}
       </Routes>
 
-      {/* <Footer /> */}
     </div>
   );
 }

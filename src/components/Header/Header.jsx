@@ -1,13 +1,11 @@
-
 import './Header.css';
 
 import HeaderLoggedIn from '../HeaderLoggedIn/HeaderLoggedIn';
 import headerLogo from '../../images/logo/logo.svg';
 
-export default function Header() {
-
+export default function Header({ userLogIn }) {
   // const userLogIn = useContext(LoggedInContext);
-  const userLogIn = true;
+  // const userLogIn = true;
 
   return (
     <header className="header">
@@ -15,10 +13,9 @@ export default function Header() {
         <img className="header__logo-img" src={headerLogo} alt="Логотип сайта" />
       </div>
       <div className="header__navigation">
-
         {userLogIn ? (
           <HeaderLoggedIn />
-        )  : (
+        ) : (
           <>
             <button type="button" className="header__button header__signup">
               Регистрация
@@ -26,9 +23,8 @@ export default function Header() {
             <button type="button" className="header__button header__signin">
               Войти
             </button>
-        </>
+          </>
         )}
-
       </div>
     </header>
   );
