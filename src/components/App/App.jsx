@@ -1,4 +1,4 @@
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes, Navigate } from 'react-router-dom';
 
 import './App.css';
 
@@ -12,33 +12,69 @@ import PageNotFound from '../NotFoundPage/PageNotFound';
 import Register from '../Register/Register';
 import Footer from '../Footer/Footer';
 
-// tmp user
+// tmp user context
 const userLogIn = true;
 
 function App() {
   return (
     <div className="app">
-      <Header />
-
       <Routes>
-        <Route path="/" element={<Main />} />
+        <Route
+          path="/"
+          element={
+            <>
+              <Header />
+              <Main />
+              <Footer />
+            </>
+          }
+        />
+
+        <Route path="/signin" element={<Login />} />
+        <Route path="/signup" element={<Register />} />
 
         {userLogIn ? (
           <>
-            <Route path="/movies" element={<Movies isSavedSection={false} />} />
-            <Route path="/saved-movies" element={<SavedMovies isSavedSection />} />
-            <Route path="/profile" element={<Profile />} />
-            <Route path="/signin" element={<Login />} />
-            <Route path="/signup" element={<Register />} />
+            <Route
+              path="/movies"
+              element={
+                <>
+                  <Header />
+                  <Movies isSavedSection={false} />
+                  <Footer />
+                </>
+              }
+            />
+
+            <Route
+              path="/saved-movies"
+              element={
+                <>
+                  <Header />
+                  <SavedMovies isSavedSection />
+                  <Footer />
+                </>
+              }
+            />
+
+            <Route
+              path="/profile"
+              element={
+                <>
+                  <Header />
+                  <Profile />
+                </>
+              }
+            />
+
+            <Route path="*" element={<PageNotFound />} />
           </>
         ) : (
-          <Main />
+          <Route path="*" element={<Navigate to="/" />} />
         )}
-
-        <Route path="*" element={<PageNotFound />} />
       </Routes>
 
-      <Footer />
+      {/* <Footer /> */}
     </div>
   );
 }

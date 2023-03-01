@@ -1,19 +1,18 @@
 import './Register.css';
 import IdentityForm from '../IdentityForm/IdentityForm';
 
-
 export default function Login() {
   return (
-    <div className='register'>
+    <div className="register">
       <IdentityForm
         header="Добро пожаловать!"
         buttonName="Зарегистрироваться"
         askSignIn={
           <p className="identity__question">
             Уже зарегистрированы?{' '}
-            <a className="identity__question-link identity__signup" href="./">
+            <button type="button" className="identity__question-button identity__signup">
               Войти
-            </a>
+            </button>
           </p>
         }
         isRegisterForm

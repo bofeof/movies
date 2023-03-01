@@ -7,7 +7,7 @@ export default function MoviesCardList({ isSavedSection }) {
     <section className="movies-preloader" aria-label="Список фильмов">
       <ul className="movies-list">
         {movies.map((card) => (
-          <MoviesCard key={card.id} card={card} mainUrl={mainUrl} isSavedSection={isSavedSection} />
+          <MoviesCard key={card.id} cardKey={card.id} card={card} mainUrl={mainUrl} isSavedSection={isSavedSection} />
         ))}
       </ul>
     </section>

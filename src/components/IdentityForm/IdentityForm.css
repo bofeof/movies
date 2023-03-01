@@ -93,7 +93,10 @@
   color: #8b8b8b;
 }
 
-.identity__question-link {
+.identity__question-button {
+  border:none;
+  background: none;
+  padding: 0;
   text-decoration: none;
   font-weight: 400;
   font-size: 14px;
@@ -104,7 +107,7 @@
 }
 
 .identity__form-button:hover,
-.identity__question-link:hover {
+.identity__question-button:hover {
   opacity: 0.5;
   cursor: pointer;
 }
@@ -146,7 +149,7 @@
     line-height: 15px;
   }
 
-  .identity__question-link {
+  .identity__question-button {
     font-size: 12px;
     line-height: 15px;
   }

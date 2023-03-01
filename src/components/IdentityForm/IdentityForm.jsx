@@ -17,7 +17,7 @@ export default function IdentityForm({ header, buttonName, askSignIn, isRegister
             type="text"
             name="name"
             autoComplete="username"
-            id="email"
+            id="name"
             placeholder="Имя"
             required="required"
             minLength="2"
@@ -36,7 +36,7 @@ export default function IdentityForm({ header, buttonName, askSignIn, isRegister
             name="email"
             autoComplete="username"
             id="email"
-            placeholder="Email"
+            placeholder="E-mail"
             required="required"
           />
         </label>

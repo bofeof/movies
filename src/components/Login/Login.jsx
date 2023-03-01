@@ -10,9 +10,9 @@ export default function Login() {
         askSignIn={
           <p className="identity__question">
             Ещё не зарегистрированы?{' '}
-            <a className="identity__question-link identity__signin" href="./">
+            <button type='button' className="identity__question-button identity__signin">
               Регистрация
-            </a>
+            </button>
           </p>
         }
         isRegisterForm={false}
