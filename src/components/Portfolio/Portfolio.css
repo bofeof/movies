@@ -25,15 +25,27 @@
 .portfolio__item {
   display: flex;
   justify-content: space-between;
+  align-items: center;
   padding: 0 0 9px;
   margin: 20px 0 auto;
   border-bottom: 1px solid #e6e6e6;
   box-sizing: border-box;
+  transition: opacity 0.5s ease-in-out;
 }
 
 .portfolio__item:last-child {
   border: none;
   padding-bottom: 0;
+}
+
+.portfolio__link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  text-align: center;
+  text-decoration: none;
+  color: #ffffff;
 }
 
 .portfolio__project {
@@ -45,18 +57,18 @@
   letter-spacing: -0.04em;
 }
 
-.portfolio__link {
+.portfolio__arrow {
+  margin: 0;
+  padding: 0;
   text-align: center;
-  text-decoration: none;
   font-weight: 400;
   font-size: 30px;
   line-height: 200%;
   letter-spacing: -0.04em;
   color: #ffffff;
-  transition: opacity 0.5s ease-in-out;
 }
 
-.portfolio__link:hover {
+.portfolio__item:hover {
   cursor: pointer;
   opacity: 0.5;
 }
@@ -72,7 +84,7 @@
     line-height: 179%;
   }
 
-  .portfolio__link {
+  .portfolio__arrow{
     font-size: 28px;
     line-height: 214%;
   }
@@ -101,7 +113,7 @@
     line-height: 156%;
   }
 
-  .portfolio__link {
+  .portfolio__arrow{
     font-size: 18px;
     line-height: 156%;
   }

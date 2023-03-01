@@ -20,6 +20,7 @@
 .aboutme__info {
   display: flex;
   flex-direction: row;
+  gap: 50px;
   justify-content: space-between;
   padding: 66px 0 100px;
 }

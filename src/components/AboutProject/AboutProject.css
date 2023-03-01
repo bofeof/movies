@@ -20,6 +20,7 @@
 .proj__steps {
   display: flex;
   width: 100%;
+  gap: 30px;
   justify-content: space-between;
   margin: 70px 0 110px;
 }

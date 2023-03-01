@@ -57,93 +57,95 @@ function App() {
 
   return (
     <div className="app">
-      <Routes>
-        <Route
-          path="/"
-          element={
+      {/* <div className='app__container'> */}
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <>
+                <Header
+                  userLogIn={userLogIn}
+                  onRedirectToMain={handleRedirectToMain}
+                  onRedirectToMovies={handleRedirectToMovies}
+                  onRedirectToSavedMovies={handleRedirectToSavedMovies}
+                  onRedirectToProfile={handleRedirectToProfile}
+                  onRedirectToSignIn={handleRedirectToSignIn}
+                  onRedirectToSignUp={handleRedirectToSignUp}
+                />
+                <Main />
+                <Footer />
+              </>
+            }
+          />
+
+          <Route path="/signin" element={<Login onRedirectToMain={handleRedirectToMain} />} />
+          <Route path="/signup" element={<Register onRedirectToMain={handleRedirectToMain} />} />
+
+          {userLogIn ? (
             <>
-              <Header
-                userLogIn={userLogIn}
-                onRedirectToMain={handleRedirectToMain}
-                onRedirectToMovies={handleRedirectToMovies}
-                onRedirectToSavedMovies={handleRedirectToSavedMovies}
-                onRedirectToProfile={handleRedirectToProfile}
-                onRedirectToSignIn={handleRedirectToSignIn}
-                onRedirectToSignUp={handleRedirectToSignUp}
+              <Route
+                path="/movies"
+                element={
+                  <>
+                    <Header
+                      userLogIn={userLogIn}
+                      onRedirectToMain={handleRedirectToMain}
+                      onRedirectToMovies={handleRedirectToMovies}
+                      onRedirectToSavedMovies={handleRedirectToSavedMovies}
+                      onRedirectToProfile={handleRedirectToProfile}
+                      onRedirectToSignIn={handleRedirectToSignIn}
+                      onRedirectToSignUp={handleRedirectToSignUp}
+                    />
+                    <Movies isSavedSection={false} />
+                    <Footer />
+                  </>
+                }
               />
-              <Main />
-              <Footer />
+
+              <Route
+                path="/saved-movies"
+                element={
+                  <>
+                    <Header
+                      userLogIn={userLogIn}
+                      onRedirectToMain={handleRedirectToMain}
+                      onRedirectToMovies={handleRedirectToMovies}
+                      onRedirectToSavedMovies={handleRedirectToSavedMovies}
+                      onRedirectToProfile={handleRedirectToProfile}
+                      onRedirectToSignIn={handleRedirectToSignIn}
+                      onRedirectToSignUp={handleRedirectToSignUp}
+                    />
+                    <SavedMovies isSavedSection />
+                    <Footer />
+                  </>
+                }
+              />
+
+              <Route
+                path="/profile"
+                element={
+                  <>
+                    <Header
+                      userLogIn={userLogIn}
+                      onRedirectToMain={handleRedirectToMain}
+                      onRedirectToMovies={handleRedirectToMovies}
+                      onRedirectToSavedMovies={handleRedirectToSavedMovies}
+                      onRedirectToProfile={handleRedirectToProfile}
+                      onRedirectToSignIn={handleRedirectToSignIn}
+                      onRedirectToSignUp={handleRedirectToSignUp}
+                    />
+                    <Profile />
+                  </>
+                }
+              />
+
+              <Route path="*" element={<PageNotFound onRedirectNotFoundToBack = {handleRedirectNotFoundToBack} />} />
             </>
-          }
-        />
-
-        <Route path="/signin" element={<Login onRedirectToMain={handleRedirectToMain} />} />
-        <Route path="/signup" element={<Register onRedirectToMain={handleRedirectToMain} />} />
-
-        {userLogIn ? (
-          <>
-            <Route
-              path="/movies"
-              element={
-                <>
-                  <Header
-                    userLogIn={userLogIn}
-                    onRedirectToMain={handleRedirectToMain}
-                    onRedirectToMovies={handleRedirectToMovies}
-                    onRedirectToSavedMovies={handleRedirectToSavedMovies}
-                    onRedirectToProfile={handleRedirectToProfile}
-                    onRedirectToSignIn={handleRedirectToSignIn}
-                    onRedirectToSignUp={handleRedirectToSignUp}
-                  />
-                  <Movies isSavedSection={false} />
-                  <Footer />
-                </>
-              }
-            />
-
-            <Route
-              path="/saved-movies"
-              element={
-                <>
-                  <Header
-                    userLogIn={userLogIn}
-                    onRedirectToMain={handleRedirectToMain}
-                    onRedirectToMovies={handleRedirectToMovies}
-                    onRedirectToSavedMovies={handleRedirectToSavedMovies}
-                    onRedirectToProfile={handleRedirectToProfile}
-                    onRedirectToSignIn={handleRedirectToSignIn}
-                    onRedirectToSignUp={handleRedirectToSignUp}
-                  />
-                  <SavedMovies isSavedSection />
-                  <Footer />
-                </>
-              }
-            />
-
-            <Route
-              path="/profile"
-              element={
-                <>
-                  <Header
-                    userLogIn={userLogIn}
-                    onRedirectToMain={handleRedirectToMain}
-                    onRedirectToMovies={handleRedirectToMovies}
-                    onRedirectToSavedMovies={handleRedirectToSavedMovies}
-                    onRedirectToProfile={handleRedirectToProfile}
-                    onRedirectToSignIn={handleRedirectToSignIn}
-                    onRedirectToSignUp={handleRedirectToSignUp}
-                  />
-                  <Profile />
-                </>
-              }
-            />
-
-            <Route path="*" element={<PageNotFound onRedirectNotFoundToBack = {handleRedirectNotFoundToBack} />} />
-          </>
-        ) : (
-          <Route path="*" element={<Navigate to="/" />} />
-        )}
-      </Routes>
+          ) : (
+            <Route path="*" element={<Navigate to="/" />} />
+          )}
+        </Routes>
+      {/* </div> */}
     </div>
   );
 }
