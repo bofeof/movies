@@ -121,18 +121,17 @@
 }
 
 @media screen and (max-width: 800px) {
-  .identity__container {
+  .identity {
     margin: 232px auto 212px;
   }
+
 }
 
 @media screen and (max-width: 500px) {
-  .identity__container {
-    display: flex;
+
+  .identity {
     width: 260px;
-    max-width: 260px;
-    height: 694px;
-    max-height: 694px;
+    min-height: 694px;
     margin: 56px auto 10px;
   }
 
@@ -141,7 +140,8 @@
     text-align: center;
   }
 
-  .identity__logo-img {
+
+  .identity__logo-button {
     display: block;
     margin: 0 auto;
   }

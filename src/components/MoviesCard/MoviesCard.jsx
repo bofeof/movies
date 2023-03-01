@@ -1,5 +1,11 @@
 import './MoviesCard.css';
 
+function convertMins(mins) {
+  const h = Math.trunc(mins / 60);
+  const min = mins % 60;
+  return `${h}ч${min}м`;
+}
+
 export default function MoviesCard({ card, mainUrl, cardKey, isSavedSection }) {
   return (
     <li className="movie-card">
@@ -19,9 +25,8 @@ export default function MoviesCard({ card, mainUrl, cardKey, isSavedSection }) {
               <span className="movie-card__save-button" />
             </label>
           )}
-
         </div>
-        <p className="movie-card__duration">{card.duration}</p>
+        <p className="movie-card__duration">{convertMins(card.duration)}</p>
       </div>
     </li>
   );

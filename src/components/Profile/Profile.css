@@ -35,7 +35,7 @@
   box-sizing: border-box;
 }
 
-.profile__form-label:last-child {
+.profile__form-label:last-of-type {
   border: none;
   margin-bottom: 0;
   padding: 0;
@@ -78,7 +78,7 @@
   transition: opacity 0.5s ease-in-out;
 }
 
-.profile__button:last-child {
+.profile__button:last-of-type {
   margin: 0 auto;
 }
 
@@ -97,7 +97,13 @@
 
 @media screen and (max-width: 800px) {
   .profile {
+    width: 410px;
+    height: 445px;
     margin: 236px auto 269px;
+  }
+
+  .profile__greeting {
+    margin: 0 auto 96px;
   }
   .profile__form {
     margin: 0 auto 193px;
@@ -106,6 +112,8 @@
 
 @media screen and (max-width: 500px) {
   .profile {
+    width: 260px;
+    min-height: 596px;
     margin: 70px auto 40px;
   }
 

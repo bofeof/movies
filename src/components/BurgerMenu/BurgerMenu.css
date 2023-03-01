@@ -72,7 +72,7 @@
   width: 100px;
   height: 32px;
   padding-left: 31px;
-  margin: 614px auto 93px;
+  margin: 600px auto 93px;
   background: url(../../images/account-logo/account-logo.svg);
   background-repeat: no-repeat;
   background-position: left 12px center;
@@ -108,7 +108,7 @@
   }
 
   .burger-menu__close-button {
-    margin-bottom: 99.44px;
+    margin-bottom: 110px;
   }
 
   .burger-menu__button {
