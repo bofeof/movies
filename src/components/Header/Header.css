@@ -10,7 +10,6 @@
 .header__logo {
   height: 38px;
   width: 38px;
-
 }
 
 .header__logo-img {
@@ -20,7 +19,7 @@
   transition: opacity 0.5s ease-in-out;
 }
 
-.header__logo-button{
+.header__logo-button {
   border: none;
   background: none;
   padding: 0;

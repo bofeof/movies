@@ -70,8 +70,8 @@
   cursor: pointer;
 }
 
-@media screen and  (max-width:500px){
-  .header__menu{
+@media screen and (max-width: 500px) {
+  .header__menu {
     width: 22px;
     height: 22px;
   }

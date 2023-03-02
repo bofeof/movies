@@ -16,12 +16,12 @@ export default function MoviesCard({ card, mainUrl, cardKey, isSavedSection }) {
 
           {isSavedSection ? (
             <label className="movie-card__label" htmlFor={cardKey}>
-              <input className="movie-card__checkbox_hidden" type="checkbox" id={cardKey} />
+              <input className="movie-card__checkbox movie-card__checkbox_hidden" type="checkbox" id={cardKey} />
               <span className="movie-card__remove-button" />
             </label>
           ) : (
             <label className="movie-card__label" htmlFor={cardKey}>
-              <input className="movie-card__checkbox_hidden" type="checkbox" id={cardKey} />
+              <input className="movie-card__checkbox movie-card__checkbox_hidden" type="checkbox" id={cardKey} />
               <span className="movie-card__save-button" />
             </label>
           )}

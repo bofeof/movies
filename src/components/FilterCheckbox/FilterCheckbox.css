@@ -1,7 +1,6 @@
 @keyframes filter_dot_shorts {
   0% {
-    margin-left: 2px;
-    margin-right: 18px;
+    margin: 0 18px 0 2px;
   }
 
   50% {
@@ -9,23 +8,20 @@
   }
 
   100% {
-    margin-left: 18px;
-    margin-right: 2px;
+    margin: 0 2px 0 18px;
   }
 }
 
 @keyframes filter_dot_longs {
   0% {
-    margin-left: 18px;
-    margin-right: 2px;
+    margin: 0 2px 0 18px;
   }
   50% {
     margin: 0 auto;
   }
 
   100% {
-    margin-left: 2px;
-    margin-right: 18px;
+    margin: 0 18px 0 2px;
   }
 }
 
@@ -59,14 +55,20 @@
 }
 
 .filter__dot {
+  display: inline-block;
   width: 16px;
   height: 16px;
+  margin-top: 0;
+  margin-bottom: 0;
+  text-align: center;
   background-color: white;
   border-radius: 50%;
   animation: filter_dot_longs 0.1s ease-in-out forwards;
 }
 
 .filter__checkbox_visible {
+  display: inline-block;
+  margin: 0;
   width: 100%;
   transition: opacity 0.5s ease-in-out;
 }

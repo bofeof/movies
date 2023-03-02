@@ -60,14 +60,14 @@
   cursor: pointer;
 }
 
-@media screen and (max-width:800px) {
-  .search-form__inputs{
+@media screen and (max-width: 800px) {
+  .search-form__inputs {
     margin: 25px 0 40px;
   }
 }
 
-@media screen and (max-width:500px) {
-  .search-form__inputs{
+@media screen and (max-width: 500px) {
+  .search-form__inputs {
     margin: 30px 0 40px;
   }
 }

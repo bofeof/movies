@@ -5,7 +5,7 @@ export default function IdentityForm({ header, buttonName, askSignIn, isRegister
   return (
     <div className="identity">
       <div className="identity__greeting">
-        <button className="identity__logo-button" type='button' onClick={onRedirectToMain}>
+        <button className="identity__logo-button" type="button" onClick={onRedirectToMain}>
           <img className="identity__logo-img" src={headerLogo} alt="Логотип сайта" />
         </button>
 
