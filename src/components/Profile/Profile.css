@@ -42,6 +42,7 @@
 }
 
 .profile__form-input {
+  outline: 0;
   width: calc(100% - 140px);
   padding: 0;
   background: none;

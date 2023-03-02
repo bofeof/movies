@@ -45,6 +45,7 @@
 }
 
 .identity__form-input {
+  outline: 0;
   padding: 15px;
   margin: 10px 0 0;
   background: #2f2f2f;
