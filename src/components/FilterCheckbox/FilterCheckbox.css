@@ -1,0 +1,92 @@
+@keyframes filter_dot_shorts {
+  0% {
+    margin: 0 18px 0 2px;
+  }
+
+  50% {
+    margin: 0 auto;
+  }
+
+  100% {
+    margin: 0 2px 0 18px;
+  }
+}
+
+@keyframes filter_dot_longs {
+  0% {
+    margin: 0 2px 0 18px;
+  }
+  50% {
+    margin: 0 auto;
+  }
+
+  100% {
+    margin: 0 18px 0 2px;
+  }
+}
+
+.filter {
+  display: flex;
+}
+
+.filter__item {
+  width: 36px;
+  box-shadow: 0px 4px 4px rgba(50, 50, 71, 0.08), 0px 4px 8px rgba(50, 50, 71, 0.06);
+  border-radius: 16px;
+}
+
+.filter__caption {
+  margin: 0 0 0 12px;
+  padding: 0;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 129%;
+  color: #ffffff;
+}
+
+.filter__checkbox_hidden {
+  position: absolute;
+  width: 0.1px;
+  height: 0.1px;
+  overflow: hidden;
+  clip-path: inset(0 0 0 0);
+  background: none;
+  border: none;
+}
+
+.filter__dot {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  margin-top: 0;
+  margin-bottom: 0;
+  text-align: center;
+  background-color: white;
+  border-radius: 50%;
+  animation: filter_dot_longs 0.1s ease-in-out forwards;
+}
+
+.filter__checkbox_visible {
+  display: inline-block;
+  margin: 0;
+  width: 100%;
+  transition: opacity 0.5s ease-in-out;
+}
+
+.filter__checkbox_visible:hover {
+  cursor: pointer;
+  opacity: 0.5;
+}
+
+.filter__checkbox_hidden:checked + .filter__checkbox_visible .filter__dot {
+  background-color: #3ddc84;
+  animation: filter_dot_shorts 0.1s ease-in-out forwards;
+}
+
+@media screen and (max-width: 500px) {
+  .filter__caption {
+    margin: 0 0 0 13px;
+    font-size: 11px;
+    line-height: 164%;
+  }
+}
