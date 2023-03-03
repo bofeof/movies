@@ -1,0 +1,118 @@
+.popup {
+  display: flex;
+  margin: 0 auto;
+
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.5);
+
+  position: fixed;
+  justify-content: center;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+
+  opacity: 0;
+
+  transition: visibility 0.6s ease, opacity 1s ease;
+  visibility: hidden;
+  z-index: 4;
+}
+
+.popup_opened {
+  opacity: 1;
+  visibility: visible;
+}
+
+.popup__container {
+  width: 470px;
+  min-height: 370px;
+  margin: 0 auto;
+
+  align-items: center;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.popup__info {
+  width: calc(100% - 60px);
+  min-width: 282px;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 0 25px rgb(0 0 0 / 15%);
+  box-sizing: border-box;
+  flex-direction: column;
+  padding: 34px 36px 37px;
+}
+
+.popup__info-err {
+  height: 40px;
+  width: 40px;
+  margin: 0 auto 30px;
+  background-image: url(../../images/info-popup/err.png);
+  background-repeat: no-repeat;
+  background-size: 40px 40px;
+}
+
+.popup__info-text {
+  width: 100%;
+  margin: 0 auto 30px;
+  padding: 0;
+  font-weight: 900;
+  font-size: 22px;
+  line-height: 27px;
+  color: #000;
+  letter-spacing: -0.04em;
+  text-align: center;
+}
+
+.popup__message {
+  margin: 0 auto;
+  padding: 0;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 143%;
+}
+
+.popup__close-button {
+  align-self: flex-end;
+  background-color: transparent;
+  background-image: url(../../images/close/close.svg);
+  background-position: 50%;
+  background-repeat: no-repeat;
+  background-size: 32px 32px;
+  border: none;
+  height: 32px;
+  margin: 0 0 8px 8px;
+  object-fit: cover;
+  padding: 0;
+  transition: opacity 0.5s ease-in-out;
+  width: 32px;
+}
+
+.popup__close-button:hover {
+  opacity: 0.5;
+  cursor: pointer;
+}
+
+@media screen and (max-width: 768px) {
+  .popup__container {
+    min-height: 400px;
+    width: 282px;
+  }
+
+  .popup__info-text {
+    font-size: 20px;
+    line-height: 24px;
+    text-align: center;
+  }
+
+  .popup__close-button {
+    background-size: 20px 20px;
+    height: 20px;
+    margin-bottom: 16px;
+    width: 20px;
+  }
+}
