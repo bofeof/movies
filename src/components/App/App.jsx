@@ -13,6 +13,8 @@ import PageNotFound from '../NotFoundPage/PageNotFound';
 import Register from '../Register/Register';
 import Footer from '../Footer/Footer';
 
+import InfoPopUp from '../InfoPopUp/InfoPopUp';
+
 // tmp user context
 const userLogIn = true;
 
@@ -201,6 +203,7 @@ function App() {
           )}
         </Routes>
       </div>
+      < InfoPopUp/>
     </div>
   );
 }
