@@ -2,7 +2,7 @@ import './InfoPopUp.css';
 
 export default function InfoPopUp() {
   return (
-    <div className="popup popup_opened">
+    <div className="popup">
       <div className="popup__container">
         <button type="button" className="popup__close-button">
           {}
