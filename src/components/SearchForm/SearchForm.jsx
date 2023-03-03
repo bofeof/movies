@@ -17,6 +17,7 @@ export default function SearchForm() {
           Найти
         </button>
       </form>
+      <span className="search-form__input-error">error text</span>
       <FilterCheckbox />
     </div>
   );

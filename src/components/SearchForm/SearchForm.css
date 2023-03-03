@@ -14,7 +14,7 @@
 .search-form__inputs {
   display: flex;
   align-items: center;
-  margin-bottom: 40px;
+  /* margin-bottom: 40px; */
   width: 100%;
   height: 46px;
   background: #2f2f2f;
@@ -36,6 +36,18 @@
   font-weight: 400;
   font-size: 13px;
   line-height: 131%;
+}
+
+.search-form__input-error{
+  width: 100%;
+  padding: 3px 22px;
+  margin-bottom: 22px;
+  box-sizing: border-box;
+  font-weight: 400;
+  font-size: 10px;
+  line-height: 12px;
+  color: #ee3465;
+  text-overflow: ellipsis;
 }
 
 .search-form__submit {
@@ -63,12 +75,12 @@
 
 @media screen and (max-width: 800px) {
   .search-form__inputs {
-    margin: 25px 0 40px;
+    margin: 25px 0 0;
   }
 }
 
 @media screen and (max-width: 500px) {
   .search-form__inputs {
-    margin: 30px 0 40px;
+    margin: 30px 0 0;
   }
 }
