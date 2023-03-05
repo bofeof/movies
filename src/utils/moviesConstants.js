@@ -1,4 +1,5 @@
-export const mainUrl = 'https://api.nomoreparties.co/';
+export const beatFilmUrlAPI = 'https://api.nomoreparties.co/beatfilm-movies';
+export const beatFilmUrl = "https://api.nomoreparties.co";
 
 export const movies = [
   {
