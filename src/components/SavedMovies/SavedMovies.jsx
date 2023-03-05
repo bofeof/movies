@@ -4,11 +4,11 @@ import MoviesCardList from '../MoviesCardList/MoviesCardList';
 import ShowMoreButton from '../ShowMoreButton/ShowMoreButton';
 // import Preloader from '../Preloader/Preloader';
 
-export default function SavedMovies({ isSavedSection }) {
+export default function SavedMovies({ isSavedSection, savedMovies, onClickFilter, filterStatus }) {
   return (
     <div className="saved-movies">
-      <SearchForm />
-      <MoviesCardList isSavedSection={isSavedSection} />
+      <SearchForm onClickFilter={onClickFilter} filterStatus={filterStatus} />
+      <MoviesCardList isSavedSection={isSavedSection} movies={savedMovies} />
       <ShowMoreButton />
     </div>
   );

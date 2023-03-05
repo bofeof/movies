@@ -22,12 +22,12 @@ const userLogIn = true;
 function App() {
   const navigate = useNavigate();
   const beatFilmAPI = new BeatFilmAPI();
-  const [beatFilms, setBeatFilmsData] = useState([]);
+  const [beatMovies, setBeatFilmsData] = useState([]);
 
   useEffect(() => {
     // get data from beat-movies, user info
-    Promise.all([beatFilmAPI.getbeatFilms()]).then(([beatFilmsData]) => {
-      setBeatFilmsData(beatFilmsData);
+    Promise.all([beatFilmAPI.getbeatFilms()]).then(([beatMoviesData]) => {
+      setBeatFilmsData(beatMoviesData);
     });
   });
 
@@ -87,6 +87,19 @@ function App() {
     [navigate]
   );
 
+
+// beat movies
+  const [isShorts, setIsShorts] = useState(false);
+  const handleSetIsShorts = useCallback(() => {
+    setIsShorts(() => !isShorts);
+  }, [isShorts]);
+
+  // saved movies
+  const [isShortsSaved, setIsShortsSaved] = useState(false);
+  const handleSetIsShortsSaved = useCallback(() => {
+    setIsShortsSaved(()=> !isShortsSaved);
+  }, [isShortsSaved]);
+
   return (
     <div className="app">
       <div className="app__container">
@@ -122,6 +135,7 @@ function App() {
               </main>
             }
           />
+
           <Route
             path="/signup"
             element={
@@ -148,7 +162,7 @@ function App() {
                     />
 
                     <main>
-                      <Movies isSavedSection={false} beatFilms={beatFilms}/>
+                      <Movies isSavedSection={false} beatMovies={beatMovies} onClickFilter={handleSetIsShorts} filterStatus={isShorts} />
                     </main>
 
                     <Footer />
@@ -171,7 +185,7 @@ function App() {
                     />
 
                     <main>
-                      <SavedMovies isSavedSection />
+                      <SavedMovies isSavedSection savedMovies={beatMovies} onClickFilter={handleSetIsShortsSaved} filterStatus={isShortsSaved}/>
                     </main>
 
                     <Footer />

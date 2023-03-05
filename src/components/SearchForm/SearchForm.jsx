@@ -3,7 +3,8 @@ import searchValidator from '../../utils/searchValidator';
 import './SearchForm.css';
 import FilterCheckbox from '../FilterCheckbox/FilterCheckbox';
 
-export default function SearchForm({onSubmit}) {
+export default function SearchForm({onSubmit,  onClickFilter, filterStatus}) {
+
   const [searchInputValue, setSearchInputValue] = useState({ searchinput: '' });
   const [inputsValidation, setInputsValidation] = useState({ searchinput: { isValid: true, errorText: '' } });
   const isFormInvalid = inputsValidation.searchinput.isValid;
@@ -90,7 +91,7 @@ export default function SearchForm({onSubmit}) {
         </button>
       </form>
       <span className="search-form__input-error">{!isFormInvalid ? inputsValidation.searchinput.errorText : ''}</span>
-      <FilterCheckbox />
+      <FilterCheckbox onClickFilter={onClickFilter} filterStatus={filterStatus} />
     </div>
   );
 }
