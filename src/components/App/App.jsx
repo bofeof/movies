@@ -1,5 +1,5 @@
 import { Route, Routes, Navigate, useNavigate } from 'react-router-dom';
-import { useCallback } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 import './App.css';
 
@@ -12,14 +12,24 @@ import Login from '../Login/Login';
 import PageNotFound from '../NotFoundPage/PageNotFound';
 import Register from '../Register/Register';
 import Footer from '../Footer/Footer';
-
 import InfoPopUp from '../InfoPopUp/InfoPopUp';
+
+import BeatFilmAPI from '../../utils/API/MoviesApi';
 
 // tmp user context
 const userLogIn = true;
 
 function App() {
   const navigate = useNavigate();
+  const beatFilmAPI = new BeatFilmAPI();
+  const [beatFilms, setBeatFilmsData] = useState([]);
+
+  useEffect(() => {
+    // get data from beat-movies, user info
+    Promise.all([beatFilmAPI.getbeatFilms()]).then(([beatFilmsData]) => {
+      setBeatFilmsData(beatFilmsData);
+    });
+  });
 
   const handleRedirectToMain = useCallback(
     (evt) => {
@@ -138,7 +148,7 @@ function App() {
                     />
 
                     <main>
-                      <Movies isSavedSection={false} />
+                      <Movies isSavedSection={false} beatFilms={beatFilms}/>
                     </main>
 
                     <Footer />
@@ -203,7 +213,7 @@ function App() {
           )}
         </Routes>
       </div>
-      < InfoPopUp/>
+      <InfoPopUp />
     </div>
   );
 }

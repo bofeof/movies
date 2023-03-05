@@ -1,4 +1,5 @@
 import './MoviesCard.css';
+import { beatFilmUrl } from '../../utils/moviesConstants';
 
 function convertMins(mins) {
   const h = Math.trunc(mins / 60);
@@ -6,13 +7,13 @@ function convertMins(mins) {
   return `${h}ч${min}м`;
 }
 
-export default function MoviesCard({ card, mainUrl, cardKey, isSavedSection }) {
+export default function MoviesCard({ card, cardKey, isSavedSection }) {
   return (
     <li className="movie-card">
-      <img className="movie-card__cover" src={`${mainUrl}/${card.image.formats.thumbnail.url}`} alt={card.nameRU} />
+      <img className="movie-card__cover" src={`${beatFilmUrl}/${card?.image.formats.thumbnail.url}`} alt={card?.nameRU} />
       <div className="movie-card__info">
         <div className="movie-card__description">
-          <h4 className="movie-card__name">{card.nameRU}</h4>
+          <h4 className="movie-card__name">{card?.nameRU  || card?.nameEN}</h4>
 
           {isSavedSection ? (
             <label className="movie-card__label" htmlFor={cardKey}>
@@ -26,7 +27,7 @@ export default function MoviesCard({ card, mainUrl, cardKey, isSavedSection }) {
             </label>
           )}
         </div>
-        <p className="movie-card__duration">{convertMins(card.duration)}</p>
+        <p className="movie-card__duration">{convertMins(card?.duration || 0)}</p>
       </div>
     </li>
   );

@@ -1,12 +1,9 @@
-/* eslint-disable import/named */
-/* eslint-disable no-unused-vars */
-
 import { useState, useEffect } from 'react';
 import searchValidator from '../../utils/searchValidator';
 import './SearchForm.css';
 import FilterCheckbox from '../FilterCheckbox/FilterCheckbox';
 
-export default function SearchForm() {
+export default function SearchForm({onSubmit}) {
   const [searchInputValue, setSearchInputValue] = useState({ searchinput: '' });
   const [inputsValidation, setInputsValidation] = useState({ searchinput: { isValid: true, errorText: '' } });
   const isFormInvalid = inputsValidation.searchinput.isValid;
@@ -29,7 +26,10 @@ export default function SearchForm() {
   function handleSearch(evt) {
     evt.preventDefault();
     validateSearchInput(searchInputValue.searchinput);
-    console.log('data ok, send next')
+    // console.log('data ok, send next')
+    onSubmit(
+      {data: searchInputValue.searchinput }
+    )
   }
 
   function handleChange(evt) {
