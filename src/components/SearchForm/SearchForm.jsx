@@ -3,7 +3,7 @@ import searchValidator from '../../utils/searchValidator';
 import './SearchForm.css';
 import FilterCheckbox from '../FilterCheckbox/FilterCheckbox';
 
-export default function SearchForm({onSubmit,  onClickFilter, filterStatus}) {
+export default function SearchForm({onSearchSubmit,  onClickFilter, filterStatus}) {
 
   const [searchInputValue, setSearchInputValue] = useState({ searchinput: '' });
   const [inputsValidation, setInputsValidation] = useState({ searchinput: { isValid: true, errorText: '' } });
@@ -27,8 +27,8 @@ export default function SearchForm({onSubmit,  onClickFilter, filterStatus}) {
   function handleSearch(evt) {
     evt.preventDefault();
     validateSearchInput(searchInputValue.searchinput);
-    // console.log('data ok, send next')
-    onSubmit(
+    // send search-input to filter movies data
+    onSearchSubmit(
       {data: searchInputValue.searchinput }
     )
   }

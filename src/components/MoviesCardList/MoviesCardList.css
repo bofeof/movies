@@ -3,8 +3,20 @@
   width: 100%;
   margin: 0 auto;
   position: relative;
-  height: 1068px;
+  max-height: 1068px;
+  min-height: 100%;
   overflow: hidden;
+}
+
+.movies-preloader__message{
+  display: flex;
+  margin: 30px auto;
+  padding: 0;
+  justify-content: center;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 129%;
+  color: #ffffff;
 }
 
 .movies-list {
@@ -14,7 +26,7 @@
   margin: 70px 0 auto;
 
   display: grid;
-  justify-content: space-between;
+  justify-content: center;
   justify-items: stretch;
   grid-template-columns: repeat(auto-fit, minmax(0, 270px));
   grid-auto-flow: row;
@@ -23,7 +35,7 @@
 
 @media screen and (max-width: 800px) {
   .movies-preloader {
-    height: 1236px;
+    max-height: 1236px;
   }
 
   .movies-list {
@@ -45,7 +57,7 @@
   }
 
   .movies-preloader {
-    height: 1315px;
+    max-height: 1315px;
     margin: 0 auto 10px;
   }
 

@@ -1,6 +1,7 @@
 import './HeaderLoggedIn.css';
-import { useCallback, useEffect, useState } from 'react';
+import { useContext, useCallback, useState } from 'react';
 import BurgerMenu from '../BurgerMenu/BurgerMenu';
+import WindowContext from '../../contexts/WindowContext';
 
 export default function HeaderLoggedIn({
   onRedirectToMain,
@@ -9,21 +10,12 @@ export default function HeaderLoggedIn({
   onRedirectToProfile,
 }) {
   const [menuOpened, setMenuOpened] = useState(false);
-  const [windowWidth, setWindowWidth] = useState();
 
   const handleOpenMenu = useCallback(() => {
     setMenuOpened(!menuOpened);
   }, [menuOpened]);
 
-  function updateSize() {
-    setWindowWidth(window.innerWidth);
-  }
-
-  useEffect(() => {
-    setWindowWidth(window.innerWidth);
-    window.addEventListener('resize', updateSize);
-    return () => window.removeEventListener('resize', updateSize);
-  }, []);
+  const windowWidth = useContext(WindowContext);
 
   return windowWidth > 768 ? (
     <>
