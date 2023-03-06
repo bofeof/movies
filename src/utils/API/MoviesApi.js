@@ -1,6 +1,6 @@
 import { beatFilmUrlAPI } from '../moviesConstants';
 
-export default class BeatFilmAPI {
+export default class MoviesApi {
   _getResponse(res) {
     return res.ok ? res.json() : Promise.reject(new Error(`Ошибка: ${res.status}, ${res.statusText}`));
   }

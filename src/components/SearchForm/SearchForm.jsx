@@ -3,9 +3,9 @@ import searchValidator from '../../utils/searchValidator';
 import './SearchForm.css';
 import FilterCheckbox from '../FilterCheckbox/FilterCheckbox';
 
-export default function SearchForm({onSearchSubmit,  onClickFilter, filterStatus}) {
+export default function SearchForm({onSearchSubmit,  onClickFilter, filterStatus, searchInputValue, onSetSearchInputValue}) {
 
-  const [searchInputValue, setSearchInputValue] = useState({ searchinput: '' });
+  // const [searchInputValue, setSearchInputValue] = useState({ searchinput: '' });
   const [inputsValidation, setInputsValidation] = useState({ searchinput: { isValid: true, errorText: '' } });
   const isFormInvalid = inputsValidation.searchinput.isValid;
 
@@ -35,7 +35,7 @@ export default function SearchForm({onSearchSubmit,  onClickFilter, filterStatus
 
   function handleChange(evt) {
     const { name, value } = evt.target;
-    setSearchInputValue((prevState) => ({
+    onSetSearchInputValue((prevState) => ({
       ...prevState,
       [name]: value,
     }));
@@ -46,7 +46,7 @@ export default function SearchForm({onSearchSubmit,  onClickFilter, filterStatus
   function handleFocus(evt) {
     const { name, value } = evt.target;
     validateSearchInput(value);
-    setSearchInputValue((prevState) => ({
+    onSetSearchInputValue((prevState) => ({
       ...prevState,
       [name]: value,
     }));
@@ -57,11 +57,6 @@ export default function SearchForm({onSearchSubmit,  onClickFilter, filterStatus
   }
 
   useEffect(() => {
-    setSearchInputValue((prevValue) => ({
-      ...prevValue,
-      searchinput: '',
-    }));
-
     setDefaultInputsValidation();
   }, []);
 

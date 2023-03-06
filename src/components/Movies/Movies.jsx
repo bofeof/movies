@@ -11,9 +11,19 @@ import ShowMoreButton from '../ShowMoreButton/ShowMoreButton';
 
 // import Preloader from '../Preloader/Preloader';
 
-export default function Movies({ isSavedSection, beatMovies, onClickFilter, filterStatus, isLoadError }) {
+export default function Movies({
+  isSavedSection,
+  beatMovies,
+  onClickFilter,
+  searchInputValue,
+  onSetSearchInputValue,
+  filterStatus,
+  isLoadError,
+  filteredBeatMovies,
+  onSetFilterBeatMovies,
+}) {
+
   const windowWidth = useContext(WindowContext);
-  const [filteredBeatMovies, setFilterBeatMovies] = useState([]);
 
   const handleFilterMovies = useCallback(
     (filterData) => {
@@ -24,29 +34,28 @@ export default function Movies({ isSavedSection, beatMovies, onClickFilter, filt
           (filterStatus ? movie?.duration <= 40 : movie?.duration >= 0)
       );
 
-      setFilterBeatMovies(() => newMovieData);
-
+      onSetFilterBeatMovies(() => newMovieData);
     },
-    [beatMovies, filterStatus]
+    [beatMovies, filterStatus, onSetFilterBeatMovies]
   );
 
-  function showLoadMoreButton(){
-    if (windowWidth > 800 && filteredBeatMovies.length > 12){
-      return true
+  function showLoadMoreButton() {
+    if (windowWidth > 800 && filteredBeatMovies.length > 12) {
+      return true;
     }
-    if (windowWidth < 768 && filteredBeatMovies.length >= 8){
-      return true
+    if (windowWidth < 768 && filteredBeatMovies.length >= 8) {
+      return true;
     }
-    if (windowWidth < 500 && filteredBeatMovies.length >= 5){
-      return true
+    if (windowWidth < 500 && filteredBeatMovies.length >= 5) {
+      return true;
     }
-    return false
+    return false;
   }
 
   return (
     <div className="movies">
-      <SearchForm onClickFilter={onClickFilter} filterStatus={filterStatus} onSearchSubmit={handleFilterMovies} />
-      <MoviesCardList isSavedSection={isSavedSection} movies={filteredBeatMovies} isLoadError={isLoadError}/>
+      <SearchForm onClickFilter={onClickFilter} filterStatus={filterStatus} onSearchSubmit={handleFilterMovies} searchInputValue={searchInputValue} onSetSearchInputValue={onSetSearchInputValue}/>
+      <MoviesCardList isSavedSection={isSavedSection} movies={filteredBeatMovies} isLoadError={isLoadError} />
       {showLoadMoreButton() && <ShowMoreButton />}
     </div>
   );

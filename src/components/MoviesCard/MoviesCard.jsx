@@ -8,12 +8,28 @@ function convertMins(mins) {
 }
 
 export default function MoviesCard({ card, cardKey, isSavedSection }) {
+  function handleSaveRemoveMovie(evt) {
+    if (evt.target.checked) {
+      // create new card in db
+      console.log('add')
+    } else {
+      // remove card from db
+      console.log('remove')
+    }
+  }
+
   return (
     <li className="movie-card">
-      <img className="movie-card__cover" src={`${beatFilmUrl}/${card?.image.formats.thumbnail.url}`} alt={card?.nameRU} />
+      <a href={card.trailerLink} target="_blank" rel="noreferrer">
+        <img
+          className="movie-card__cover"
+          src={`${beatFilmUrl}/${card?.image.formats.thumbnail.url}`}
+          alt={card?.nameRU}
+        />
+      </a>
       <div className="movie-card__info">
         <div className="movie-card__description">
-          <h4 className="movie-card__name">{card?.nameRU  || card?.nameEN}</h4>
+          <h4 className="movie-card__name">{card?.nameRU || card?.nameEN}</h4>
 
           {isSavedSection ? (
             <label className="movie-card__label" htmlFor={cardKey}>
@@ -22,7 +38,12 @@ export default function MoviesCard({ card, cardKey, isSavedSection }) {
             </label>
           ) : (
             <label className="movie-card__label" htmlFor={cardKey}>
-              <input className="movie-card__checkbox movie-card__checkbox_hidden" type="checkbox" id={cardKey} />
+              <input
+                className="movie-card__checkbox movie-card__checkbox_hidden"
+                type="checkbox"
+                id={cardKey}
+                onChange={handleSaveRemoveMovie}
+              />
               <span className="movie-card__save-button" />
             </label>
           )}

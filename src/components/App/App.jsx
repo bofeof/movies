@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { Route, Routes, Navigate, useNavigate } from 'react-router-dom';
 import { useCallback, useEffect, useState } from 'react';
 
@@ -14,20 +15,57 @@ import Register from '../Register/Register';
 import Footer from '../Footer/Footer';
 import InfoPopUp from '../InfoPopUp/InfoPopUp';
 
-import BeatFilmAPI from '../../utils/API/MoviesApi';
+import MoviesApi from '../../utils/API/MoviesApi';
+import MainApi from '../../utils/API/MainApi';
+import UserAuth from '../../utils/API/UserAuth';
+import {configMainAPI} from '../../utils/API/mainApiConfig';
 import WindowContext from '../../contexts/WindowContext';
 
 // tmp user context
 const userLogIn = true;
 
 function App() {
+
+  const BeatFilmAPI = new MoviesApi();
+  const MainAPI = new MainApi(configMainAPI);
+  const UserAPI = new UserAuth(configMainAPI);
+
   const navigate = useNavigate();
-  const beatFilmAPI = new BeatFilmAPI();
+  // beat movies
   const [beatMovies, setBeatMovies] = useState([]);
   const [isLoadError, setIsLoadError] = useState(false);
+  const [filteredBeatMovies, setFilterBeatMovies] = useState([]);
+  const [searchInputValue, setSearchInputValue] = useState({ searchinput: '' });
 
+  // beat movies
+  const [isShorts, setIsShorts] = useState(false);
+  const handleSetIsShorts = useCallback(() => {
+    setIsShorts(() => !isShorts);
+  }, [isShorts]);
+
+  // window width
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+
+  function updateSize() {
+    setWindowWidth(window.innerWidth);
+  }
+
+  // saved movies
+  const [isShortsSaved, setIsShortsSaved] = useState(false);
+  const handleSetIsShortsSaved = useCallback(() => {
+    setIsShortsSaved(() => !isShortsSaved);
+  }, [isShortsSaved]);
+
+  // update widnow size
   useEffect(() => {
-    beatFilmAPI
+    setWindowWidth(window.innerWidth);
+    window.addEventListener('resize', updateSize);
+    return () => window.removeEventListener('resize', updateSize);
+  }, []);
+
+  // get beat movies
+  useEffect(() => {
+    BeatFilmAPI
       .getbeatMovies()
       .then((beatMoviesData) => {
         setBeatMovies(() => beatMoviesData);
@@ -37,6 +75,14 @@ function App() {
       });
   }, []);
 
+  useEffect(() => {
+    setSearchInputValue((prevValue) => ({
+      ...prevValue,
+      searchinput: '',
+    }));
+  }, []);
+
+  // redirects
   const handleRedirectToMain = useCallback(
     (evt) => {
       evt.preventDefault();
@@ -92,29 +138,6 @@ function App() {
     },
     [navigate]
   );
-
-  // beat movies
-  const [isShorts, setIsShorts] = useState(false);
-  const handleSetIsShorts = useCallback(() => {
-    setIsShorts(() => !isShorts);
-  }, [isShorts]);
-
-  // saved movies
-  const [isShortsSaved, setIsShortsSaved] = useState(false);
-  const handleSetIsShortsSaved = useCallback(() => {
-    setIsShortsSaved(() => !isShortsSaved);
-  }, [isShortsSaved]);
-
-  // window width
-  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
-  function updateSize() {
-    setWindowWidth(window.innerWidth);
-  }
-  useEffect(() => {
-    setWindowWidth(window.innerWidth);
-    window.addEventListener('resize', updateSize);
-    return () => window.removeEventListener('resize', updateSize);
-  }, []);
 
   return (
     <WindowContext.Provider value={windowWidth}>
@@ -183,8 +206,12 @@ function App() {
                           isSavedSection={false}
                           beatMovies={beatMovies}
                           onClickFilter={handleSetIsShorts}
+                          searchInputValue={searchInputValue}
+                          onSetSearchInputValue={setSearchInputValue}
                           filterStatus={isShorts}
                           isLoadError={isLoadError}
+                          filteredBeatMovies={filteredBeatMovies}
+                          onSetFilterBeatMovies={setFilterBeatMovies}
                         />
                       </main>
 
