@@ -42,6 +42,7 @@ export default function IdentityForm({
 
     setInputsValidation((prevInuptsValidation) => ({
       ...prevInuptsValidation,
+      name: { isValid: false, errorText: '' },
       email: { isValid: false, errorText: '' },
       password: { isValid: false, errorText: '' },
     }));

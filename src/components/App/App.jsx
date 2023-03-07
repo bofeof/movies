@@ -21,6 +21,7 @@ import MainApi from '../../utils/API/MainApi';
 import UserAuth from '../../utils/API/UserAuth';
 import { configMainAPI } from '../../utils/API/mainApiConfig';
 import WindowContext from '../../contexts/WindowContext';
+import {CurrentUserContext} from '../../contexts/CurrentUserContext';
 
 function App() {
   const BeatFilmAPI = new MoviesApi();
@@ -34,8 +35,9 @@ function App() {
   // user
   const [loggedIn, setLoggedIn] = useState(false);
   const [currentUser, setCurrentUser] = useState({});
-  const [loginId, setLoginId] = useState('');
-  const [loginEmail, setLoginEmail] = useState('');
+
+  const [userId, setUserId] = useState('');
+  const [userEmail, setUserEmail] = useState('');
   const [loginName, setLoginName] = useState('');
 
   // beat movies
@@ -120,21 +122,22 @@ function App() {
 
   // FIRST RUN
   useEffect(() => {
-    if (localStorage.getItem('mestoToken')) {
+    if (localStorage.getItem('moviesToken')) {
       UserAPI.checkToken(localStorage.getItem('moviesToken'))
         .then((res) => {
           // if jwt secret key is changed by dev while user has active session
           if (!res || !res.data) {
-            localStorage.clear();
+            // localStorage.clear();
             setLoggedIn(false);
-            handleRedirectToSignIn.bind(this);
+            handleRedirectToSignIn();
             return;
           }
 
-          setLoginId(() => res.data._id);
-          setLoginEmail(() => res.data.email);
-          setLoginName(() => res.data.name);
           setLoggedIn(true);
+          setCurrentUser(res.data)
+          setUserId(() => res.data._id);
+          setLoginName(() => res.data.name);
+          setUserEmail(() => res.data.email);
           handleRedirectToMovies();
         })
         .catch((err) => {
@@ -170,12 +173,10 @@ function App() {
 
           UserAPI.checkToken(localStorage.getItem('moviesToken'))
             .then((resUser) => {
-              setLoginId(() => resUser.data._id);
-              setLoginEmail(() => resUser.data.email);
-              setLoginName(() => resUser.data.name);
-
               // set res to localstorage
-              localStorage.clear();
+              setUserId(() => resUser.data._id);
+              setUserEmail(() => resUser.data.email);
+              setLoginName(() => resUser.data.name);
 
               setLoggedIn(true);
               handleRedirectToMain();
@@ -208,6 +209,11 @@ function App() {
       });
   }
 
+  function handleUserUpdate(userData){
+    // UserAPI.
+    // setCurrentUser()
+  }
+
   function handleUserLogout() {
     localStorage.clear();
     setLoggedIn(false);
@@ -215,160 +221,162 @@ function App() {
   }
 
   return (
-    <WindowContext.Provider value={windowWidth}>
-      <div className="app">
-        <div className="app__container">
-          <Routes>
-            <Route
-              path="/"
-              element={
-                <>
-                  <Header
-                    loggedIn={loggedIn}
-                    onRedirectToMain={handleRedirectToMain}
-                    onRedirectToMovies={handleRedirectToMovies}
-                    onRedirectToSavedMovies={handleRedirectToSavedMovies}
-                    onRedirectToProfile={handleRedirectToProfile}
-                    onRedirectToSignIn={handleRedirectToSignIn}
-                    onRedirectToSignUp={handleRedirectToSignUp}
-                  />
+    <CurrentUserContext.Provider value={currentUser}>
+      <WindowContext.Provider value={windowWidth}>
+        <div className="app">
+          <div className="app__container">
+            <Routes>
+              <Route
+                path="/"
+                element={
+                  <>
+                    <Header
+                      loggedIn={loggedIn}
+                      onRedirectToMain={handleRedirectToMain}
+                      onRedirectToMovies={handleRedirectToMovies}
+                      onRedirectToSavedMovies={handleRedirectToSavedMovies}
+                      onRedirectToProfile={handleRedirectToProfile}
+                      onRedirectToSignIn={handleRedirectToSignIn}
+                      onRedirectToSignUp={handleRedirectToSignUp}
+                    />
 
-                  <main>
-                    <Main />
-                  </main>
-
-                  <Footer />
-                </>
-              }
-            />
-
-            <Route
-              path="/signin"
-              element={
-                <main>
-                  <Login
-                    onRedirectToMain={handleRedirectToMain}
-                    onHandleLoggedIn={handleLoggedIn}
-                    onRedirectToAuth={handleRedirectToSignUp}
-                  />
-                </main>
-              }
-            />
-
-            <Route
-              path="/signup"
-              element={
-                <main>
-                  <Register
-                    onRedirectToMain={handleRedirectToMain}
-                    onHandleUserRegister={handleUserRegister}
-                    onRedirectToAuth={handleRedirectToSignIn}
-                  />
-                </main>
-              }
-            />
-
-            {loggedIn ? (
-              <>
-                <Route
-                  path="/movies"
-                  element={
-                    <>
-                      <Header
-                        loggedIn={loggedIn}
-                        onRedirectToMain={handleRedirectToMain}
-                        onRedirectToMovies={handleRedirectToMovies}
-                        onRedirectToSavedMovies={handleRedirectToSavedMovies}
-                        onRedirectToProfile={handleRedirectToProfile}
-                        onRedirectToSignIn={handleRedirectToSignIn}
-                        onRedirectToSignUp={handleRedirectToSignUp}
-                      />
-
-                      <main>
-                        <Movies
-                          isSavedSection={false}
-                          beatMovies={beatMovies}
-                          onClickFilter={handleSetIsShorts}
-                          searchInputValue={searchInputValue}
-                          onSetSearchInputValue={setSearchInputValue}
-                          filterStatus={isShorts}
-                          isLoadError={isLoadError}
-                          filteredBeatMovies={filteredBeatMovies}
-                          onSetFilterBeatMovies={setFilterBeatMovies}
-                          onCreateMovie={createMovie}
-                        />
-                      </main>
-
-                      <Footer />
-                    </>
-                  }
-                />
-
-                <Route
-                  path="/saved-movies"
-                  element={
-                    <>
-                      <Header
-                        loggedIn={loggedIn}
-                        onRedirectToMain={handleRedirectToMain}
-                        onRedirectToMovies={handleRedirectToMovies}
-                        onRedirectToSavedMovies={handleRedirectToSavedMovies}
-                        onRedirectToProfile={handleRedirectToProfile}
-                        onRedirectToSignIn={handleRedirectToSignIn}
-                        onRedirectToSignUp={handleRedirectToSignUp}
-                      />
-
-                      <main>
-                        <SavedMovies
-                          isSavedSection
-                          savedMovies={savedMovies}
-                          onClickFilter={handleSetIsShortsSaved}
-                          filterStatus={isShortsSaved}
-                        />
-                      </main>
-
-                      <Footer />
-                    </>
-                  }
-                />
-
-                <Route
-                  path="/profile"
-                  element={
-                    <>
-                      <Header
-                        loggedIn={loggedIn}
-                        onRedirectToMain={handleRedirectToMain}
-                        onRedirectToMovies={handleRedirectToMovies}
-                        onRedirectToSavedMovies={handleRedirectToSavedMovies}
-                        onRedirectToProfile={handleRedirectToProfile}
-                        onRedirectToSignIn={handleRedirectToSignIn}
-                        onRedirectToSignUp={handleRedirectToSignUp}
-                      />
-                      <main>
-                        <Profile />
-                      </main>
-                    </>
-                  }
-                />
-
-                <Route
-                  path="*"
-                  element={
                     <main>
-                      <PageNotFound onRedirectNotFoundToBack={handleRedirectNotFoundToBack} />
+                      <Main />
                     </main>
-                  }
-                />
-              </>
-            ) : (
-              <Route path="*" element={<Navigate to="/" />} />
-            )}
-          </Routes>
+
+                    <Footer />
+                  </>
+                }
+              />
+
+              <Route
+                path="/signin"
+                element={
+                  <main>
+                    <Login
+                      onRedirectToMain={handleRedirectToMain}
+                      onHandleLoggedIn={handleLoggedIn}
+                      onRedirectToAuth={handleRedirectToSignUp}
+                    />
+                  </main>
+                }
+              />
+
+              <Route
+                path="/signup"
+                element={
+                  <main>
+                    <Register
+                      onRedirectToMain={handleRedirectToMain}
+                      onHandleUserRegister={handleUserRegister}
+                      onRedirectToAuth={handleRedirectToSignIn}
+                    />
+                  </main>
+                }
+              />
+
+              {loggedIn ? (
+                <>
+                  <Route
+                    path="/movies"
+                    element={
+                      <>
+                        <Header
+                          loggedIn={loggedIn}
+                          onRedirectToMain={handleRedirectToMain}
+                          onRedirectToMovies={handleRedirectToMovies}
+                          onRedirectToSavedMovies={handleRedirectToSavedMovies}
+                          onRedirectToProfile={handleRedirectToProfile}
+                          onRedirectToSignIn={handleRedirectToSignIn}
+                          onRedirectToSignUp={handleRedirectToSignUp}
+                        />
+
+                        <main>
+                          <Movies
+                            isSavedSection={false}
+                            beatMovies={beatMovies}
+                            onClickFilter={handleSetIsShorts}
+                            searchInputValue={searchInputValue}
+                            onSetSearchInputValue={setSearchInputValue}
+                            filterStatus={isShorts}
+                            isLoadError={isLoadError}
+                            filteredBeatMovies={filteredBeatMovies}
+                            onSetFilterBeatMovies={setFilterBeatMovies}
+                            onCreateMovie={createMovie}
+                          />
+                        </main>
+
+                        <Footer />
+                      </>
+                    }
+                  />
+
+                  <Route
+                    path="/saved-movies"
+                    element={
+                      <>
+                        <Header
+                          loggedIn={loggedIn}
+                          onRedirectToMain={handleRedirectToMain}
+                          onRedirectToMovies={handleRedirectToMovies}
+                          onRedirectToSavedMovies={handleRedirectToSavedMovies}
+                          onRedirectToProfile={handleRedirectToProfile}
+                          onRedirectToSignIn={handleRedirectToSignIn}
+                          onRedirectToSignUp={handleRedirectToSignUp}
+                        />
+
+                        <main>
+                          <SavedMovies
+                            isSavedSection
+                            savedMovies={savedMovies}
+                            onClickFilter={handleSetIsShortsSaved}
+                            filterStatus={isShortsSaved}
+                          />
+                        </main>
+
+                        <Footer />
+                      </>
+                    }
+                  />
+
+                  <Route
+                    path="/profile"
+                    element={
+                      <>
+                        <Header
+                          loggedIn={loggedIn}
+                          onRedirectToMain={handleRedirectToMain}
+                          onRedirectToMovies={handleRedirectToMovies}
+                          onRedirectToSavedMovies={handleRedirectToSavedMovies}
+                          onRedirectToProfile={handleRedirectToProfile}
+                          onRedirectToSignIn={handleRedirectToSignIn}
+                          onRedirectToSignUp={handleRedirectToSignUp}
+                        />
+                        <main>
+                          <Profile onHandleSubmit={handleUserUpdate} onHandleLogOut={handleUserLogout}/>
+                        </main>
+                      </>
+                    }
+                  />
+
+                  <Route
+                    path="*"
+                    element={
+                      <main>
+                        <PageNotFound onRedirectNotFoundToBack={handleRedirectNotFoundToBack} />
+                      </main>
+                    }
+                  />
+                </>
+              ) : (
+                <Route path="*" element={<Navigate to="/" />} />
+              )}
+            </Routes>
+          </div>
+          <InfoPopUp isOpen={isInfoPopupOpen} onClose={closeInfoPopUp} message={errorMessage} />
         </div>
-        <InfoPopUp isOpen={isInfoPopupOpen} onClose={closeInfoPopUp} message={errorMessage} />
-      </div>
-    </WindowContext.Provider>
+      </WindowContext.Provider>
+    </CurrentUserContext.Provider>
   );
 }
 
