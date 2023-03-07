@@ -1,13 +1,20 @@
 import './Login.css';
+import { useCallback } from 'react';
 import IdentityForm from '../IdentityForm/IdentityForm';
 
 export default function Login({ onRedirectToMain, onHandleLoggedIn, onRedirectToAuth }) {
-
-
-  function redirectToAuth(evt){
+  function redirectToAuth(evt) {
     evt.preventDefault();
     onRedirectToAuth();
   }
+
+  const redirectToMain = useCallback(
+    (evt) => {
+      evt.preventDefault();
+      onRedirectToMain();
+    },
+    [onRedirectToMain]
+  );
 
   return (
     <div className="login">
@@ -23,7 +30,7 @@ export default function Login({ onRedirectToMain, onHandleLoggedIn, onRedirectTo
           </p>
         }
         isRegisterForm={false}
-        onRedirectToMain={onRedirectToMain}
+        onRedirectToMain={redirectToMain}
         onHandleSubmit={onHandleLoggedIn}
       />
     </div>

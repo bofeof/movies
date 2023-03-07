@@ -1,4 +1,5 @@
 import './Register.css';
+import { useCallback } from 'react';
 import IdentityForm from '../IdentityForm/IdentityForm';
 
 export default function Register({ onRedirectToMain, onHandleUserRegister, onRedirectToAuth }) {
@@ -6,6 +7,14 @@ export default function Register({ onRedirectToMain, onHandleUserRegister, onRed
     evt.preventDefault();
     onRedirectToAuth();
   }
+
+  const redirectToMain = useCallback(
+    (evt) => {
+      evt.preventDefault();
+      onRedirectToMain();
+    },
+    [onRedirectToMain]
+  );
 
   return (
     <div className="register">
@@ -21,7 +30,7 @@ export default function Register({ onRedirectToMain, onHandleUserRegister, onRed
           </p>
         }
         isRegisterForm
-        onRedirectToMain={onRedirectToMain}
+        onRedirectToMain={redirectToMain}
         onHandleSubmit={onHandleUserRegister}
       />
     </div>

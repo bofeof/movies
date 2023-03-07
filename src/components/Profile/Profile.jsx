@@ -5,7 +5,6 @@ import { CurrentUserContext } from '../../contexts/CurrentUserContext';
 import formValidator from '../../utils/formValidator';
 
 export default function Profile({ onHandleSubmit, onHandleLogOut }) {
-
   const currentUser = useContext(CurrentUserContext);
 
   const [userInfo, setUserInfo] = useState({ currentUser });
@@ -56,7 +55,7 @@ export default function Profile({ onHandleSubmit, onHandleLogOut }) {
         <label className="profile__form-label" htmlFor="profile-name">
           Имя
           <input
-          className={`profile__form-input ${!inputsValidation.name.isValid && 'profile__form-input_error'}`}
+            className={`profile__form-input ${!inputsValidation.name.isValid && 'profile__form-input_error'}`}
             type="text"
             name="name"
             id="profile-name"

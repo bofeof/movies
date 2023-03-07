@@ -21,7 +21,7 @@ import MainApi from '../../utils/API/MainApi';
 import UserAuth from '../../utils/API/UserAuth';
 import { configMainAPI } from '../../utils/API/mainApiConfig';
 import WindowContext from '../../contexts/WindowContext';
-import {CurrentUserContext} from '../../contexts/CurrentUserContext';
+import { CurrentUserContext } from '../../contexts/CurrentUserContext';
 
 function App() {
   const BeatFilmAPI = new MoviesApi();
@@ -134,7 +134,7 @@ function App() {
           }
 
           setLoggedIn(true);
-          setCurrentUser(res.data)
+          setCurrentUser(res.data);
           setUserId(() => res.data._id);
           setLoginName(() => res.data.name);
           setUserEmail(() => res.data.email);
@@ -154,7 +154,7 @@ function App() {
 
   // CARD ACTIONS
   function createMovie(movieData) {
-    MainAPI.createCard(movieData)
+    MainAPI.createMovie(movieData)
       .then((newMovie) => {
         setSavedMovies((prevSate) => [newMovie.data, ...prevSate]);
       })
@@ -179,7 +179,7 @@ function App() {
               setLoginName(() => resUser.data.name);
 
               setLoggedIn(true);
-              handleRedirectToMain();
+              handleRedirectToMovies();
             })
             .catch((err) => {
               setErrorMessage(err.message);
@@ -209,9 +209,19 @@ function App() {
       });
   }
 
-  function handleUserUpdate(userData){
-    // UserAPI.
-    // setCurrentUser()
+  function handleUserUpdate(userData) {
+    MainAPI.updateUserInfo(userData)
+      .then((newUserData) => {
+        setCurrentUser((prevState) => ({
+          ...prevState,
+          name: newUserData.data.name,
+          email: newUserData.data.email,
+        }));
+      })
+      .catch((err) => {
+        setErrorMessage(err.message);
+        setIsInfoPopupOpen(!isInfoPopupOpen);
+      });
   }
 
   function handleUserLogout() {
@@ -353,7 +363,7 @@ function App() {
                           onRedirectToSignUp={handleRedirectToSignUp}
                         />
                         <main>
-                          <Profile onHandleSubmit={handleUserUpdate} onHandleLogOut={handleUserLogout}/>
+                          <Profile onHandleSubmit={handleUserUpdate} onHandleLogOut={handleUserLogout} />
                         </main>
                       </>
                     }
