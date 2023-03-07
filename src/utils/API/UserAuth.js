@@ -3,12 +3,16 @@ export default class UserAuth {
     this._configAPI = configAPI;
   }
 
-  _getResponse(res) {
-    return res.ok ? res.json() : Promise.reject(new Error(`Ошибка: ${res.status}, ${res.statusText}`));
+  async _getResponse(res) {
+    if (res.ok) {
+      return res.json();
+    }
+    const userMessage = await res.json().then((errText) => errText.message || '');
+    return Promise.reject(new Error(`Ошибка: ${res.status}. ${userMessage}`));
   }
 
   signup(userData) {
-    return fetch(`${this._configAPI.REACT_APP_BASE_URL}/signup`, {
+    return fetch(`${this._configAPI.mainMoviesUrl}/signup`, {
       method: 'POST',
       headers: this._configAPI.headers,
       body: JSON.stringify(userData),
@@ -16,18 +20,19 @@ export default class UserAuth {
   }
 
   signin(userData) {
-    return fetch(`${this._configAPI.REACT_APP_BASE_URL}/signin`, {
+    return fetch(`${this._configAPI.mainMoviesUrl}/signin`, {
       method: 'POST',
       headers: this._configAPI.headers,
-      credentials: this._configAPI.credentials,
       body: JSON.stringify(userData),
     }).then((res) => this._getResponse(res));
   }
 
-  signout() {
-    fetch(`${this._configAPI.REACT_APP_BASE_URL}/signout`, {
-      methon: 'GET',
-      headers: this._configAPI.headers,
+  checkToken(token) {
+    return fetch(`${this._configAPI.mainMoviesUrl}/users/me`, {
+      method: 'GET',
+      headers: {
+        authorization: `Bearer ${token}`,
+      },
     }).then((res) => this._getResponse(res));
   }
 }

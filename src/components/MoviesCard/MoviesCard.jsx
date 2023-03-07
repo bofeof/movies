@@ -7,11 +7,11 @@ function convertMins(mins) {
   return `${h}ч${min}м`;
 }
 
-export default function MoviesCard({ card, cardKey, isSavedSection }) {
+export default function MoviesCard({ card, cardKey, isSavedSection, onCreateMovie }) {
   function handleSaveRemoveMovie(evt) {
     if (evt.target.checked) {
       // create new card in db
-      console.log('add')
+      onCreateMovie(card)
     } else {
       // remove card from db
       console.log('remove')

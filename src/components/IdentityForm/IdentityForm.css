@@ -58,6 +58,10 @@
   color: #ffffff;
 }
 
+.identity__form-input_error{
+  color: #ee3465;
+}
+
 .identity__input-error {
   width: 100%;
   height: 20px;
@@ -85,6 +89,10 @@
   color: #ffffff;
 
   transition: opacity 0.5s ease-in-out;
+}
+
+.identity__form-button:disabled {
+  opacity: 0.5;
 }
 
 .identity__buttons {

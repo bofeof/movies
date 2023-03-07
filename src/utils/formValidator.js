@@ -5,7 +5,7 @@ export default function formValidator(evt) {
     errorText: currentInput.validationMessage,
   };
 
-  if (currentInput.validity.valid && currentInput.value.trim().length) {
+  if (currentInput.validity.valid) {
     validationStatus.isValid = true;
   }
 

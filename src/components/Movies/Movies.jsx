@@ -21,6 +21,7 @@ export default function Movies({
   isLoadError,
   filteredBeatMovies,
   onSetFilterBeatMovies,
+  onCreateMovie
 }) {
 
   const windowWidth = useContext(WindowContext);
@@ -55,7 +56,7 @@ export default function Movies({
   return (
     <div className="movies">
       <SearchForm onClickFilter={onClickFilter} filterStatus={filterStatus} onSearchSubmit={handleFilterMovies} searchInputValue={searchInputValue} onSetSearchInputValue={onSetSearchInputValue}/>
-      <MoviesCardList isSavedSection={isSavedSection} movies={filteredBeatMovies} isLoadError={isLoadError} />
+      <MoviesCardList isSavedSection={isSavedSection} movies={filteredBeatMovies} isLoadError={isLoadError} onCreateMovie={onCreateMovie} />
       {showLoadMoreButton() && <ShowMoreButton />}
     </div>
   );

@@ -4,7 +4,7 @@ import HeaderLoggedIn from '../HeaderLoggedIn/HeaderLoggedIn';
 import headerLogo from '../../images/logo/logo.svg';
 
 export default function Header({
-  userLogIn,
+  loggedIn,
   onRedirectToMain,
   onRedirectToMovies,
   onRedirectToSavedMovies,
@@ -20,7 +20,7 @@ export default function Header({
         </button>
       </div>
       <div className="header__navigation">
-        {userLogIn ? (
+        {loggedIn ? (
           <HeaderLoggedIn
             onRedirectToMain={onRedirectToMain}
             onRedirectToMovies={onRedirectToMovies}

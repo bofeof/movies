@@ -2,7 +2,7 @@ import MoviesCard from '../MoviesCard/MoviesCard';
 import './MoviesCardList.css';
 import errorMessages from '../../utils/errorMessages';
 
-export default function MoviesCardList({ isSavedSection, movies, isLoadError }) {
+export default function MoviesCardList({ isSavedSection, movies, isLoadError, onCreateMovie }) {
   return (
     <section className="movies-preloader" aria-label="Список фильмов">
       { (() => {
@@ -17,7 +17,7 @@ export default function MoviesCardList({ isSavedSection, movies, isLoadError }) 
 
           return (<ul className="movies-list">
             {movies.map((card) => (
-              <MoviesCard key={card.id} cardKey={card.id} card={card} isSavedSection={isSavedSection} />
+              <MoviesCard key={card.id} cardKey={card.id} card={card} isSavedSection={isSavedSection} onCreateMovie={onCreateMovie} />
             ))}
           </ul>)
 
