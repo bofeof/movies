@@ -52,6 +52,8 @@ function App() {
 
   // saved movies
   const [savedMovies, setSavedMovies] = useState([]);
+  const [searchInputValueSaved, setSearchInputValueSaved] = useState({ searchinput: '' });
+  const [filteredSavedMovies, setFilteredSavedMovies] = useState([]);
 
   // window width
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
@@ -127,7 +129,7 @@ function App() {
         .then((res) => {
           // if jwt secret key is changed by dev while user has active session
           if (!res || !res.data) {
-            // localStorage.clear();
+            localStorage.clear();
             setLoggedIn(false);
             handleRedirectToSignIn();
             return;
@@ -143,13 +145,25 @@ function App() {
         .catch((err) => {
           handleRedirectToSignIn();
         });
+
+      // get cards
+      MainAPI.getAllMovies()
+        .then((res) => {
+
+          setSavedMovies(res.data)
+          setFilteredSavedMovies(res.data)
+        })
+        .catch((err) => {
+          setErrorMessage(err.message);
+          setIsInfoPopupOpen(!isInfoPopupOpen);
+        });
     }
   }, [loggedIn]);
+
 
   // POPUP
   const closeInfoPopUp = useCallback(() => {
     setIsInfoPopupOpen(!isInfoPopupOpen);
-    // setErrorMessage('');
   }, [isInfoPopupOpen]);
 
   // CARD ACTIONS
@@ -162,6 +176,10 @@ function App() {
         setErrorMessage(err.message);
         setIsInfoPopupOpen(!isInfoPopupOpen);
       });
+  }
+
+  function removeMovie(movie) {
+    console.log(movie);
   }
 
   // USER ACTION
@@ -313,6 +331,7 @@ function App() {
                             filteredBeatMovies={filteredBeatMovies}
                             onSetFilterBeatMovies={setFilterBeatMovies}
                             onCreateMovie={createMovie}
+                            onRemoveMovie={removeMovie}
                           />
                         </main>
 
@@ -341,6 +360,13 @@ function App() {
                             savedMovies={savedMovies}
                             onClickFilter={handleSetIsShortsSaved}
                             filterStatus={isShortsSaved}
+                            searchInputValue={searchInputValueSaved}
+                            onSetSearchInputValue={setSearchInputValueSaved}
+                            isLoadError={isLoadError}
+                            filteredBeatMovies={filteredSavedMovies}
+                            onSetFilterBeatMovies={setFilteredSavedMovies}
+                            onCreateMovie={createMovie}
+                            onRemoveMovie={removeMovie}
                           />
                         </main>
 

@@ -3,9 +3,16 @@ import searchValidator from '../../utils/searchValidator';
 import './SearchForm.css';
 import FilterCheckbox from '../FilterCheckbox/FilterCheckbox';
 
-export default function SearchForm({onSearchSubmit,  onClickFilter, filterStatus, searchInputValue, onSetSearchInputValue}) {
-
-  // const [searchInputValue, setSearchInputValue] = useState({ searchinput: '' });
+export default function SearchForm({
+  isSavedSection,
+  onShowAllMovies,
+  onHideAllMovies,
+  onSearchSubmit,
+  onClickFilter,
+  filterStatus,
+  searchInputValue,
+  onSetSearchInputValue,
+}) {
   const [inputsValidation, setInputsValidation] = useState({ searchinput: { isValid: true, errorText: '' } });
   const isFormInvalid = inputsValidation.searchinput.isValid;
 
@@ -26,11 +33,20 @@ export default function SearchForm({onSearchSubmit,  onClickFilter, filterStatus
 
   function handleSearch(evt) {
     evt.preventDefault();
+
     validateSearchInput(searchInputValue.searchinput);
+
+    // if input is empy => show all saved cards
+    if (isSavedSection && searchInputValue.searchinput === '') {
+      return onShowAllMovies();
+    }
+    if (!isSavedSection && searchInputValue.searchinput === '') {
+      return onHideAllMovies();
+    }
+
+    // all ok
     // send search-input to filter movies data
-    onSearchSubmit(
-      {data: searchInputValue.searchinput }
-    )
+    return onSearchSubmit({ data: searchInputValue.searchinput });
   }
 
   function handleChange(evt) {
@@ -41,6 +57,16 @@ export default function SearchForm({onSearchSubmit,  onClickFilter, filterStatus
     }));
 
     validateSearchInput(value);
+
+    // if input is empy => show all saved cards
+    if (isSavedSection && evt.target.value === '') {
+      onShowAllMovies();
+    }
+
+    if (!isSavedSection && evt.target.value === '') {
+      onHideAllMovies();
+    }
+
   }
 
   function handleFocus(evt) {
@@ -86,6 +112,7 @@ export default function SearchForm({onSearchSubmit,  onClickFilter, filterStatus
         </button>
       </form>
       <span className="search-form__input-error">{!isFormInvalid ? inputsValidation.searchinput.errorText : ''}</span>
+
       <FilterCheckbox onClickFilter={onClickFilter} filterStatus={filterStatus} />
     </div>
   );

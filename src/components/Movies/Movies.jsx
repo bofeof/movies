@@ -15,15 +15,15 @@ export default function Movies({
   isSavedSection,
   beatMovies,
   onClickFilter,
+  filterStatus,
   searchInputValue,
   onSetSearchInputValue,
-  filterStatus,
   isLoadError,
   filteredBeatMovies,
   onSetFilterBeatMovies,
-  onCreateMovie
+  onCreateMovie,
+  onRemoveMovie
 }) {
-
   const windowWidth = useContext(WindowContext);
 
   const handleFilterMovies = useCallback(
@@ -53,10 +53,29 @@ export default function Movies({
     return false;
   }
 
+  const hideAllMovies = useCallback (()=>{
+    onSetFilterBeatMovies(() => [])
+  }, [])
+
   return (
     <div className="movies">
-      <SearchForm onClickFilter={onClickFilter} filterStatus={filterStatus} onSearchSubmit={handleFilterMovies} searchInputValue={searchInputValue} onSetSearchInputValue={onSetSearchInputValue}/>
-      <MoviesCardList isSavedSection={isSavedSection} movies={filteredBeatMovies} isLoadError={isLoadError} onCreateMovie={onCreateMovie} />
+      <SearchForm
+        onClickFilter={onClickFilter}
+        filterStatus={filterStatus}
+        onSearchSubmit={handleFilterMovies}
+        searchInputValue={searchInputValue}
+        onSetSearchInputValue={onSetSearchInputValue}
+
+        onShowAllMovies={null}
+        onHideAllMovies={hideAllMovies}
+      />
+      <MoviesCardList
+        isSavedSection={isSavedSection}
+        movies={filteredBeatMovies}
+        isLoadError={isLoadError}
+        onCreateMovie={onCreateMovie}
+        onRemoveMovie={onRemoveMovie}
+      />
       {showLoadMoreButton() && <ShowMoreButton />}
     </div>
   );

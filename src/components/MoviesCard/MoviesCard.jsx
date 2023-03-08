@@ -7,14 +7,15 @@ function convertMins(mins) {
   return `${h}ч${min}м`;
 }
 
-export default function MoviesCard({ card, cardKey, isSavedSection, onCreateMovie }) {
+export default function MoviesCard({ card, cardKey, isSavedSection, onCreateMovie, onRemoveMovie }) {
+
+  const thumbnail = isSavedSection ? card.image : `${beatFilmUrl}/${card?.image?.formats?.thumbnail?.url || card?.image?.formats?.small?.url}`
+
   function handleSaveRemoveMovie(evt) {
-    if (evt.target.checked) {
-      // create new card in db
-      onCreateMovie(card)
+    if (evt.target.checked && !isSavedSection) {
+      onCreateMovie(card);
     } else {
-      // remove card from db
-      console.log('remove')
+      onRemoveMovie(card);
     }
   }
 
@@ -23,7 +24,7 @@ export default function MoviesCard({ card, cardKey, isSavedSection, onCreateMovi
       <a href={card.trailerLink} target="_blank" rel="noreferrer">
         <img
           className="movie-card__cover"
-          src={`${beatFilmUrl}/${card?.image.formats.thumbnail.url}`}
+          src={thumbnail}
           alt={card?.nameRU}
         />
       </a>
