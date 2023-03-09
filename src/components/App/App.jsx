@@ -1,5 +1,5 @@
 /* eslint-disable react/jsx-no-bind */
-/* eslint-disable no-unused-vars */
+
 import { Route, Routes, Navigate, useNavigate } from 'react-router-dom';
 import { useCallback, useEffect, useState } from 'react';
 
@@ -36,10 +36,6 @@ function App() {
   const [loggedIn, setLoggedIn] = useState(false);
   const [currentUser, setCurrentUser] = useState({});
 
-  const [userId, setUserId] = useState('');
-  const [userEmail, setUserEmail] = useState('');
-  const [loginName, setLoginName] = useState('');
-
   // beat movies
   const [beatMovies, setBeatMovies] = useState([]);
   const [isLoadError, setIsLoadError] = useState(false);
@@ -74,23 +70,14 @@ function App() {
     return () => window.removeEventListener('resize', updateSize);
   }, []);
 
-  // get beat movies
-  useEffect(() => {
-    BeatFilmAPI.getbeatMovies()
-      .then((beatMoviesData) => {
-        setBeatMovies(() => beatMoviesData);
-      })
-      .catch(() => {
-        setIsLoadError(() => true);
-      });
-  }, []);
+// first run for search inputs
+  // useEffect(() => {
+  //   setSearchInputValue((prevValue) => ({
+  //     ...prevValue,
+  //     searchinput: '',
+  //   }));
 
-  useEffect(() => {
-    setSearchInputValue((prevValue) => ({
-      ...prevValue,
-      searchinput: '',
-    }));
-  }, []);
+  // }, []);
 
   // REDIRECT
   function handleRedirectToMain() {
@@ -137,29 +124,41 @@ function App() {
 
           setLoggedIn(true);
           setCurrentUser(res.data);
-          setUserId(() => res.data._id);
-          setLoginName(() => res.data.name);
-          setUserEmail(() => res.data.email);
           handleRedirectToMovies();
         })
-        .catch((err) => {
+        .catch(() => {
           handleRedirectToSignIn();
         });
 
-      // get cards
+      // get saved movies
       MainAPI.getAllMovies()
         .then((res) => {
-
-          setSavedMovies(res.data)
-          setFilteredSavedMovies(res.data)
+          setSavedMovies(res.data);
+          setFilteredSavedMovies(res.data);
         })
         .catch((err) => {
           setErrorMessage(err.message);
           setIsInfoPopupOpen(!isInfoPopupOpen);
         });
+
+      // get beat movies
+      BeatFilmAPI.getbeatMovies()
+        .then((beatMoviesData) => {
+          const updateBeatMoviesData = beatMoviesData.map((item) => Object.assign(item, { isMovieSaved: false }));
+
+          updateBeatMoviesData.map((beatMovie) =>
+            filteredSavedMovies.map(
+              (savedMovie) => beatMovie.id === savedMovie.movieId && Object.assign(beatMovie, { isMovieSaved: true })
+            )
+          );
+
+          setBeatMovies(() => updateBeatMoviesData);
+        })
+        .catch(() => {
+          setIsLoadError(() => true);
+        });
     }
   }, [loggedIn]);
-
 
   // POPUP
   const closeInfoPopUp = useCallback(() => {
@@ -170,7 +169,22 @@ function App() {
   function createMovie(movieData) {
     MainAPI.createMovie(movieData)
       .then((newMovie) => {
+        // beatfilm section
         setSavedMovies((prevSate) => [newMovie.data, ...prevSate]);
+        // update saved-status
+        setBeatMovies((prev) =>
+          prev.map((beatMovie) =>
+            movieData.id === beatMovie.id ? { ...beatMovie, isMovieSaved: true } : { ...beatMovie }
+          )
+        );
+
+        // saved section
+        setFilteredSavedMovies((prevSate) => [newMovie.data, ...prevSate]);
+        setFilterBeatMovies((prev) =>
+          prev.map((beatMovie) =>
+            beatMovie.id === movieData.id ? { ...beatMovie, isMovieSaved: true } : { ...beatMovie }
+          )
+        );
       })
       .catch((err) => {
         setErrorMessage(err.message);
@@ -178,8 +192,51 @@ function App() {
       });
   }
 
-  function removeMovie(movie) {
-    console.log(movie);
+  function removeMovie(movieData) {
+    const movieId = movieData._id || savedMovies.find((item) => item.movieId === movieData.id)._id;
+
+    // remove from db
+    MainAPI.removeMovie(movieId)
+      .then(() => {
+        // beatfilm section
+        setBeatMovies((prev) =>
+          prev.map((beatMovie) =>
+            movieData.id === beatMovie.id ? { ...beatMovie, isMovieSaved: false } : { ...beatMovie }
+          )
+        );
+        setFilterBeatMovies((prev) =>
+          prev.map((beatMovie) =>
+            beatMovie.id === movieData.id ? { ...beatMovie, isMovieSaved: false } : { ...beatMovie }
+          )
+        );
+        // saved section
+        setSavedMovies((prev) => prev.map((savedMovie) => movieData.id !== movieData.movieId && { ...savedMovie }));
+        setFilteredSavedMovies((prev) =>
+          prev.map((savedMovie) => movieData.id !== movieData.movieId && { ...savedMovie })
+        );
+      })
+      .catch((err) => {
+        setErrorMessage(err.message);
+        setIsInfoPopupOpen(!isInfoPopupOpen);
+      });
+
+    // // beatfilm section
+    // setBeatMovies(
+    //   beatMovies.map((beatMovie) =>
+    //     movieData.id === beatMovie.id ? { ...beatMovie, isMovieSaved: false } : { ...beatMovie }
+    //   )
+    // );
+    // setFilterBeatMovies(
+    //   filteredBeatMovies.map((beatMovie) =>
+    //     beatMovie.id === movieData.id ? { ...beatMovie, isMovieSaved: false } : { ...beatMovie }
+    //   )
+    // );
+
+    // // saved section
+    // setSavedMovies(savedMovies.map((savedMovie) => movieData.id !== movieData.movieId && { ...savedMovie }));
+    // setFilteredSavedMovies(
+    //   filteredSavedMovies.map((savedMovie) => movieData.id !== movieData.movieId && { ...savedMovie })
+    // );
   }
 
   // USER ACTION
@@ -190,12 +247,7 @@ function App() {
           localStorage.setItem('moviesToken', res.token);
 
           UserAPI.checkToken(localStorage.getItem('moviesToken'))
-            .then((resUser) => {
-              // set res to localstorage
-              setUserId(() => resUser.data._id);
-              setUserEmail(() => resUser.data.email);
-              setLoginName(() => resUser.data.name);
-
+            .then(() => {
               setLoggedIn(true);
               handleRedirectToMovies();
             })
@@ -363,7 +415,7 @@ function App() {
                             searchInputValue={searchInputValueSaved}
                             onSetSearchInputValue={setSearchInputValueSaved}
                             isLoadError={isLoadError}
-                            filteredBeatMovies={filteredSavedMovies}
+                            filteredSavedMovies={filteredSavedMovies}
                             onSetFilterBeatMovies={setFilteredSavedMovies}
                             onCreateMovie={createMovie}
                             onRemoveMovie={removeMovie}

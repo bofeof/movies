@@ -43,8 +43,6 @@ export default function SearchForm({
     if (!isSavedSection && searchInputValue.searchinput === '') {
       return onHideAllMovies();
     }
-
-    // all ok
     // send search-input to filter movies data
     return onSearchSubmit({ data: searchInputValue.searchinput });
   }
@@ -66,7 +64,6 @@ export default function SearchForm({
     if (!isSavedSection && evt.target.value === '') {
       onHideAllMovies();
     }
-
   }
 
   function handleFocus(evt) {

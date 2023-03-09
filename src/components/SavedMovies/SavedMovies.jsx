@@ -1,5 +1,5 @@
 import './SavedMovies.css';
-import { useCallback,  useContext } from 'react';
+import { useCallback, useContext, useEffect } from 'react';
 import SearchForm from '../SearchForm/SearchForm';
 import MoviesCardList from '../MoviesCardList/MoviesCardList';
 import ShowMoreButton from '../ShowMoreButton/ShowMoreButton';
@@ -14,12 +14,13 @@ export default function SavedMovies({
   searchInputValue,
   onSetSearchInputValue,
   isLoadError,
-  filteredBeatMovies,
+  filteredSavedMovies,
   onSetFilterBeatMovies,
   onCreateMovie,
   onRemoveMovie,
 }) {
   const windowWidth = useContext(WindowContext);
+
 
   const handleFilterMovies = useCallback(
     (filterData) => {
@@ -35,18 +36,22 @@ export default function SavedMovies({
     [savedMovies, filterStatus, onSetFilterBeatMovies]
   );
 
-  const showAllMoviesSaved = useCallback (()=>{
-    onSetFilterBeatMovies(() => savedMovies)
-  }, [savedMovies])
+  const showAllMoviesSaved = useCallback(() => {
+    onSetFilterBeatMovies(() => savedMovies);
+  }, [savedMovies, onSetFilterBeatMovies]);
+
+  useEffect(() => {
+    onSetFilterBeatMovies(() => savedMovies);
+  }, [savedMovies, filteredSavedMovies, onSetFilterBeatMovies]);
 
   function showLoadMoreButton() {
-    if (windowWidth > 800 && filteredBeatMovies.length > 12) {
+    if (windowWidth > 800 && filteredSavedMovies.length > 12) {
       return true;
     }
-    if (windowWidth < 768 && filteredBeatMovies.length >= 8) {
+    if (windowWidth < 768 && filteredSavedMovies.length >= 8) {
       return true;
     }
-    if (windowWidth < 500 && filteredBeatMovies.length >= 5) {
+    if (windowWidth < 500 && filteredSavedMovies.length >= 5) {
       return true;
     }
     return false;
@@ -61,14 +66,12 @@ export default function SavedMovies({
         onSearchSubmit={handleFilterMovies}
         searchInputValue={searchInputValue}
         onSetSearchInputValue={onSetSearchInputValue}
-
         onShowAllMovies={showAllMoviesSaved}
         onHideAllMovies={null}
-
       />
       <MoviesCardList
         isSavedSection={isSavedSection}
-        movies={filteredBeatMovies}
+        movies={filteredSavedMovies}
         isLoadError={isLoadError}
         onCreateMovie={onCreateMovie}
         onRemoveMovie={onRemoveMovie}
