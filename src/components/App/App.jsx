@@ -186,30 +186,30 @@ function App() {
     setIsInfoPopupOpen(!isInfoPopupOpen);
   }, [isInfoPopupOpen]);
 
-  // function updateSavingStatus(status){
+  function updateSavingStatus(movieUpdated, status) {
+    setBeatMovies(
+      beatMovies.map((beatMovie) =>
+        movieUpdated.data.movieId === beatMovie.id ? { ...beatMovie, isMovieSaved: status } : { ...beatMovie }
+      )
+    );
 
-  // }
+    setFilterBeatMovies(
+      filteredBeatMovies.map((beatMovie) =>
+        movieUpdated.data.movieId === beatMovie.id ? { ...beatMovie, isMovieSaved: status } : { ...beatMovie }
+      )
+    );
+  }
 
   // CARD ACTIONS
   function createMovie(movieData) {
     MainAPI.createMovie(movieData)
       .then((newMovie) => {
-        // beatfilm section, update saved-status
-        setBeatMovies(
-          beatMovies.map((beatMovie) =>
-            movieData.id === beatMovie.id ? { ...beatMovie, isMovieSaved: true } : { ...beatMovie }
-          )
-        );
+        // update beatfilms
+        updateSavingStatus(newMovie, true);
 
-        // saved section
+        // add new movie to save-section
         setSavedMovies((prevSate) => [newMovie.data, ...prevSate]);
         setFilteredSavedMovies((prevSate) => [newMovie.data, ...prevSate]);
-
-        setFilterBeatMovies(
-          filteredBeatMovies.map((beatMovie) =>
-            beatMovie.id === movieData.id ? { ...beatMovie, isMovieSaved: true } : { ...beatMovie }
-          )
-        );
       })
       .catch((err) => {
         setErrorMessage(err.message);
@@ -221,25 +221,15 @@ function App() {
     const movieIdRemoved = movieData._id || savedMovies.find((item) => item.movieId === movieData.id)._id;
     // remove from db
     MainAPI.removeMovie(movieIdRemoved)
-      .then(() => {
-        // beatfilm section, update saved-status
-        setBeatMovies((prev) =>
-          prev.map((beatMovie) =>
-            movieData.id === beatMovie.id ? { ...beatMovie, isMovieSaved: false } : { ...beatMovie }
-          )
-        );
-        setFilterBeatMovies((prev) =>
-          prev.map((beatMovie) =>
-            beatMovie.id === movieData.id ? { ...beatMovie, isMovieSaved: false } : { ...beatMovie }
-          )
-        );
+      .then((removedMovie) => {
+        // update beatfilms
+        updateSavingStatus(removedMovie, false);
 
         // saved section
         setSavedMovies((prev) => prev.filter((savedMovie) => movieIdRemoved !== savedMovie._id && { ...savedMovie }));
         setFilteredSavedMovies((prev) =>
           prev.filter((savedMovie) => movieIdRemoved !== savedMovie._id && { ...savedMovie })
         );
-
       })
       .catch((err) => {
         setErrorMessage(err.message);
