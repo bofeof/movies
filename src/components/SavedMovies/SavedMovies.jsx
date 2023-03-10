@@ -21,7 +21,6 @@ export default function SavedMovies({
 }) {
   const windowWidth = useContext(WindowContext);
 
-
   const handleFilterMovies = useCallback(
     (filterData) => {
       const newMovieData = savedMovies.filter(
@@ -38,11 +37,11 @@ export default function SavedMovies({
 
   const showAllMoviesSaved = useCallback(() => {
     onSetFilterBeatMovies(() => savedMovies);
-  }, [savedMovies, onSetFilterBeatMovies]);
+  }, [savedMovies]);
 
-  useEffect(() => {
-    onSetFilterBeatMovies(() => savedMovies);
-  }, [savedMovies, filteredSavedMovies, onSetFilterBeatMovies]);
+  useEffect(()=>{
+    onSetFilterBeatMovies(savedMovies)
+  }, [savedMovies])
 
   function showLoadMoreButton() {
     if (windowWidth > 800 && filteredSavedMovies.length > 12) {

@@ -5,7 +5,7 @@ export default class MoviesApi {
     return res.ok ? res.json() : Promise.reject(new Error(`Ошибка: ${res.status}, ${res.statusText}`));
   }
 
-  getbeatMovies() {
+  getBeatMovies() {
     return fetch(`${beatFilmUrlAPI}`, {
       method: 'GET',
     }).then((res) => this._getResponse(res));

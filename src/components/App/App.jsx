@@ -59,6 +59,7 @@ function App() {
 
   // saved movies
   const [isShortsSaved, setIsShortsSaved] = useState(false);
+
   const handleSetIsShortsSaved = useCallback(() => {
     setIsShortsSaved(() => !isShortsSaved);
   }, [isShortsSaved]);
@@ -70,14 +71,13 @@ function App() {
     return () => window.removeEventListener('resize', updateSize);
   }, []);
 
-// first run for search inputs
-  // useEffect(() => {
-  //   setSearchInputValue((prevValue) => ({
-  //     ...prevValue,
-  //     searchinput: '',
-  //   }));
-
-  // }, []);
+  // first run for search inputs
+  useEffect(() => {
+    setSearchInputValue((prevValue) => ({
+      ...prevValue,
+      searchinput: '',
+    }));
+  }, []);
 
   // REDIRECT
   function handleRedirectToMain() {
@@ -109,7 +109,7 @@ function App() {
     navigate(-1);
   }
 
-  // FIRST RUN
+  // first run: check login, get movies data
   useEffect(() => {
     if (localStorage.getItem('moviesToken')) {
       UserAPI.checkToken(localStorage.getItem('moviesToken'))
@@ -125,38 +125,59 @@ function App() {
           setLoggedIn(true);
           setCurrentUser(res.data);
           handleRedirectToMovies();
+
+          // get data
+          Promise.all([MainAPI.getAllMovies(), BeatFilmAPI.getBeatMovies()])
+            .then(([savedMoviesData, beatMoviesData]) => {
+              // set saved movies
+              setSavedMovies(savedMoviesData.data);
+              setFilteredSavedMovies(savedMoviesData.data);
+
+              // check if movie is saved
+              const savedList = savedMoviesData.data.map((savedMovie) => savedMovie.movieId);
+              const updatedBeat = beatMoviesData.map((beatMovie) =>
+                savedList.includes(beatMovie.id)
+                  ? Object.assign(beatMovie, { isMovieSaved: true })
+                  : Object.assign(beatMovie, { isMovieSaved: false })
+              );
+
+              setBeatMovies(updatedBeat);
+            })
+            .catch((err) => {
+              setIsLoadError(() => true);
+              setErrorMessage(err.message);
+              setIsInfoPopupOpen(!isInfoPopupOpen);
+            });
         })
         .catch(() => {
           handleRedirectToSignIn();
         });
 
-      // get saved movies
-      MainAPI.getAllMovies()
-        .then((res) => {
-          setSavedMovies(res.data);
-          setFilteredSavedMovies(res.data);
-        })
-        .catch((err) => {
-          setErrorMessage(err.message);
-          setIsInfoPopupOpen(!isInfoPopupOpen);
-        });
+      // OLD get saved movies
+      // MainAPI.getAllMovies()
+      //   .then((res) => {
+      //     setSavedMovies(res.data);
+      //     setFilteredSavedMovies(res.data);
+      //   })
+      //   .catch((err) => {
+      //     setErrorMessage(err.message);
+      //     setIsInfoPopupOpen(!isInfoPopupOpen);
+      //   });
 
       // get beat movies
-      BeatFilmAPI.getbeatMovies()
-        .then((beatMoviesData) => {
-          const updateBeatMoviesData = beatMoviesData.map((item) => Object.assign(item, { isMovieSaved: false }));
-
-          updateBeatMoviesData.map((beatMovie) =>
-            filteredSavedMovies.map(
-              (savedMovie) => beatMovie.id === savedMovie.movieId && Object.assign(beatMovie, { isMovieSaved: true })
-            )
-          );
-
-          setBeatMovies(() => updateBeatMoviesData);
-        })
-        .catch(() => {
-          setIsLoadError(() => true);
-        });
+      // BeatFilmAPI.getBeatMovies()
+      //   .then((beatMoviesData) => {
+      //     const updateBeatMoviesData = beatMoviesData.map((item) => Object.assign(item, { isMovieSaved: false }));
+      //     updateBeatMoviesData.map((beatMovie) =>
+      //       filteredSavedMovies.map(
+      //         (savedMovie) => beatMovie.id === savedMovie.movieId && Object.assign(beatMovie, { isMovieSaved: true })
+      //       )
+      //     );
+      //     setBeatMovies(() => updateBeatMoviesData);
+      //   })
+      //   .catch(() => {
+      //     setIsLoadError(() => true);
+      //   });
     }
   }, [loggedIn]);
 
@@ -165,23 +186,27 @@ function App() {
     setIsInfoPopupOpen(!isInfoPopupOpen);
   }, [isInfoPopupOpen]);
 
+  // function updateSavingStatus(status){
+
+  // }
+
   // CARD ACTIONS
   function createMovie(movieData) {
     MainAPI.createMovie(movieData)
       .then((newMovie) => {
-        // beatfilm section
-        setSavedMovies((prevSate) => [newMovie.data, ...prevSate]);
-        // update saved-status
-        setBeatMovies((prev) =>
-          prev.map((beatMovie) =>
+        // beatfilm section, update saved-status
+        setBeatMovies(
+          beatMovies.map((beatMovie) =>
             movieData.id === beatMovie.id ? { ...beatMovie, isMovieSaved: true } : { ...beatMovie }
           )
         );
 
         // saved section
+        setSavedMovies((prevSate) => [newMovie.data, ...prevSate]);
         setFilteredSavedMovies((prevSate) => [newMovie.data, ...prevSate]);
-        setFilterBeatMovies((prev) =>
-          prev.map((beatMovie) =>
+
+        setFilterBeatMovies(
+          filteredBeatMovies.map((beatMovie) =>
             beatMovie.id === movieData.id ? { ...beatMovie, isMovieSaved: true } : { ...beatMovie }
           )
         );
@@ -193,12 +218,11 @@ function App() {
   }
 
   function removeMovie(movieData) {
-    const movieId = movieData._id || savedMovies.find((item) => item.movieId === movieData.id)._id;
-
+    const movieIdRemoved = movieData._id || savedMovies.find((item) => item.movieId === movieData.id)._id;
     // remove from db
-    MainAPI.removeMovie(movieId)
+    MainAPI.removeMovie(movieIdRemoved)
       .then(() => {
-        // beatfilm section
+        // beatfilm section, update saved-status
         setBeatMovies((prev) =>
           prev.map((beatMovie) =>
             movieData.id === beatMovie.id ? { ...beatMovie, isMovieSaved: false } : { ...beatMovie }
@@ -209,34 +233,18 @@ function App() {
             beatMovie.id === movieData.id ? { ...beatMovie, isMovieSaved: false } : { ...beatMovie }
           )
         );
+
         // saved section
-        setSavedMovies((prev) => prev.map((savedMovie) => movieData.id !== movieData.movieId && { ...savedMovie }));
+        setSavedMovies((prev) => prev.filter((savedMovie) => movieIdRemoved !== savedMovie._id && { ...savedMovie }));
         setFilteredSavedMovies((prev) =>
-          prev.map((savedMovie) => movieData.id !== movieData.movieId && { ...savedMovie })
+          prev.filter((savedMovie) => movieIdRemoved !== savedMovie._id && { ...savedMovie })
         );
+
       })
       .catch((err) => {
         setErrorMessage(err.message);
         setIsInfoPopupOpen(!isInfoPopupOpen);
       });
-
-    // // beatfilm section
-    // setBeatMovies(
-    //   beatMovies.map((beatMovie) =>
-    //     movieData.id === beatMovie.id ? { ...beatMovie, isMovieSaved: false } : { ...beatMovie }
-    //   )
-    // );
-    // setFilterBeatMovies(
-    //   filteredBeatMovies.map((beatMovie) =>
-    //     beatMovie.id === movieData.id ? { ...beatMovie, isMovieSaved: false } : { ...beatMovie }
-    //   )
-    // );
-
-    // // saved section
-    // setSavedMovies(savedMovies.map((savedMovie) => movieData.id !== movieData.movieId && { ...savedMovie }));
-    // setFilteredSavedMovies(
-    //   filteredSavedMovies.map((savedMovie) => movieData.id !== movieData.movieId && { ...savedMovie })
-    // );
   }
 
   // USER ACTION
