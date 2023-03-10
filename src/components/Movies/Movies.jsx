@@ -37,7 +37,7 @@ export default function Movies({
 
       onSetFilterBeatMovies(() => newMovieData);
     },
-    [beatMovies]
+    [beatMovies, filterStatus]
   );
 
   function showLoadMoreButton() {

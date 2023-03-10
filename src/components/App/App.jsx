@@ -131,7 +131,7 @@ function App() {
             .then(([savedMoviesData, beatMoviesData]) => {
               // set saved movies
               setSavedMovies(savedMoviesData.data);
-              setFilteredSavedMovies(savedMoviesData.data);
+              setFilteredSavedMovies(savedMoviesData.data.reverse());
 
               // check if movie is saved
               const savedList = savedMoviesData.data.map((savedMovie) => savedMovie.movieId);

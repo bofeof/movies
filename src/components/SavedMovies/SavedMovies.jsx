@@ -1,5 +1,5 @@
 import './SavedMovies.css';
-import { useCallback, useContext, useEffect } from 'react';
+import { useCallback, useContext } from 'react';
 import SearchForm from '../SearchForm/SearchForm';
 import MoviesCardList from '../MoviesCardList/MoviesCardList';
 import ShowMoreButton from '../ShowMoreButton/ShowMoreButton';
@@ -19,6 +19,7 @@ export default function SavedMovies({
   onCreateMovie,
   onRemoveMovie,
 }) {
+
   const windowWidth = useContext(WindowContext);
 
   const handleFilterMovies = useCallback(
@@ -30,18 +31,15 @@ export default function SavedMovies({
           (filterStatus ? movie?.duration <= 40 : movie?.duration >= 0)
       );
 
+      console.log(newMovieData)
       onSetFilterBeatMovies(() => newMovieData);
     },
-    [savedMovies, filterStatus, onSetFilterBeatMovies]
+    [savedMovies, filterStatus]
   );
 
   const showAllMoviesSaved = useCallback(() => {
     onSetFilterBeatMovies(() => savedMovies);
   }, [savedMovies]);
-
-  useEffect(()=>{
-    onSetFilterBeatMovies(savedMovies)
-  }, [savedMovies])
 
   function showLoadMoreButton() {
     if (windowWidth > 800 && filteredSavedMovies.length > 12) {
