@@ -15,30 +15,15 @@ export default function SavedMovies({
   onSetSearchInputValue,
   isLoadError,
   filteredSavedMovies,
-  onSetFilterBeatMovies,
+  onSetFilterSavedMovies,
   onCreateMovie,
   onRemoveMovie,
 }) {
 
   const windowWidth = useContext(WindowContext);
 
-  const handleFilterMovies = useCallback(
-    (filterData) => {
-      const newMovieData = savedMovies.filter(
-        (movie) =>
-          (movie?.nameRU.toLowerCase().includes(filterData.data.toLowerCase()) ||
-            movie?.nameEN.toLowerCase().includes(filterData.data.toLowerCase())) &&
-          (filterStatus ? movie?.duration <= 40 : movie?.duration >= 0)
-      );
-
-      console.log(newMovieData)
-      onSetFilterBeatMovies(() => newMovieData);
-    },
-    [savedMovies, filterStatus]
-  );
-
   const showAllMoviesSaved = useCallback(() => {
-    onSetFilterBeatMovies(() => savedMovies);
+    onSetFilterSavedMovies(savedMovies);
   }, [savedMovies]);
 
   function showLoadMoreButton() {
@@ -60,7 +45,7 @@ export default function SavedMovies({
         isSavedSection={isSavedSection}
         onClickFilter={onClickFilter}
         filterStatus={filterStatus}
-        onSearchSubmit={handleFilterMovies}
+        onSearchSubmit={onSetFilterSavedMovies}
         searchInputValue={searchInputValue}
         onSetSearchInputValue={onSetSearchInputValue}
         onShowAllMovies={showAllMoviesSaved}

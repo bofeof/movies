@@ -37,14 +37,14 @@ export default function SearchForm({
     validateSearchInput(searchInputValue.searchinput);
 
     // if input is empy => show all saved cards
-    if (isSavedSection && searchInputValue.searchinput === '') {
+    if (isSavedSection && searchInputValue.searchinput ==='') {
       return onShowAllMovies();
     }
     if (!isSavedSection && searchInputValue.searchinput === '') {
       return onHideAllMovies();
     }
-    // send search-input to filter movies data
-    return onSearchSubmit({ data: searchInputValue.searchinput });
+
+    return onSearchSubmit();
   }
 
   function handleChange(evt) {
@@ -57,7 +57,7 @@ export default function SearchForm({
     validateSearchInput(value);
 
     // if input is empy => show all saved cards
-    if (isSavedSection && evt.target.value === '') {
+    if (isSavedSection && (evt.target.value === '' || searchInputValue.searchInputValue==='')) {
       onShowAllMovies();
     }
 

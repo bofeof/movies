@@ -42,27 +42,25 @@ function App() {
   const [filteredBeatMovies, setFilterBeatMovies] = useState([]);
   const [searchInputValue, setSearchInputValue] = useState({ searchinput: '' });
   const [isShorts, setIsShorts] = useState(false);
+
   const handleSetIsShorts = useCallback(() => {
-    setIsShorts(() => !isShorts);
+    setIsShorts(!isShorts);
   }, [isShorts]);
 
   // saved movies
   const [savedMovies, setSavedMovies] = useState([]);
   const [searchInputValueSaved, setSearchInputValueSaved] = useState({ searchinput: '' });
   const [filteredSavedMovies, setFilteredSavedMovies] = useState([]);
+  const [isShortsSaved, setIsShortsSaved] = useState(false);
+  const handleSetIsShortsSaved = useCallback(() => {
+    setIsShortsSaved(() => !isShortsSaved);
+  }, [isShortsSaved]);
 
   // window width
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   function updateSize() {
     setWindowWidth(window.innerWidth);
   }
-
-  // saved movies
-  const [isShortsSaved, setIsShortsSaved] = useState(false);
-
-  const handleSetIsShortsSaved = useCallback(() => {
-    setIsShortsSaved(() => !isShortsSaved);
-  }, [isShortsSaved]);
 
   // update widnow size
   useEffect(() => {
@@ -152,32 +150,6 @@ function App() {
         .catch(() => {
           handleRedirectToSignIn();
         });
-
-      // OLD get saved movies
-      // MainAPI.getAllMovies()
-      //   .then((res) => {
-      //     setSavedMovies(res.data);
-      //     setFilteredSavedMovies(res.data);
-      //   })
-      //   .catch((err) => {
-      //     setErrorMessage(err.message);
-      //     setIsInfoPopupOpen(!isInfoPopupOpen);
-      //   });
-
-      // get beat movies
-      // BeatFilmAPI.getBeatMovies()
-      //   .then((beatMoviesData) => {
-      //     const updateBeatMoviesData = beatMoviesData.map((item) => Object.assign(item, { isMovieSaved: false }));
-      //     updateBeatMoviesData.map((beatMovie) =>
-      //       filteredSavedMovies.map(
-      //         (savedMovie) => beatMovie.id === savedMovie.movieId && Object.assign(beatMovie, { isMovieSaved: true })
-      //       )
-      //     );
-      //     setBeatMovies(() => updateBeatMoviesData);
-      //   })
-      //   .catch(() => {
-      //     setIsLoadError(() => true);
-      //   });
     }
   }, [loggedIn]);
 
@@ -200,6 +172,37 @@ function App() {
     );
   }
 
+  // FILTERS
+  function handleSetFilterBeatMovies(updatedFilteredBeatMovies) {
+    setFilterBeatMovies(() => updatedFilteredBeatMovies);
+  }
+
+  function handleSetFilterSavedMovies(updatedFilteredSavedMovies) {
+    setFilteredSavedMovies(() => updatedFilteredSavedMovies);
+  }
+
+  function filterMovieData(movies, searchValue, shortsFilter, isSavedSection){
+    if(searchValue==='' && isSavedSection) {return movies}
+    const updatedMovies = movies.filter(
+      (movie) =>
+        (movie?.nameRU.toLowerCase().includes(searchValue.searchinput.toLowerCase()) ||
+          movie?.nameEN.toLowerCase().includes(searchValue.searchinput.toLowerCase())) &&
+          (shortsFilter ? movie?.duration <= 40 : movie?.duration >= 0));
+    return updatedMovies
+  }
+
+  function filterBeatMovies() {
+    const updatedFilteredBeatMovies = filterMovieData(beatMovies, searchInputValue, isShorts, false)
+    handleSetFilterBeatMovies(updatedFilteredBeatMovies);
+  }
+
+  function filterSavedMovies() {
+    const updatedFilteredSavedMovies = filterMovieData(savedMovies, searchInputValueSaved, isShortsSaved, true)
+    handleSetFilterSavedMovies(updatedFilteredSavedMovies);
+  }
+
+  //
+
   // CARD ACTIONS
   function createMovie(movieData) {
     MainAPI.createMovie(movieData)
@@ -210,6 +213,7 @@ function App() {
         // add new movie to save-section
         setSavedMovies((prevSate) => [newMovie.data, ...prevSate]);
         setFilteredSavedMovies((prevSate) => [newMovie.data, ...prevSate]);
+        filterSavedMovies();
       })
       .catch((err) => {
         setErrorMessage(err.message);
@@ -379,7 +383,7 @@ function App() {
                             filterStatus={isShorts}
                             isLoadError={isLoadError}
                             filteredBeatMovies={filteredBeatMovies}
-                            onSetFilterBeatMovies={setFilterBeatMovies}
+                            onSetFilterBeatMovies={filterBeatMovies}
                             onCreateMovie={createMovie}
                             onRemoveMovie={removeMovie}
                           />
@@ -414,7 +418,7 @@ function App() {
                             onSetSearchInputValue={setSearchInputValueSaved}
                             isLoadError={isLoadError}
                             filteredSavedMovies={filteredSavedMovies}
-                            onSetFilterBeatMovies={setFilteredSavedMovies}
+                            onSetFilterSavedMovies={filterSavedMovies}
                             onCreateMovie={createMovie}
                             onRemoveMovie={removeMovie}
                           />

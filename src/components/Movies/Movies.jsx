@@ -26,20 +26,6 @@ export default function Movies({
 }) {
   const windowWidth = useContext(WindowContext);
 
-  const handleFilterMovies = useCallback(
-    (filterData) => {
-      const newMovieData = beatMovies.filter(
-        (movie) =>
-          (movie?.nameRU.toLowerCase().includes(filterData.data.toLowerCase()) ||
-            movie?.nameEN.toLowerCase().includes(filterData.data.toLowerCase())) &&
-          (filterStatus ? movie?.duration <= 40 : movie?.duration >= 0)
-      );
-
-      onSetFilterBeatMovies(() => newMovieData);
-    },
-    [beatMovies, filterStatus]
-  );
-
   function showLoadMoreButton() {
     if (windowWidth > 800 && filteredBeatMovies.length > 12) {
       return true;
@@ -62,7 +48,7 @@ export default function Movies({
       <SearchForm
         onClickFilter={onClickFilter}
         filterStatus={filterStatus}
-        onSearchSubmit={handleFilterMovies}
+        onSearchSubmit={onSetFilterBeatMovies}
         searchInputValue={searchInputValue}
         onSetSearchInputValue={onSetSearchInputValue}
 
