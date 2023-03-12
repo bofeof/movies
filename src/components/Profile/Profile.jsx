@@ -59,6 +59,7 @@ export default function Profile({ onHandleSubmit, onHandleLogOut }) {
             type="text"
             name="name"
             id="profile-name"
+            // pattern="^.[a-zа-я\ \-]{2,30}$"
             required
             minLength="2"
             maxLength="30"

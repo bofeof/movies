@@ -9,7 +9,7 @@ import SearchForm from '../SearchForm/SearchForm';
 import MoviesCardList from '../MoviesCardList/MoviesCardList';
 import ShowMoreButton from '../ShowMoreButton/ShowMoreButton';
 
-// import Preloader from '../Preloader/Preloader';
+import Preloader from '../Preloader/Preloader';
 
 export default function Movies({
   isSavedSection,
@@ -22,7 +22,9 @@ export default function Movies({
   filteredBeatMovies,
   onSetFilterBeatMovies,
   onCreateMovie,
-  onRemoveMovie
+  onRemoveMovie,
+  isPreloaderActive,
+  onSetIsPreloaderActive,
 }) {
   const windowWidth = useContext(WindowContext);
 
@@ -39,9 +41,9 @@ export default function Movies({
     return false;
   }
 
-  const hideAllMovies = useCallback (()=>{
-    onSetFilterBeatMovies(() => [])
-  }, [])
+  const hideAllMovies = useCallback(() => {
+    onSetFilterBeatMovies(() => []);
+  }, []);
 
   return (
     <div className="movies">
@@ -51,18 +53,25 @@ export default function Movies({
         onSearchSubmit={onSetFilterBeatMovies}
         searchInputValue={searchInputValue}
         onSetSearchInputValue={onSetSearchInputValue}
-
         onShowAllMovies={null}
         onHideAllMovies={hideAllMovies}
       />
-      <MoviesCardList
-        isSavedSection={isSavedSection}
-        movies={filteredBeatMovies}
-        isLoadError={isLoadError}
-        onCreateMovie={onCreateMovie}
-        onRemoveMovie={onRemoveMovie}
-      />
-      {showLoadMoreButton() && <ShowMoreButton />}
+
+      {isPreloaderActive ? (
+        <Preloader />
+      ) : (
+        <>
+          <MoviesCardList
+            isSavedSection={isSavedSection}
+            movies={filteredBeatMovies}
+            isLoadError={isLoadError}
+            onCreateMovie={onCreateMovie}
+            onRemoveMovie={onRemoveMovie}
+            isPreloaderActive={isPreloaderActive}
+          />
+          {showLoadMoreButton() && <ShowMoreButton />}
+        </>
+      )}
     </div>
   );
 }

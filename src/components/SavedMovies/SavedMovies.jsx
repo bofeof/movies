@@ -4,7 +4,7 @@ import SearchForm from '../SearchForm/SearchForm';
 import MoviesCardList from '../MoviesCardList/MoviesCardList';
 import ShowMoreButton from '../ShowMoreButton/ShowMoreButton';
 import WindowContext from '../../contexts/WindowContext';
-// import Preloader from '../Preloader/Preloader';
+import Preloader from '../Preloader/Preloader';
 
 export default function SavedMovies({
   isSavedSection,
@@ -18,8 +18,8 @@ export default function SavedMovies({
   onSetFilterSavedMovies,
   onCreateMovie,
   onRemoveMovie,
+  isPreloaderActive,
 }) {
-
   const windowWidth = useContext(WindowContext);
 
   const showAllMoviesSaved = useCallback(() => {
@@ -51,14 +51,21 @@ export default function SavedMovies({
         onShowAllMovies={showAllMoviesSaved}
         onHideAllMovies={null}
       />
-      <MoviesCardList
-        isSavedSection={isSavedSection}
-        movies={filteredSavedMovies}
-        isLoadError={isLoadError}
-        onCreateMovie={onCreateMovie}
-        onRemoveMovie={onRemoveMovie}
-      />
-      {showLoadMoreButton() && <ShowMoreButton />}
+
+      {isPreloaderActive ? (
+        <Preloader />
+      ) : (
+        <>
+          <MoviesCardList
+            isSavedSection={isSavedSection}
+            movies={filteredSavedMovies}
+            isLoadError={isLoadError}
+            onCreateMovie={onCreateMovie}
+            onRemoveMovie={onRemoveMovie}
+          />
+          {showLoadMoreButton() && <ShowMoreButton />}
+        </>
+      )}
     </div>
   );
 }

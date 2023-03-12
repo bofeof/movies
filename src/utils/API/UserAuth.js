@@ -16,7 +16,7 @@ export default class UserAuth {
   }
 
   signup(userData) {
-    this._getToken();
+    // this._getToken();
     return fetch(`${this._configAPI.mainMoviesUrl}/signup`, {
       method: 'POST',
       headers: this._configAPI.headers,
@@ -25,7 +25,7 @@ export default class UserAuth {
   }
 
   signin(userData) {
-    this._getToken();
+    // this._getToken();
     return fetch(`${this._configAPI.mainMoviesUrl}/signin`, {
       method: 'POST',
       headers: this._configAPI.headers,

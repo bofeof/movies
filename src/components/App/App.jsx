@@ -30,7 +30,10 @@ function App() {
 
   const navigate = useNavigate();
   const [isInfoPopupOpen, setIsInfoPopupOpen] = useState(false);
-  const [errorMessage, setErrorMessage] = useState('');
+  const [infoMessage, setInfoMessage] = useState('');
+
+  const [isPreloaderActive, setIsPreloaderActive] = useState(false);
+  const [infoPopUpTitle, setInfoPopUpTitle] = useState('Внимание!');
 
   // user
   const [loggedIn, setLoggedIn] = useState(false);
@@ -125,6 +128,8 @@ function App() {
           handleRedirectToMovies();
 
           // get data
+          setIsPreloaderActive(!isPreloaderActive);
+
           Promise.all([MainAPI.getAllMovies(), BeatFilmAPI.getBeatMovies()])
             .then(([savedMoviesData, beatMoviesData]) => {
               // set saved movies
@@ -143,13 +148,15 @@ function App() {
             })
             .catch((err) => {
               setIsLoadError(() => true);
-              setErrorMessage(err.message);
+              setInfoPopUpTitle('Внимание!');
+              setInfoMessage(err.message);
               setIsInfoPopupOpen(!isInfoPopupOpen);
             });
         })
         .catch(() => {
           handleRedirectToSignIn();
-        });
+        })
+        .finally(setIsPreloaderActive(!isPreloaderActive));
     }
   }, [loggedIn]);
 
@@ -181,23 +188,26 @@ function App() {
     setFilteredSavedMovies(() => updatedFilteredSavedMovies);
   }
 
-  function filterMovieData(movies, searchValue, shortsFilter, isSavedSection){
-    if(searchValue==='' && isSavedSection) {return movies}
+  function filterMovieData(movies, searchValue, shortsFilter, isSavedSection) {
+    if (searchValue === '' && isSavedSection) {
+      return movies;
+    }
     const updatedMovies = movies.filter(
       (movie) =>
         (movie?.nameRU.toLowerCase().includes(searchValue.searchinput.toLowerCase()) ||
           movie?.nameEN.toLowerCase().includes(searchValue.searchinput.toLowerCase())) &&
-          (shortsFilter ? movie?.duration <= 40 : movie?.duration >= 0));
-    return updatedMovies
+        (shortsFilter ? movie?.duration <= 40 : movie?.duration >= 0)
+    );
+    return updatedMovies;
   }
 
   function filterBeatMovies() {
-    const updatedFilteredBeatMovies = filterMovieData(beatMovies, searchInputValue, isShorts, false)
+    const updatedFilteredBeatMovies = filterMovieData(beatMovies, searchInputValue, isShorts, false);
     handleSetFilterBeatMovies(updatedFilteredBeatMovies);
   }
 
   function filterSavedMovies() {
-    const updatedFilteredSavedMovies = filterMovieData(savedMovies, searchInputValueSaved, isShortsSaved, true)
+    const updatedFilteredSavedMovies = filterMovieData(savedMovies, searchInputValueSaved, isShortsSaved, true);
     handleSetFilterSavedMovies(updatedFilteredSavedMovies);
   }
 
@@ -212,11 +222,13 @@ function App() {
 
         // add new movie to save-section
         setSavedMovies((prevSate) => [newMovie.data, ...prevSate]);
+        // check card for saved filter
         setFilteredSavedMovies((prevSate) => [newMovie.data, ...prevSate]);
-        filterSavedMovies();
+        // filterSavedMovies();
       })
       .catch((err) => {
-        setErrorMessage(err.message);
+        setInfoPopUpTitle('Внимание!');
+        setInfoMessage(err.message);
         setIsInfoPopupOpen(!isInfoPopupOpen);
       });
   }
@@ -236,7 +248,8 @@ function App() {
         );
       })
       .catch((err) => {
-        setErrorMessage(err.message);
+        setInfoPopUpTitle('Внимание!');
+        setInfoMessage(err.message);
         setIsInfoPopupOpen(!isInfoPopupOpen);
       });
   }
@@ -254,16 +267,20 @@ function App() {
               handleRedirectToMovies();
             })
             .catch((err) => {
-              setErrorMessage(err.message);
+              setInfoPopUpTitle('Внимание!');
+              setInfoMessage(err.message);
               setIsInfoPopupOpen(!isInfoPopupOpen);
             });
         } else {
           setLoggedIn(false);
+          setInfoPopUpTitle('Внимание!');
+          setInfoMessage('Непредвиденная ошибка. Повторите свое действие еще раз');
           setIsInfoPopupOpen(!isInfoPopupOpen);
         }
       })
       .catch((err) => {
-        setErrorMessage(err.message);
+        setInfoPopUpTitle('Внимание!');
+        setInfoMessage(err.message);
         setIsInfoPopupOpen(!isInfoPopupOpen);
       });
   }
@@ -275,8 +292,14 @@ function App() {
           handleRedirectToSignIn();
         }
       })
+      .then(() => {
+        setInfoPopUpTitle('Ура!');
+        setInfoMessage('Вы успешно зарегистрированы');
+        setIsInfoPopupOpen(!isInfoPopupOpen);
+      })
       .catch((err) => {
-        setErrorMessage(err.message);
+        setInfoPopUpTitle('Внимание!');
+        setInfoMessage(err.message);
         setIsInfoPopupOpen(!isInfoPopupOpen);
       });
   }
@@ -291,7 +314,8 @@ function App() {
         }));
       })
       .catch((err) => {
-        setErrorMessage(err.message);
+        setInfoPopUpTitle('Внимание!');
+        setInfoMessage(err.message);
         setIsInfoPopupOpen(!isInfoPopupOpen);
       });
   }
@@ -386,6 +410,7 @@ function App() {
                             onSetFilterBeatMovies={filterBeatMovies}
                             onCreateMovie={createMovie}
                             onRemoveMovie={removeMovie}
+                            isPreloaderActive={isPreloaderActive}
                           />
                         </main>
 
@@ -421,6 +446,7 @@ function App() {
                             onSetFilterSavedMovies={filterSavedMovies}
                             onCreateMovie={createMovie}
                             onRemoveMovie={removeMovie}
+                            isPreloaderActive={isPreloaderActive}
                           />
                         </main>
 
@@ -463,7 +489,7 @@ function App() {
               )}
             </Routes>
           </div>
-          <InfoPopUp isOpen={isInfoPopupOpen} onClose={closeInfoPopUp} message={errorMessage} />
+          <InfoPopUp isOpen={isInfoPopupOpen} onClose={closeInfoPopUp} message={infoMessage} title={infoPopUpTitle} />
         </div>
       </WindowContext.Provider>
     </CurrentUserContext.Provider>

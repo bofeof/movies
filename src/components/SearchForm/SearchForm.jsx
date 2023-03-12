@@ -75,8 +75,17 @@ export default function SearchForm({
     }));
   }
 
-  function handleBlur() {
+  function handleBlur(evt) {
     setDefaultInputsValidation();
+    const { name, value } = evt.target;
+    onSetSearchInputValue((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
+
+    if (value === ""){
+      onShowAllMovies()
+    }
   }
 
   useEffect(() => {
