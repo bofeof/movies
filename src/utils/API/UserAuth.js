@@ -3,10 +3,6 @@ export default class UserAuth {
     this._configAPI = configAPI;
   }
 
-  _getToken() {
-    this._configAPI.headers.authorization = `Bearer ${localStorage.getItem('moviesToken')}`;
-  }
-
   async _getResponse(res) {
     if (res.ok) {
       return res.json();
@@ -16,7 +12,6 @@ export default class UserAuth {
   }
 
   signup(userData) {
-    // this._getToken();
     return fetch(`${this._configAPI.mainMoviesUrl}/signup`, {
       method: 'POST',
       headers: this._configAPI.headers,
@@ -25,7 +20,6 @@ export default class UserAuth {
   }
 
   signin(userData) {
-    // this._getToken();
     return fetch(`${this._configAPI.mainMoviesUrl}/signin`, {
       method: 'POST',
       headers: this._configAPI.headers,

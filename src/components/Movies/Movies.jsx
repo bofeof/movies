@@ -19,30 +19,29 @@ export default function Movies({
   searchInputValue,
   onSetSearchInputValue,
   isLoadError,
-  filteredBeatMovies,
-  onSetFilterBeatMovies,
+  beatMoviesFiltered,
+  onSetBeatMoviesFiltered,
   onCreateMovie,
   onRemoveMovie,
   isPreloaderActive,
-  onSetIsPreloaderActive,
 }) {
   const windowWidth = useContext(WindowContext);
 
   function showLoadMoreButton() {
-    if (windowWidth > 800 && filteredBeatMovies.length > 12) {
+    if (windowWidth > 800 && beatMoviesFiltered.length > 12) {
       return true;
     }
-    if (windowWidth < 768 && filteredBeatMovies.length >= 8) {
+    if (windowWidth < 768 && beatMoviesFiltered.length >= 8) {
       return true;
     }
-    if (windowWidth < 500 && filteredBeatMovies.length >= 5) {
+    if (windowWidth < 500 && beatMoviesFiltered.length >= 5) {
       return true;
     }
     return false;
   }
 
   const hideAllMovies = useCallback(() => {
-    onSetFilterBeatMovies(() => []);
+    onSetBeatMoviesFiltered(() => []);
   }, []);
 
   return (
@@ -50,7 +49,7 @@ export default function Movies({
       <SearchForm
         onClickFilter={onClickFilter}
         filterStatus={filterStatus}
-        onSearchSubmit={onSetFilterBeatMovies}
+        onSearchSubmit={onSetBeatMoviesFiltered}
         searchInputValue={searchInputValue}
         onSetSearchInputValue={onSetSearchInputValue}
         onShowAllMovies={null}
@@ -63,7 +62,7 @@ export default function Movies({
         <>
           <MoviesCardList
             isSavedSection={isSavedSection}
-            movies={filteredBeatMovies}
+            movies={beatMoviesFiltered}
             isLoadError={isLoadError}
             onCreateMovie={onCreateMovie}
             onRemoveMovie={onRemoveMovie}

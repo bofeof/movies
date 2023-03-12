@@ -42,45 +42,29 @@ function App() {
   // beat movies
   const [beatMovies, setBeatMovies] = useState([]);
   const [isLoadError, setIsLoadError] = useState(false);
-  const [filteredBeatMovies, setFilterBeatMovies] = useState([]);
+  const [beatMoviesFiltered, setBeatMoviesFiltered] = useState([]);
   const [searchInputValue, setSearchInputValue] = useState({ searchinput: '' });
   const [isShorts, setIsShorts] = useState(false);
-
-  const handleSetIsShorts = useCallback(() => {
-    setIsShorts(!isShorts);
-  }, [isShorts]);
 
   // saved movies
   const [savedMovies, setSavedMovies] = useState([]);
   const [searchInputValueSaved, setSearchInputValueSaved] = useState({ searchinput: '' });
-  const [filteredSavedMovies, setFilteredSavedMovies] = useState([]);
+  const [savedMoviesFiltered, setSavedMoviesFiltered] = useState([]);
   const [isShortsSaved, setIsShortsSaved] = useState(false);
+
+  // filters
+  const handleSetIsShorts = useCallback(() => {
+    setIsShorts(!isShorts);
+  }, [isShorts]);
+
   const handleSetIsShortsSaved = useCallback(() => {
     setIsShortsSaved(() => !isShortsSaved);
   }, [isShortsSaved]);
 
   // window width
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
-  function updateSize() {
-    setWindowWidth(window.innerWidth);
-  }
 
-  // update widnow size
-  useEffect(() => {
-    setWindowWidth(window.innerWidth);
-    window.addEventListener('resize', updateSize);
-    return () => window.removeEventListener('resize', updateSize);
-  }, []);
-
-  // first run for search inputs
-  useEffect(() => {
-    setSearchInputValue((prevValue) => ({
-      ...prevValue,
-      searchinput: '',
-    }));
-  }, []);
-
-  // REDIRECT
+  // Redirect
   function handleRedirectToMain() {
     navigate('/');
   }
@@ -110,7 +94,30 @@ function App() {
     navigate(-1);
   }
 
-  // first run: check login, get movies data
+  function updateSize() {
+    setWindowWidth(window.innerWidth);
+  }
+
+  // First run: search inputs
+  useEffect(() => {
+    setSearchInputValue((prevValue) => ({
+      ...prevValue,
+      searchinput: '',
+    }));
+    setSearchInputValueSaved((prevValue) => ({
+      ...prevValue,
+      searchinput: '',
+    }));
+  }, []);
+
+  // update widnow size
+  useEffect(() => {
+    setWindowWidth(window.innerWidth);
+    window.addEventListener('resize', updateSize);
+    return () => window.removeEventListener('resize', updateSize);
+  }, []);
+
+  // First run: check login, get movies data
   useEffect(() => {
     if (localStorage.getItem('moviesToken')) {
       UserAPI.checkToken(localStorage.getItem('moviesToken'))
@@ -127,14 +134,14 @@ function App() {
           setCurrentUser(res.data);
           handleRedirectToMovies();
 
-          // get data
+          // get data + preloader
           setIsPreloaderActive(!isPreloaderActive);
 
           Promise.all([MainAPI.getAllMovies(), BeatFilmAPI.getBeatMovies()])
             .then(([savedMoviesData, beatMoviesData]) => {
               // set saved movies
               setSavedMovies(savedMoviesData.data);
-              setFilteredSavedMovies(savedMoviesData.data.reverse());
+              setSavedMoviesFiltered(savedMoviesData.data.reverse());
 
               // check if movie is saved
               const savedList = savedMoviesData.data.map((savedMovie) => savedMovie.movieId);
@@ -151,12 +158,12 @@ function App() {
               setInfoPopUpTitle('Внимание!');
               setInfoMessage(err.message);
               setIsInfoPopupOpen(!isInfoPopupOpen);
-            });
+            })
+            .finally(setIsPreloaderActive(!isPreloaderActive));
         })
         .catch(() => {
           handleRedirectToSignIn();
-        })
-        .finally(setIsPreloaderActive(!isPreloaderActive));
+        });
     }
   }, [loggedIn]);
 
@@ -172,20 +179,20 @@ function App() {
       )
     );
 
-    setFilterBeatMovies(
-      filteredBeatMovies.map((beatMovie) =>
+    setBeatMoviesFiltered(
+      beatMoviesFiltered.map((beatMovie) =>
         movieUpdated.data.movieId === beatMovie.id ? { ...beatMovie, isMovieSaved: status } : { ...beatMovie }
       )
     );
   }
 
   // FILTERS
-  function handleSetFilterBeatMovies(updatedFilteredBeatMovies) {
-    setFilterBeatMovies(() => updatedFilteredBeatMovies);
+  function handlesetBeatMoviesFiltered(updatedbeatMoviesFiltered) {
+    setBeatMoviesFiltered(() => updatedbeatMoviesFiltered);
   }
 
   function handleSetFilterSavedMovies(updatedFilteredSavedMovies) {
-    setFilteredSavedMovies(() => updatedFilteredSavedMovies);
+    setSavedMoviesFiltered(() => updatedFilteredSavedMovies);
   }
 
   function filterMovieData(movies, searchValue, shortsFilter, isSavedSection) {
@@ -202,8 +209,8 @@ function App() {
   }
 
   function filterBeatMovies() {
-    const updatedFilteredBeatMovies = filterMovieData(beatMovies, searchInputValue, isShorts, false);
-    handleSetFilterBeatMovies(updatedFilteredBeatMovies);
+    const updatedbeatMoviesFiltered = filterMovieData(beatMovies, searchInputValue, isShorts, false);
+    handlesetBeatMoviesFiltered(updatedbeatMoviesFiltered);
   }
 
   function filterSavedMovies() {
@@ -223,7 +230,7 @@ function App() {
         // add new movie to save-section
         setSavedMovies((prevSate) => [newMovie.data, ...prevSate]);
         // check card for saved filter
-        setFilteredSavedMovies((prevSate) => [newMovie.data, ...prevSate]);
+        setSavedMoviesFiltered((prevSate) => [newMovie.data, ...prevSate]);
         // filterSavedMovies();
       })
       .catch((err) => {
@@ -243,7 +250,7 @@ function App() {
 
         // saved section
         setSavedMovies((prev) => prev.filter((savedMovie) => movieIdRemoved !== savedMovie._id && { ...savedMovie }));
-        setFilteredSavedMovies((prev) =>
+        setSavedMoviesFiltered((prev) =>
           prev.filter((savedMovie) => movieIdRemoved !== savedMovie._id && { ...savedMovie })
         );
       })
@@ -304,6 +311,12 @@ function App() {
       });
   }
 
+  function handleUserLogout() {
+    localStorage.clear();
+    setLoggedIn(false);
+    handleRedirectToMain();
+  }
+
   function handleUserUpdate(userData) {
     MainAPI.updateUserInfo(userData)
       .then((newUserData) => {
@@ -318,12 +331,6 @@ function App() {
         setInfoMessage(err.message);
         setIsInfoPopupOpen(!isInfoPopupOpen);
       });
-  }
-
-  function handleUserLogout() {
-    localStorage.clear();
-    setLoggedIn(false);
-    handleRedirectToSignIn();
   }
 
   return (
@@ -406,8 +413,8 @@ function App() {
                             onSetSearchInputValue={setSearchInputValue}
                             filterStatus={isShorts}
                             isLoadError={isLoadError}
-                            filteredBeatMovies={filteredBeatMovies}
-                            onSetFilterBeatMovies={filterBeatMovies}
+                            beatMoviesFiltered={beatMoviesFiltered}
+                            onSetBeatMoviesFiltered={filterBeatMovies}
                             onCreateMovie={createMovie}
                             onRemoveMovie={removeMovie}
                             isPreloaderActive={isPreloaderActive}
@@ -442,7 +449,7 @@ function App() {
                             searchInputValue={searchInputValueSaved}
                             onSetSearchInputValue={setSearchInputValueSaved}
                             isLoadError={isLoadError}
-                            filteredSavedMovies={filteredSavedMovies}
+                            savedMoviesFiltered={savedMoviesFiltered}
                             onSetFilterSavedMovies={filterSavedMovies}
                             onCreateMovie={createMovie}
                             onRemoveMovie={removeMovie}
