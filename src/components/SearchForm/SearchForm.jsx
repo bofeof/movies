@@ -57,13 +57,13 @@ export default function SearchForm({
     validateSearchInput(value);
 
     // if input is empy => show all saved cards
-    if (isSavedSection && (evt.target.value === '' || searchInputValue.searchInputValue==='')) {
-      onShowAllMovies();
-    }
+    // if (isSavedSection && (evt.target.value === '' || searchInputValue.searchInputValue==='')) {
+    //   onShowAllMovies();
+    // }
 
-    if (!isSavedSection && evt.target.value === '') {
-      onHideAllMovies();
-    }
+    // if (!isSavedSection && evt.target.value === '') {
+    //   onHideAllMovies();
+    // }
   }
 
   function handleFocus(evt) {
@@ -75,17 +75,16 @@ export default function SearchForm({
     }));
   }
 
-  function handleBlur(evt) {
+  function handleBlur() {
     setDefaultInputsValidation();
-    const { name, value } = evt.target;
-    onSetSearchInputValue((prevState) => ({
-      ...prevState,
-      [name]: value,
-    }));
-
-    if (value === ""){
-      onShowAllMovies()
-    }
+    // const { name, value } = evt.target;
+    // if (value === ""){
+    //   onSetSearchInputValue((prevState) => ({
+    //     ...prevState,
+    //     [name]: value,
+    //   }));
+    //   onShowAllMovies()
+    // }
   }
 
   useEffect(() => {

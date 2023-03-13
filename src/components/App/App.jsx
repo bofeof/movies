@@ -1,5 +1,3 @@
-/* eslint-disable react/jsx-no-bind */
-
 import { Route, Routes, Navigate, useNavigate } from 'react-router-dom';
 import { useCallback, useEffect, useState } from 'react';
 
@@ -52,47 +50,41 @@ function App() {
   const [savedMoviesFiltered, setSavedMoviesFiltered] = useState([]);
   const [isShortsSaved, setIsShortsSaved] = useState(false);
 
-  // filters
-  const handleSetIsShorts = useCallback(() => {
-    setIsShorts(!isShorts);
-  }, [isShorts]);
-
-  const handleSetIsShortsSaved = useCallback(() => {
-    setIsShortsSaved(() => !isShortsSaved);
-  }, [isShortsSaved]);
-
   // window width
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
   // Redirect
-  function handleRedirectToMain() {
+  const handleRedirectToMain = useCallback(() => {
     navigate('/');
-  }
+  }, [navigate]);
 
-  function handleRedirectToMovies() {
+  const handleRedirectToMovies = useCallback(() => {
     navigate('/movies');
-  }
+  }, [navigate]);
 
-  function handleRedirectToSavedMovies() {
+  const handleRedirectToSavedMovies = useCallback(() => {
     navigate('/saved-movies');
-  }
+  }, [navigate]);
 
-  function handleRedirectToProfile(evt) {
-    evt.preventDefault();
-    navigate('/profile');
-  }
+  const handleRedirectToProfile = useCallback(
+    (evt) => {
+      evt.preventDefault();
+      navigate('/profile');
+    },
+    [navigate]
+  );
 
-  function handleRedirectToSignIn() {
+  const handleRedirectToSignIn = useCallback(() => {
     navigate('/signin');
-  }
+  }, [navigate]);
 
-  function handleRedirectToSignUp() {
+  const handleRedirectToSignUp = useCallback(() => {
     navigate('/signup');
-  }
+  }, [navigate]);
 
-  function handleRedirectNotFoundToBack() {
+  const handleRedirectNotFoundToBack = useCallback(() => {
     navigate(-1);
-  }
+  }, [navigate]);
 
   function updateSize() {
     setWindowWidth(window.innerWidth);
@@ -187,17 +179,19 @@ function App() {
   }
 
   // FILTERS
-  function handlesetBeatMoviesFiltered(updatedbeatMoviesFiltered) {
-    setBeatMoviesFiltered(() => updatedbeatMoviesFiltered);
+  // update filtered lists of movies
+  function handleSetBeatMoviesFiltered(updatedbeatMoviesFiltered) {
+    setBeatMoviesFiltered(updatedbeatMoviesFiltered);
   }
 
   function handleSetFilterSavedMovies(updatedFilteredSavedMovies) {
     setSavedMoviesFiltered(() => updatedFilteredSavedMovies);
   }
 
+  // select data w/ filters
   function filterMovieData(movies, searchValue, shortsFilter, isSavedSection) {
-    if (searchValue === '' && isSavedSection) {
-      return movies;
+    if (searchValue.searchinput === '' && !isSavedSection) {
+      return [];
     }
     const updatedMovies = movies.filter(
       (movie) =>
@@ -210,7 +204,7 @@ function App() {
 
   function filterBeatMovies() {
     const updatedbeatMoviesFiltered = filterMovieData(beatMovies, searchInputValue, isShorts, false);
-    handlesetBeatMoviesFiltered(updatedbeatMoviesFiltered);
+    handleSetBeatMoviesFiltered(updatedbeatMoviesFiltered);
   }
 
   function filterSavedMovies() {
@@ -218,10 +212,25 @@ function App() {
     handleSetFilterSavedMovies(updatedFilteredSavedMovies);
   }
 
-  //
+  useEffect(() => {
+    filterBeatMovies();
+  }, [isShorts]);
+
+  useEffect(() => {
+    filterSavedMovies();
+  }, [isShortsSaved, savedMovies]);
+
+  // filters
+  const handleSetIsShorts = useCallback(() => {
+    setIsShorts(!isShorts);
+  }, [isShorts]);
+
+  const handleSetIsShortsSaved = useCallback(() => {
+    setIsShortsSaved(!isShortsSaved);
+  }, [isShortsSaved]);
 
   // CARD ACTIONS
-  function createMovie(movieData) {
+  function handleCreateMovie(movieData) {
     MainAPI.createMovie(movieData)
       .then((newMovie) => {
         // update beatfilms
@@ -240,7 +249,7 @@ function App() {
       });
   }
 
-  function removeMovie(movieData) {
+  function handleRemoveMovie(movieData) {
     const movieIdRemoved = movieData._id || savedMovies.find((item) => item.movieId === movieData.id)._id;
     // remove from db
     MainAPI.removeMovie(movieIdRemoved)
@@ -325,6 +334,11 @@ function App() {
           name: newUserData.data.name,
           email: newUserData.data.email,
         }));
+      })
+      .then(() => {
+        setInfoPopUpTitle('Ура!');
+        setInfoMessage('Данные изменены');
+        setIsInfoPopupOpen(!isInfoPopupOpen);
       })
       .catch((err) => {
         setInfoPopUpTitle('Внимание!');
@@ -415,8 +429,8 @@ function App() {
                             isLoadError={isLoadError}
                             beatMoviesFiltered={beatMoviesFiltered}
                             onSetBeatMoviesFiltered={filterBeatMovies}
-                            onCreateMovie={createMovie}
-                            onRemoveMovie={removeMovie}
+                            onCreateMovie={handleCreateMovie}
+                            onRemoveMovie={handleRemoveMovie}
                             isPreloaderActive={isPreloaderActive}
                           />
                         </main>
@@ -451,8 +465,8 @@ function App() {
                             isLoadError={isLoadError}
                             savedMoviesFiltered={savedMoviesFiltered}
                             onSetFilterSavedMovies={filterSavedMovies}
-                            onCreateMovie={createMovie}
-                            onRemoveMovie={removeMovie}
+                            onCreateMovie={handleCreateMovie}
+                            onRemoveMovie={handleRemoveMovie}
                             isPreloaderActive={isPreloaderActive}
                           />
                         </main>

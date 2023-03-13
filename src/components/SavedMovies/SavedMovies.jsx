@@ -14,7 +14,7 @@ export default function SavedMovies({
   searchInputValue,
   onSetSearchInputValue,
   isLoadError,
-  filteredSavedMovies,
+  savedMoviesFiltered,
   onSetFilterSavedMovies,
   onCreateMovie,
   onRemoveMovie,
@@ -27,13 +27,13 @@ export default function SavedMovies({
   }, [savedMovies]);
 
   function showLoadMoreButton() {
-    if (windowWidth > 800 && filteredSavedMovies.length > 12) {
+    if (windowWidth > 800 && savedMoviesFiltered.length > 12) {
       return true;
     }
-    if (windowWidth < 768 && filteredSavedMovies.length >= 8) {
+    if (windowWidth < 768 && savedMoviesFiltered.length >= 8) {
       return true;
     }
-    if (windowWidth < 500 && filteredSavedMovies.length >= 5) {
+    if (windowWidth < 500 && savedMoviesFiltered.length >= 5) {
       return true;
     }
     return false;
@@ -58,7 +58,7 @@ export default function SavedMovies({
         <>
           <MoviesCardList
             isSavedSection={isSavedSection}
-            movies={filteredSavedMovies}
+            movies={savedMoviesFiltered}
             isLoadError={isLoadError}
             onCreateMovie={onCreateMovie}
             onRemoveMovie={onRemoveMovie}

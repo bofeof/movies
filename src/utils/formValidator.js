@@ -1,17 +1,18 @@
 import validationErrorMessages from './validationErrorMessages';
 
+let testResultName;
+
 export default function formValidator(evt) {
   const currentInput = evt.target;
+  const { name, value } = currentInput;
 
   const validationStatus = {
     isValid: false,
     errorText: currentInput.validationMessage,
   };
 
-  const { name, value } = currentInput;
-
   if (name === 'name') {
-    const testResultName = /^.[a-zа-я\s{0,1}-]{1,30}$/.test(value);
+    testResultName = /^.[a-zа-я\s{0,1}-]{1,30}$/gmi.test(value);
     validationStatus.isValid = testResultName;
     validationStatus.errorText = !testResultName && validationErrorMessages.nameErr;
     return validationStatus
