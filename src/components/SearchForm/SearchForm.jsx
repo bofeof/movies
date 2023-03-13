@@ -6,13 +6,14 @@ import FilterCheckbox from '../FilterCheckbox/FilterCheckbox';
 export default function SearchForm({
   isSavedSection,
   onShowAllMovies,
-  onHideAllMovies,
+  // onHideAllMovies,
   onSearchSubmit,
   onClickFilter,
   filterStatus,
   searchInputValue,
   onSetSearchInputValue,
 }) {
+
   const [inputsValidation, setInputsValidation] = useState({ searchinput: { isValid: true, errorText: '' } });
   const isFormInvalid = inputsValidation.searchinput.isValid;
 
@@ -33,17 +34,7 @@ export default function SearchForm({
 
   function handleSearch(evt) {
     evt.preventDefault();
-
     validateSearchInput(searchInputValue.searchinput);
-
-    // if input is empy => show all saved cards
-    if (isSavedSection && searchInputValue.searchinput ==='') {
-      return onShowAllMovies();
-    }
-    if (!isSavedSection && searchInputValue.searchinput === '') {
-      return onHideAllMovies();
-    }
-
     return onSearchSubmit();
   }
 
@@ -55,15 +46,6 @@ export default function SearchForm({
     }));
 
     validateSearchInput(value);
-
-    // if input is empy => show all saved cards
-    // if (isSavedSection && (evt.target.value === '' || searchInputValue.searchInputValue==='')) {
-    //   onShowAllMovies();
-    // }
-
-    // if (!isSavedSection && evt.target.value === '') {
-    //   onHideAllMovies();
-    // }
   }
 
   function handleFocus(evt) {
@@ -75,16 +57,18 @@ export default function SearchForm({
     }));
   }
 
-  function handleBlur() {
+  function handleBlur(evt) {
     setDefaultInputsValidation();
-    // const { name, value } = evt.target;
-    // if (value === ""){
-    //   onSetSearchInputValue((prevState) => ({
-    //     ...prevState,
-    //     [name]: value,
-    //   }));
-    //   onShowAllMovies()
-    // }
+
+    const { name, value } = evt.target;
+
+    if (value === "" && isSavedSection){
+      onSetSearchInputValue((prevState) => ({
+        ...prevState,
+        [name]: value,
+      }));
+      onShowAllMovies()
+    }
   }
 
   useEffect(() => {

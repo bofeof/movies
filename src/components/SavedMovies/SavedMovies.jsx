@@ -8,7 +8,7 @@ import Preloader from '../Preloader/Preloader';
 
 export default function SavedMovies({
   isSavedSection,
-  savedMovies,
+
   onClickFilter,
   filterStatus,
   searchInputValue,
@@ -23,8 +23,8 @@ export default function SavedMovies({
   const windowWidth = useContext(WindowContext);
 
   const showAllMoviesSaved = useCallback(() => {
-    onSetFilterSavedMovies(savedMovies);
-  }, [savedMovies]);
+    onSetFilterSavedMovies();
+  }, []);
 
   function showLoadMoreButton() {
     if (windowWidth > 800 && savedMoviesFiltered.length > 12) {

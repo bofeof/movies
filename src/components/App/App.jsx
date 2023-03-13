@@ -220,6 +220,13 @@ function App() {
     filterSavedMovies();
   }, [isShortsSaved, savedMovies]);
 
+  useEffect(() => {
+    if (searchInputValueSaved === '') {
+      setIsShortsSaved(!isShortsSaved);
+      filterSavedMovies();
+    }
+  }, [searchInputValueSaved]);
+
   // filters
   const handleSetIsShorts = useCallback(() => {
     setIsShorts(!isShorts);
@@ -240,7 +247,6 @@ function App() {
         setSavedMovies((prevSate) => [newMovie.data, ...prevSate]);
         // check card for saved filter
         setSavedMoviesFiltered((prevSate) => [newMovie.data, ...prevSate]);
-        // filterSavedMovies();
       })
       .catch((err) => {
         setInfoPopUpTitle('Внимание!');
@@ -421,7 +427,6 @@ function App() {
                         <main>
                           <Movies
                             isSavedSection={false}
-                            beatMovies={beatMovies}
                             onClickFilter={handleSetIsShorts}
                             searchInputValue={searchInputValue}
                             onSetSearchInputValue={setSearchInputValue}
@@ -457,7 +462,6 @@ function App() {
                         <main>
                           <SavedMovies
                             isSavedSection
-                            savedMovies={savedMovies}
                             onClickFilter={handleSetIsShortsSaved}
                             filterStatus={isShortsSaved}
                             searchInputValue={searchInputValueSaved}

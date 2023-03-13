@@ -1,6 +1,5 @@
-/* eslint-disable no-unused-vars */
 
-import { useCallback, useState, useContext } from 'react';
+import { useCallback, useContext } from 'react';
 
 import WindowContext from '../../contexts/WindowContext';
 
@@ -13,7 +12,7 @@ import Preloader from '../Preloader/Preloader';
 
 export default function Movies({
   isSavedSection,
-  beatMovies,
+
   onClickFilter,
   filterStatus,
   searchInputValue,
