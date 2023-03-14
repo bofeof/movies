@@ -1,7 +1,7 @@
 
-import { useCallback, useContext } from 'react';
+import { useCallback } from 'react';
 
-import WindowContext from '../../contexts/WindowContext';
+// import WindowContext from '../../contexts/WindowContext';
 
 import './Movies.css';
 import SearchForm from '../SearchForm/SearchForm';
@@ -23,21 +23,13 @@ export default function Movies({
   onCreateMovie,
   onRemoveMovie,
   isPreloaderActive,
-}) {
-  const windowWidth = useContext(WindowContext);
 
-  function showLoadMoreButton() {
-    if (windowWidth > 800 && beatMoviesFiltered.length > 12) {
-      return true;
-    }
-    if (windowWidth < 768 && beatMoviesFiltered.length >= 8) {
-      return true;
-    }
-    if (windowWidth < 500 && beatMoviesFiltered.length >= 5) {
-      return true;
-    }
-    return false;
-  }
+  onClickMoreButton,
+  currentGalleryHeight,
+
+  isMoreButtonVisible
+
+}) {
 
   const hideAllMovies = useCallback(() => {
     onSetBeatMoviesFiltered(() => []);
@@ -66,8 +58,9 @@ export default function Movies({
             onCreateMovie={onCreateMovie}
             onRemoveMovie={onRemoveMovie}
             isPreloaderActive={isPreloaderActive}
+            currentGalleryHeight = {currentGalleryHeight}
           />
-          {showLoadMoreButton() && <ShowMoreButton />}
+          {isMoreButtonVisible && <ShowMoreButton onClickMoreButton = {onClickMoreButton} />}
         </>
       )}
     </div>

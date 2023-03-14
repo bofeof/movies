@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { Route, Routes, Navigate, useNavigate } from 'react-router-dom';
 import { useCallback, useEffect, useState } from 'react';
 
@@ -20,6 +21,8 @@ import UserAuth from '../../utils/API/UserAuth';
 import { configMainAPI } from '../../utils/API/mainApiConfig';
 import WindowContext from '../../contexts/WindowContext';
 import { CurrentUserContext } from '../../contexts/CurrentUserContext';
+
+// import { listMoviesContainer } from '../../utils/moviesConstants';
 
 function App() {
   const BeatFilmAPI = new MoviesApi();
@@ -353,6 +356,80 @@ function App() {
       });
   }
 
+  // check button
+
+  // load more button
+  const [isMoreButtonVisible, setIsMoreButtonVisible] = useState(false)
+  const [currentGalleryHeight, setCurrentGalleryHeight] = useState(0);
+  const [moreButtonCounter, setMoreButtonCounter] = useState(0);
+  const [movieGalleryHeigh, setMovieGalleryHeigh] = useState({
+    large: 1068 + moreButtonCounter * (218 + 32),
+    medium: 1236 + moreButtonCounter * (257 + 36),
+    small: 1315 + moreButtonCounter * (235 + 20),
+  });
+
+  function defineCurrentWindowSize() {
+    if (windowWidth > 800) {
+      return 'large';
+    }
+    if (windowWidth <= 768 && windowWidth > 500) {
+      return 'medium';
+    }
+    return 'small';
+  }
+
+  function showLoadMoreButton(moviesFiltered) {
+    let movieArray
+    let hiddenStatus
+
+    if (moviesFiltered.length !== 0 && document.querySelector('.movies-list').children) {
+      movieArray = Array.from(document.querySelector('.movies-list').children);
+      hiddenStatus = movieArray.map((movie) => movie.offsetTop < currentGalleryHeight).includes(false);
+    }
+
+    if (windowWidth > 800 && moviesFiltered.length > 12 && hiddenStatus) {
+      return true;
+    }
+    if (windowWidth < 768 && moviesFiltered.length >= 8 && hiddenStatus) {
+      return true;
+    }
+    if (windowWidth < 500 && moviesFiltered.length >= 5 && hiddenStatus) {
+      return true;
+    }
+    return false;
+
+  }
+
+  function handleSetMoreButtonCounter() {
+    setMoreButtonCounter((prevConter) => prevConter + 1);
+  }
+
+  // define current size of gallery
+  useEffect(() => {
+    setMovieGalleryHeigh((prevState) => ({
+      ...prevState,
+      // start h + n click * card h + gap * n row
+      large: 1068 + moreButtonCounter * (218 + 32) * 1,
+      medium: 1236 + moreButtonCounter * (257 + 36) * 1,
+      small: 1315 + moreButtonCounter * (235 + 20) * 5,
+    }));
+  }, [windowWidth,  moreButtonCounter, isShorts, beatMoviesFiltered]);
+
+  useEffect(() => {
+    const size = defineCurrentWindowSize();
+    setCurrentGalleryHeight(movieGalleryHeigh[size]);
+  }, [windowWidth, moreButtonCounter, movieGalleryHeigh]);
+
+  // check hiddens
+  useEffect(() => {
+    const isMoreVisibleStatus = showLoadMoreButton(beatMoviesFiltered)
+    setIsMoreButtonVisible(isMoreVisibleStatus)
+  }, [windowWidth, moreButtonCounter, currentGalleryHeight, movieGalleryHeigh]);
+
+  useEffect(() => {
+    setMoreButtonCounter(0);
+  }, [beatMoviesFiltered]);
+
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <WindowContext.Provider value={windowWidth}>
@@ -437,6 +514,9 @@ function App() {
                             onCreateMovie={handleCreateMovie}
                             onRemoveMovie={handleRemoveMovie}
                             isPreloaderActive={isPreloaderActive}
+                            onClickMoreButton={handleSetMoreButtonCounter}
+                            currentGalleryHeight={currentGalleryHeight}
+                            isMoreButtonVisible = {isMoreButtonVisible}
                           />
                         </main>
 

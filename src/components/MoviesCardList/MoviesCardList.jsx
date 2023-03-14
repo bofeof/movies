@@ -2,9 +2,21 @@ import MoviesCard from '../MoviesCard/MoviesCard';
 import './MoviesCardList.css';
 import errorMessages from '../../utils/errorMessages';
 
-export default function MoviesCardList({ isSavedSection, movies, isLoadError, onCreateMovie, onRemoveMovie }) {
+export default function MoviesCardList({
+  isSavedSection,
+  movies,
+  isLoadError,
+  onCreateMovie,
+  onRemoveMovie,
+  currentGalleryHeight,
+}) {
+  const galleryHeightStyle = {
+    maxHeight: currentGalleryHeight
+    // height: currentGalleryHeight,
+  };
+
   return (
-    <section className="movies-preloader" aria-label="Список фильмов">
+    <section className="movies-preloader" aria-label="Список фильмов" style={galleryHeightStyle}>
       {(() => {
         if (isLoadError) {
           return <p className="movies-preloader__message">{errorMessages.loadError}</p>;

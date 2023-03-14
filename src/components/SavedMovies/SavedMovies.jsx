@@ -23,6 +23,7 @@ export default function SavedMovies({
   const windowWidth = useContext(WindowContext);
 
   const showAllMoviesSaved = useCallback(() => {
+
     onSetFilterSavedMovies();
   }, []);
 
