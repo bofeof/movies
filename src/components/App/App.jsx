@@ -1,4 +1,4 @@
-import { Route, Routes, Navigate, useNavigate } from 'react-router-dom';
+import { Route, Routes, useNavigate } from 'react-router-dom';
 import { useCallback, useEffect, useState } from 'react';
 
 import './App.css';
@@ -13,6 +13,7 @@ import PageNotFound from '../NotFoundPage/PageNotFound';
 import Register from '../Register/Register';
 import Footer from '../Footer/Footer';
 import InfoPopUp from '../InfoPopUp/InfoPopUp';
+import ProtectedRoute from '../ProtectedRoute/ProtectedRoute';
 
 import MoviesApi from '../../utils/API/MoviesApi';
 import MainApi from '../../utils/API/MainApi';
@@ -434,6 +435,7 @@ function App() {
           <div className="app__container">
             <Routes>
               <Route
+                exact
                 path="/"
                 element={
                   <>
@@ -455,7 +457,6 @@ function App() {
                   </>
                 }
               />
-
               <Route
                 path="/signin"
                 element={
@@ -468,7 +469,6 @@ function App() {
                   </main>
                 }
               />
-
               <Route
                 path="/signup"
                 element={
@@ -481,11 +481,11 @@ function App() {
                   </main>
                 }
               />
-
-              {loggedIn ? (
-                <>
-                  <Route
-                    path="/movies"
+              <Route
+                path="/movies"
+                element={
+                  <ProtectedRoute
+                    loggedIn={loggedIn}
                     element={
                       <>
                         <Header
@@ -521,9 +521,14 @@ function App() {
                       </>
                     }
                   />
-
-                  <Route
-                    path="/saved-movies"
+                }
+              />
+              <Route />
+              <Route
+                path="/saved-movies"
+                element={
+                  <ProtectedRoute
+                    loggedIn={loggedIn}
                     element={
                       <>
                         <Header
@@ -559,9 +564,13 @@ function App() {
                       </>
                     }
                   />
-
-                  <Route
-                    path="/profile"
+                }
+              />
+              <Route
+                path="/profile"
+                element={
+                  <ProtectedRoute
+                    loggedIn={loggedIn}
                     element={
                       <>
                         <Header
@@ -579,19 +588,22 @@ function App() {
                       </>
                     }
                   />
+                }
+              />
 
-                  <Route
-                    path="*"
+              <Route
+                path="*"
+                element={
+                  <ProtectedRoute
+                    loggedIn={loggedIn}
                     element={
                       <main>
                         <PageNotFound onRedirectNotFoundToBack={handleRedirectNotFoundToBack} />
                       </main>
                     }
                   />
-                </>
-              ) : (
-                <Route path="*" element={<Navigate to="/" />} />
-              )}
+                }
+              />
             </Routes>
           </div>
           <InfoPopUp isOpen={isInfoPopupOpen} onClose={closeInfoPopUp} message={infoMessage} title={infoPopUpTitle} />
