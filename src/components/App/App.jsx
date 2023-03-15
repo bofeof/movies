@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import { Route, Routes, Navigate, useNavigate } from 'react-router-dom';
 import { useCallback, useEffect, useState } from 'react';
 
@@ -22,7 +21,9 @@ import { configMainAPI } from '../../utils/API/mainApiConfig';
 import WindowContext from '../../contexts/WindowContext';
 import { CurrentUserContext } from '../../contexts/CurrentUserContext';
 
-// import { listMoviesContainer } from '../../utils/moviesConstants';
+import showLoadMoreButton from '../../utils/showLoadMoreButton';
+import defineCurrentWindowSize from '../../utils/defineCurrentWindowSize';
+import filterMovieData from '../../utils/filterMovieData';
 
 function App() {
   const BeatFilmAPI = new MoviesApi();
@@ -30,6 +31,7 @@ function App() {
   const UserAPI = new UserAuth(configMainAPI);
 
   const navigate = useNavigate();
+
   const [isInfoPopupOpen, setIsInfoPopupOpen] = useState(false);
   const [infoMessage, setInfoMessage] = useState('');
 
@@ -47,11 +49,31 @@ function App() {
   const [searchInputValue, setSearchInputValue] = useState({ searchinput: '' });
   const [isShorts, setIsShorts] = useState(false);
 
+  // show-more button for movie section
+  const [isMoreButtonVisible, setIsMoreButtonVisible] = useState(false);
+  const [currentGalleryHeight, setCurrentGalleryHeight] = useState(0);
+  const [moreButtonCounter, setMoreButtonCounter] = useState(0);
+  const [movieGalleryHeigh, setMovieGalleryHeigh] = useState({
+    large: 1068 + moreButtonCounter * (218 + 32),
+    medium: 1236 + moreButtonCounter * (257 + 36),
+    small: 1315 + moreButtonCounter * (235 + 20),
+  });
+
   // saved movies
   const [savedMovies, setSavedMovies] = useState([]);
   const [searchInputValueSaved, setSearchInputValueSaved] = useState({ searchinput: '' });
   const [savedMoviesFiltered, setSavedMoviesFiltered] = useState([]);
   const [isShortsSaved, setIsShortsSaved] = useState(false);
+
+  // show-more button for saved-movie section
+  const [isMoreButtonVisibleSaved, setIsMoreButtonVisibleSaved] = useState(false);
+  const [currentGalleryHeightSaved, setCurrentGalleryHeightSaved] = useState(0);
+  const [moreButtonCounterSaved, setMoreButtonCounterSaved] = useState(0);
+  const [movieGalleryHeighSaved, setMovieGalleryHeighSaved] = useState({
+    large: 1068 + moreButtonCounterSaved * (218 + 32),
+    medium: 1236 + moreButtonCounterSaved * (257 + 36),
+    small: 1315 + moreButtonCounterSaved * (235 + 20),
+  });
 
   // window width
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
@@ -93,7 +115,7 @@ function App() {
     setWindowWidth(window.innerWidth);
   }
 
-  // First run: search inputs
+  // First run: set search inputs
   useEffect(() => {
     setSearchInputValue((prevValue) => ({
       ...prevValue,
@@ -105,7 +127,7 @@ function App() {
     }));
   }, []);
 
-  // update widnow size
+  // First run: get current window size
   useEffect(() => {
     setWindowWidth(window.innerWidth);
     window.addEventListener('resize', updateSize);
@@ -129,12 +151,10 @@ function App() {
           setCurrentUser(res.data);
           handleRedirectToMovies();
 
-          // get data + preloader
-          setIsPreloaderActive(!isPreloaderActive);
+          setIsPreloaderActive(true);
 
           Promise.all([MainAPI.getAllMovies(), BeatFilmAPI.getBeatMovies()])
             .then(([savedMoviesData, beatMoviesData]) => {
-              // set saved movies
               setSavedMovies(savedMoviesData.data);
               setSavedMoviesFiltered(savedMoviesData.data.reverse());
 
@@ -153,8 +173,11 @@ function App() {
               setInfoPopUpTitle('Внимание!');
               setInfoMessage(err.message);
               setIsInfoPopupOpen(!isInfoPopupOpen);
+              setIsPreloaderActive(false);
             })
-            .finally(setIsPreloaderActive(!isPreloaderActive));
+            .finally(() => {
+              setIsPreloaderActive(false);
+            });
         })
         .catch(() => {
           handleRedirectToSignIn();
@@ -162,7 +185,6 @@ function App() {
     }
   }, [loggedIn]);
 
-  // POPUP
   const closeInfoPopUp = useCallback(() => {
     setIsInfoPopupOpen(!isInfoPopupOpen);
   }, [isInfoPopupOpen]);
@@ -181,28 +203,13 @@ function App() {
     );
   }
 
-  // FILTERS
-  // update filtered lists of movies
+  // Filters
   function handleSetBeatMoviesFiltered(updatedbeatMoviesFiltered) {
     setBeatMoviesFiltered(updatedbeatMoviesFiltered);
   }
 
   function handleSetFilterSavedMovies(updatedFilteredSavedMovies) {
     setSavedMoviesFiltered(() => updatedFilteredSavedMovies);
-  }
-
-  // select data w/ filters
-  function filterMovieData(movies, searchValue, shortsFilter, isSavedSection) {
-    if (searchValue.searchinput === '' && !isSavedSection) {
-      return [];
-    }
-    const updatedMovies = movies.filter(
-      (movie) =>
-        (movie?.nameRU.toLowerCase().includes(searchValue.searchinput.toLowerCase()) ||
-          movie?.nameEN.toLowerCase().includes(searchValue.searchinput.toLowerCase())) &&
-        (shortsFilter ? movie?.duration <= 40 : movie?.duration >= 0)
-    );
-    return updatedMovies;
   }
 
   function filterBeatMovies() {
@@ -215,6 +222,7 @@ function App() {
     handleSetFilterSavedMovies(updatedFilteredSavedMovies);
   }
 
+  // filter movies
   useEffect(() => {
     filterBeatMovies();
   }, [isShorts]);
@@ -239,7 +247,7 @@ function App() {
     setIsShortsSaved(!isShortsSaved);
   }, [isShortsSaved]);
 
-  // CARD ACTIONS
+  // Cards actions
   function handleCreateMovie(movieData) {
     MainAPI.createMovie(movieData)
       .then((newMovie) => {
@@ -279,7 +287,7 @@ function App() {
       });
   }
 
-  // USER ACTION
+  // User actions
   function handleLoggedIn(loggedInData) {
     UserAPI.signin(loggedInData)
       .then((res) => {
@@ -356,53 +364,13 @@ function App() {
       });
   }
 
-  // check button
-  function defineCurrentWindowSize() {
-    if (windowWidth > 800) {
-      return 'large';
-    }
-    if (windowWidth <= 768 && windowWidth > 500) {
-      return 'medium';
-    }
-    return 'small';
-  }
 
-  function showLoadMoreButton(moviesFiltered, galleryHeight) {
-    let movieArray;
-    let hiddenStatus;
-
-    if (moviesFiltered.length !== 0 && document.querySelector('.movies-list')?.children) {
-      movieArray = Array.from(document.querySelector('.movies-list').children);
-      hiddenStatus = movieArray.map((movie) => movie.offsetTop < galleryHeight).includes(false);
-    }
-
-    if (windowWidth > 800 && moviesFiltered.length > 12 && hiddenStatus) {
-      return true;
-    }
-    if (windowWidth < 768 && moviesFiltered.length >= 8 && hiddenStatus) {
-      return true;
-    }
-    if (windowWidth < 500 && moviesFiltered.length >= 5 && hiddenStatus) {
-      return true;
-    }
-    return false;
-  }
-
-  // load more button
-  const [isMoreButtonVisible, setIsMoreButtonVisible] = useState(false);
-  const [currentGalleryHeight, setCurrentGalleryHeight] = useState(0);
-  const [moreButtonCounter, setMoreButtonCounter] = useState(0);
-  const [movieGalleryHeigh, setMovieGalleryHeigh] = useState({
-    large: 1068 + moreButtonCounter * (218 + 32),
-    medium: 1236 + moreButtonCounter * (257 + 36),
-    small: 1315 + moreButtonCounter * (235 + 20),
-  });
-
+  // movie more button
   function handleSetMoreButtonCounter() {
     setMoreButtonCounter((prevConter) => prevConter + 1);
   }
 
-  // define current size of gallery
+  // define size of movie section
   useEffect(() => {
     setMovieGalleryHeigh((prevState) => ({
       ...prevState,
@@ -414,13 +382,13 @@ function App() {
   }, [windowWidth, moreButtonCounter, isShorts, beatMoviesFiltered]);
 
   useEffect(() => {
-    const size = defineCurrentWindowSize();
+    const size = defineCurrentWindowSize(windowWidth);
     setCurrentGalleryHeight(movieGalleryHeigh[size]);
   }, [windowWidth, moreButtonCounter, movieGalleryHeigh]);
 
-  // check hiddens for movies
+  // check hiddens for movie section
   useEffect(() => {
-    const isMoreVisibleStatus = showLoadMoreButton(beatMoviesFiltered, currentGalleryHeight);
+    const isMoreVisibleStatus = showLoadMoreButton(windowWidth, beatMoviesFiltered, currentGalleryHeight);
     setIsMoreButtonVisible(isMoreVisibleStatus);
   }, [windowWidth, moreButtonCounter, currentGalleryHeight, movieGalleryHeigh]);
 
@@ -429,46 +397,37 @@ function App() {
   }, [beatMoviesFiltered]);
 
 
-  // SAVED
-   // load more button
-   const [isMoreButtonVisibleSaved, setIsMoreButtonVisibleSaved] = useState(false);
-   const [currentGalleryHeightSaved, setCurrentGalleryHeightSaved] = useState(0);
-   const [moreButtonCounterSaved, setMoreButtonCounterSaved] = useState(0);
-   const [movieGalleryHeighSaved, setMovieGalleryHeighSaved] = useState({
-     large: 1068 + moreButtonCounterSaved * (218 + 32),
-     medium: 1236 + moreButtonCounterSaved * (257 + 36),
-     small: 1315 + moreButtonCounterSaved * (235 + 20),
-   });
 
-   function handleSetMoreButtonCounterSaved() {
-     setMoreButtonCounterSaved((prevConter) => prevConter + 1);
-   }
+  // Saved more button
+  function handleSetMoreButtonCounterSaved() {
+    setMoreButtonCounterSaved((prevConter) => prevConter + 1);
+  }
 
-   // define current size of gallery
-   useEffect(() => {
-     setMovieGalleryHeighSaved((prevState) => ({
-       ...prevState,
-       // start h + n click * card h + gap * n row
-       large: 1068 + moreButtonCounterSaved * (218 + 32) * 1,
-       medium: 1236 + moreButtonCounterSaved * (257 + 36) * 1,
-       small: 1315 + moreButtonCounterSaved * (235 + 20) * 5,
-     }));
-   }, [windowWidth, moreButtonCounterSaved, isShortsSaved, savedMoviesFiltered]);
+  // define size of saved-movie section
+  useEffect(() => {
+    setMovieGalleryHeighSaved((prevState) => ({
+      ...prevState,
+      // start h + n click * card h + gap * n row
+      large: 1068 + moreButtonCounterSaved * (218 + 32) * 1,
+      medium: 1236 + moreButtonCounterSaved * (257 + 36) * 1,
+      small: 1315 + moreButtonCounterSaved * (235 + 20) * 5,
+    }));
+  }, [windowWidth, moreButtonCounterSaved, isShortsSaved, savedMoviesFiltered]);
 
-   useEffect(() => {
-     const size = defineCurrentWindowSize();
-     setCurrentGalleryHeightSaved(movieGalleryHeighSaved[size]);
-   }, [windowWidth, moreButtonCounterSaved, movieGalleryHeighSaved]);
+  useEffect(() => {
+    const size = defineCurrentWindowSize(windowWidth);
+    setCurrentGalleryHeightSaved(movieGalleryHeighSaved[size]);
+  }, [windowWidth, moreButtonCounterSaved, movieGalleryHeighSaved]);
 
-   // check hiddens for movies
-   useEffect(() => {
-     const isMoreVisibleStatusSaved = showLoadMoreButton(savedMoviesFiltered, currentGalleryHeightSaved);
-     setIsMoreButtonVisibleSaved(isMoreVisibleStatusSaved);
-   }, [windowWidth, moreButtonCounterSaved, currentGalleryHeightSaved, movieGalleryHeighSaved]);
+  // check hiddens for saved-movie section
+  useEffect(() => {
+    const isMoreVisibleStatusSaved = showLoadMoreButton(windowWidth, savedMoviesFiltered, currentGalleryHeightSaved);
+    setIsMoreButtonVisibleSaved(isMoreVisibleStatusSaved);
+  }, [windowWidth, moreButtonCounterSaved, currentGalleryHeightSaved, movieGalleryHeighSaved]);
 
-   useEffect(() => {
-     setMoreButtonCounterSaved(0);
-   }, [savedMoviesFiltered]);
+  useEffect(() => {
+    setMoreButtonCounterSaved(0);
+  }, [savedMoviesFiltered]);
 
   return (
     <CurrentUserContext.Provider value={currentUser}>
@@ -592,10 +551,9 @@ function App() {
                             onCreateMovie={handleCreateMovie}
                             onRemoveMovie={handleRemoveMovie}
                             isPreloaderActive={isPreloaderActive}
-
                             onClickMoreButton={handleSetMoreButtonCounterSaved}
                             currentGalleryHeight={currentGalleryHeightSaved}
-                            isMoreButtonVisibleSaved = {isMoreButtonVisibleSaved}
+                            isMoreButtonVisibleSaved={isMoreButtonVisibleSaved}
                           />
                         </main>
 
