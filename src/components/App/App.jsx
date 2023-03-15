@@ -304,7 +304,7 @@ function App() {
   useEffect(() => {
     const isMoreVisibleStatusSaved = showLoadMoreButton(windowWidth, savedMoviesFiltered, currentGalleryHeightSaved);
     setIsMoreButtonVisibleSaved(isMoreVisibleStatusSaved);
-  }, [windowWidth, moreButtonCounterSaved, currentGalleryHeightSaved, movieGalleryHeighSaved]);
+  }, [windowWidth, moreButtonCounterSaved, currentGalleryHeightSaved, movieGalleryHeighSaved, savedMoviesFiltered]);
 
   useEffect(() => {
     setMoreButtonCounterSaved(0);
