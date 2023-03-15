@@ -1,6 +1,7 @@
 const validationErrorMessages = {
-  nameErr: 'Allowed: Latin, Cyrillic, space, hyphen. Length: 2-30 characters.',
-  emailErr: 'Wrong email format.'
+  nameErr: 'Разрешены: латиница, кириллица, пробел и дефис. Длина: 2-30 символов.',
+  emailErr: 'Некорректный формат почты',
+  requiredField: 'Обязательное поле',
 };
 
 export default validationErrorMessages;
