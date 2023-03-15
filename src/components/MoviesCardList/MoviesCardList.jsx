@@ -11,8 +11,7 @@ export default function MoviesCardList({
   currentGalleryHeight,
 }) {
   const galleryHeightStyle = {
-    maxHeight: currentGalleryHeight
-    // height: currentGalleryHeight,
+    maxHeight: currentGalleryHeight,
   };
 
   return (

@@ -1,9 +1,8 @@
 import './SavedMovies.css';
-import { useCallback, useContext } from 'react';
+import { useCallback } from 'react';
 import SearchForm from '../SearchForm/SearchForm';
 import MoviesCardList from '../MoviesCardList/MoviesCardList';
 import ShowMoreButton from '../ShowMoreButton/ShowMoreButton';
-import WindowContext from '../../contexts/WindowContext';
 import Preloader from '../Preloader/Preloader';
 
 export default function SavedMovies({
@@ -19,26 +18,16 @@ export default function SavedMovies({
   onCreateMovie,
   onRemoveMovie,
   isPreloaderActive,
+
+  onClickMoreButton,
+  currentGalleryHeight,
+  isMoreButtonVisibleSaved
 }) {
-  const windowWidth = useContext(WindowContext);
 
   const showAllMoviesSaved = useCallback(() => {
 
     onSetFilterSavedMovies();
   }, []);
-
-  function showLoadMoreButton() {
-    if (windowWidth > 800 && savedMoviesFiltered.length > 12) {
-      return true;
-    }
-    if (windowWidth < 768 && savedMoviesFiltered.length >= 8) {
-      return true;
-    }
-    if (windowWidth < 500 && savedMoviesFiltered.length >= 5) {
-      return true;
-    }
-    return false;
-  }
 
   return (
     <div className="saved-movies">
@@ -63,8 +52,9 @@ export default function SavedMovies({
             isLoadError={isLoadError}
             onCreateMovie={onCreateMovie}
             onRemoveMovie={onRemoveMovie}
+            currentGalleryHeight = {currentGalleryHeight}
           />
-          {showLoadMoreButton() && <ShowMoreButton />}
+          {isMoreButtonVisibleSaved && <ShowMoreButton onClickMoreButton = {onClickMoreButton} />}
         </>
       )}
     </div>

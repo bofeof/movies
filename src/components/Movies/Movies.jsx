@@ -26,9 +26,7 @@ export default function Movies({
 
   onClickMoreButton,
   currentGalleryHeight,
-
   isMoreButtonVisible
-
 }) {
 
   const hideAllMovies = useCallback(() => {
