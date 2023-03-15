@@ -203,13 +203,9 @@ function App() {
     );
   }
 
-  // Filters
+  // MOVIES
   function handleSetBeatMoviesFiltered(updatedbeatMoviesFiltered) {
     setBeatMoviesFiltered(updatedbeatMoviesFiltered);
-  }
-
-  function handleSetFilterSavedMovies(updatedFilteredSavedMovies) {
-    setSavedMoviesFiltered(() => updatedFilteredSavedMovies);
   }
 
   function filterBeatMovies() {
@@ -217,15 +213,56 @@ function App() {
     handleSetBeatMoviesFiltered(updatedbeatMoviesFiltered);
   }
 
-  function filterSavedMovies() {
-    const updatedFilteredSavedMovies = filterMovieData(savedMovies, searchInputValueSaved, isShortsSaved, true);
-    handleSetFilterSavedMovies(updatedFilteredSavedMovies);
-  }
-
   // filter movies
   useEffect(() => {
     filterBeatMovies();
   }, [isShorts]);
+
+  // filters
+  const handleSetIsShorts = useCallback(() => {
+    setIsShorts(!isShorts);
+  }, [isShorts]);
+
+  // show more button
+  function handleSetMoreButtonCounter() {
+    setMoreButtonCounter((prevConter) => prevConter + 1);
+  }
+
+  // define size of movie section
+  useEffect(() => {
+    setMovieGalleryHeigh((prevState) => ({
+      ...prevState,
+      // start h + n click * card h + gap * n row
+      large: 1068 + moreButtonCounter * (218 + 32) * 1,
+      medium: 1236 + moreButtonCounter * (257 + 36) * 1,
+      small: 1315 + moreButtonCounter * (235 + 20) * 5,
+    }));
+  }, [windowWidth, moreButtonCounter, isShorts, beatMoviesFiltered]);
+
+  useEffect(() => {
+    const size = defineCurrentWindowSize(windowWidth);
+    setCurrentGalleryHeight(movieGalleryHeigh[size]);
+  }, [windowWidth, moreButtonCounter, movieGalleryHeigh]);
+
+  // check hiddens for movie section
+  useEffect(() => {
+    const isMoreVisibleStatus = showLoadMoreButton(windowWidth, beatMoviesFiltered, currentGalleryHeight);
+    setIsMoreButtonVisible(isMoreVisibleStatus);
+  }, [windowWidth, moreButtonCounter, currentGalleryHeight, movieGalleryHeigh]);
+
+  useEffect(() => {
+    setMoreButtonCounter(0);
+  }, [searchInputValue, isShorts]);
+
+  // SAVED MOVIES
+  function handleSetSavedMoviesFiltered(updatedFilteredSavedMovies) {
+    setSavedMoviesFiltered(() => updatedFilteredSavedMovies);
+  }
+
+  function filterSavedMovies() {
+    const updatedFilteredSavedMovies = filterMovieData(savedMovies, searchInputValueSaved, isShortsSaved, true);
+    handleSetSavedMoviesFiltered(updatedFilteredSavedMovies);
+  }
 
   useEffect(() => {
     filterSavedMovies();
@@ -238,16 +275,42 @@ function App() {
     }
   }, [searchInputValueSaved]);
 
-  // filters
-  const handleSetIsShorts = useCallback(() => {
-    setIsShorts(!isShorts);
-  }, [isShorts]);
-
   const handleSetIsShortsSaved = useCallback(() => {
     setIsShortsSaved(!isShortsSaved);
   }, [isShortsSaved]);
 
-  // Cards actions
+  // Saved more button
+  function handleSetMoreButtonCounterSaved() {
+    setMoreButtonCounterSaved((prevConter) => prevConter + 1);
+  }
+
+  // define size of saved-movie section
+  useEffect(() => {
+    setMovieGalleryHeighSaved((prevState) => ({
+      ...prevState,
+      // start h + n click * card h + gap * n row
+      large: 1068 + moreButtonCounterSaved * (218 + 32) * 1,
+      medium: 1236 + moreButtonCounterSaved * (257 + 36) * 1,
+      small: 1315 + moreButtonCounterSaved * (235 + 20) * 5,
+    }));
+  }, [windowWidth, moreButtonCounterSaved, isShortsSaved, savedMoviesFiltered]);
+
+  useEffect(() => {
+    const size = defineCurrentWindowSize(windowWidth);
+    setCurrentGalleryHeightSaved(movieGalleryHeighSaved[size]);
+  }, [windowWidth, moreButtonCounterSaved, movieGalleryHeighSaved]);
+
+  // check hiddens for saved-movie section
+  useEffect(() => {
+    const isMoreVisibleStatusSaved = showLoadMoreButton(windowWidth, savedMoviesFiltered, currentGalleryHeightSaved);
+    setIsMoreButtonVisibleSaved(isMoreVisibleStatusSaved);
+  }, [windowWidth, moreButtonCounterSaved, currentGalleryHeightSaved, movieGalleryHeighSaved]);
+
+  useEffect(() => {
+    setMoreButtonCounterSaved(0);
+  }, [searchInputValueSaved, isShortsSaved]);
+
+  // CARDS
   function handleCreateMovie(movieData) {
     MainAPI.createMovie(movieData)
       .then((newMovie) => {
@@ -287,7 +350,7 @@ function App() {
       });
   }
 
-  // User actions
+  // USER
   function handleLoggedIn(loggedInData) {
     UserAPI.signin(loggedInData)
       .then((res) => {
@@ -363,71 +426,6 @@ function App() {
         setIsInfoPopupOpen(!isInfoPopupOpen);
       });
   }
-
-
-  // movie more button
-  function handleSetMoreButtonCounter() {
-    setMoreButtonCounter((prevConter) => prevConter + 1);
-  }
-
-  // define size of movie section
-  useEffect(() => {
-    setMovieGalleryHeigh((prevState) => ({
-      ...prevState,
-      // start h + n click * card h + gap * n row
-      large: 1068 + moreButtonCounter * (218 + 32) * 1,
-      medium: 1236 + moreButtonCounter * (257 + 36) * 1,
-      small: 1315 + moreButtonCounter * (235 + 20) * 5,
-    }));
-  }, [windowWidth, moreButtonCounter, isShorts, beatMoviesFiltered]);
-
-  useEffect(() => {
-    const size = defineCurrentWindowSize(windowWidth);
-    setCurrentGalleryHeight(movieGalleryHeigh[size]);
-  }, [windowWidth, moreButtonCounter, movieGalleryHeigh]);
-
-  // check hiddens for movie section
-  useEffect(() => {
-    const isMoreVisibleStatus = showLoadMoreButton(windowWidth, beatMoviesFiltered, currentGalleryHeight);
-    setIsMoreButtonVisible(isMoreVisibleStatus);
-  }, [windowWidth, moreButtonCounter, currentGalleryHeight, movieGalleryHeigh]);
-
-  useEffect(() => {
-    setMoreButtonCounter(0);
-  }, [beatMoviesFiltered]);
-
-
-
-  // Saved more button
-  function handleSetMoreButtonCounterSaved() {
-    setMoreButtonCounterSaved((prevConter) => prevConter + 1);
-  }
-
-  // define size of saved-movie section
-  useEffect(() => {
-    setMovieGalleryHeighSaved((prevState) => ({
-      ...prevState,
-      // start h + n click * card h + gap * n row
-      large: 1068 + moreButtonCounterSaved * (218 + 32) * 1,
-      medium: 1236 + moreButtonCounterSaved * (257 + 36) * 1,
-      small: 1315 + moreButtonCounterSaved * (235 + 20) * 5,
-    }));
-  }, [windowWidth, moreButtonCounterSaved, isShortsSaved, savedMoviesFiltered]);
-
-  useEffect(() => {
-    const size = defineCurrentWindowSize(windowWidth);
-    setCurrentGalleryHeightSaved(movieGalleryHeighSaved[size]);
-  }, [windowWidth, moreButtonCounterSaved, movieGalleryHeighSaved]);
-
-  // check hiddens for saved-movie section
-  useEffect(() => {
-    const isMoreVisibleStatusSaved = showLoadMoreButton(windowWidth, savedMoviesFiltered, currentGalleryHeightSaved);
-    setIsMoreButtonVisibleSaved(isMoreVisibleStatusSaved);
-  }, [windowWidth, moreButtonCounterSaved, currentGalleryHeightSaved, movieGalleryHeighSaved]);
-
-  useEffect(() => {
-    setMoreButtonCounterSaved(0);
-  }, [savedMoviesFiltered]);
 
   return (
     <CurrentUserContext.Provider value={currentUser}>
