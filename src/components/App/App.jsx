@@ -220,7 +220,6 @@ function App() {
     filterBeatMovies();
   }, [isShorts]);
 
-  // filters
   const handleSetIsShorts = useCallback(() => {
     setIsShorts(!isShorts);
   }, [isShorts]);
@@ -250,7 +249,7 @@ function App() {
   useEffect(() => {
     const isMoreVisibleStatus = showLoadMoreButton(windowWidth, beatMoviesFiltered, currentGalleryHeight);
     setIsMoreButtonVisible(isMoreVisibleStatus);
-  }, [windowWidth, moreButtonCounter, currentGalleryHeight, movieGalleryHeigh]);
+  }, [windowWidth, moreButtonCounter, currentGalleryHeight, movieGalleryHeigh, navigate]);
 
   useEffect(() => {
     setMoreButtonCounter(0);

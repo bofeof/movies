@@ -1,4 +1,3 @@
-/* eslint-disable react/destructuring-assignment */
 import './Profile.css';
 import { useState, useEffect, useContext } from 'react';
 import { CurrentUserContext } from '../../contexts/CurrentUserContext';
@@ -14,7 +13,7 @@ export default function Profile({ onHandleSubmit, onHandleLogOut }) {
     email: { isValid: false, errorText: '' },
   });
 
-  const buttonStatus = ![inputsValidation.email.isValid, inputsValidation.name.isValid].includes(false);
+  const buttonStatus = [inputsValidation.email.isValid, inputsValidation.name.isValid].includes(false);
 
   useEffect(() => {
     setUserInfo((prevUserInfo) => ({
@@ -25,14 +24,21 @@ export default function Profile({ onHandleSubmit, onHandleLogOut }) {
 
     setInputsValidation((prevInuptsValidation) => ({
       ...prevInuptsValidation,
-      name: { isValid: true, errorText: '' },
-      email: { isValid: true, errorText: '' },
+      name: { isValid: false, errorText: '' },
+      email: { isValid: false, errorText: '' },
     }));
-  }, []);
+  }, [currentUser]);
+
+  useEffect(() => {
+    setInputsValidation((prevInuptsValidation) => ({
+      ...prevInuptsValidation,
+      colorText: { colorErr: buttonStatus },
+    }));
+  }, [inputsValidation.name, inputsValidation.email]);
 
   function handleInputChange(evt) {
     const { name, value } = evt.target;
-    const validationResult = formValidator(evt);
+    const validationResult = formValidator(evt, currentUser);
     setUserInfo((prevUserInfo) => ({ ...prevUserInfo, [name]: value }));
     setInputsValidation((prevInuptsValidation) => ({
       ...prevInuptsValidation,
@@ -55,11 +61,10 @@ export default function Profile({ onHandleSubmit, onHandleLogOut }) {
         <label className="profile__form-label" htmlFor="profile-name">
           Имя
           <input
-            className={`profile__form-input ${!inputsValidation.name.isValid && 'profile__form-input_error'}`}
+            className={`profile__form-input ${inputsValidation.name.errorText && 'profile__form-input_error'}`}
             type="text"
             name="name"
             id="profile-name"
-            // pattern="^.[a-zа-я\ \-]{2,30}$"
             required
             minLength="2"
             maxLength="30"
@@ -73,7 +78,7 @@ export default function Profile({ onHandleSubmit, onHandleLogOut }) {
         <label className="profile__form-label" htmlFor="profile-email">
           E-mail
           <input
-            className={`profile__form-input ${!inputsValidation.email.isValid && 'profile__form-input_error'}`}
+            className={`profile__form-input ${inputsValidation.email.errorText && 'profile__form-input_error'}`}
             type="email"
             id="profile-email"
             name="email"
@@ -90,7 +95,7 @@ export default function Profile({ onHandleSubmit, onHandleLogOut }) {
         className="profile__button profile__button-edit"
         type="submit"
         onClick={handleFormSubmit}
-        disabled={!buttonStatus}
+        disabled={buttonStatus && !(currentUser.name !== userInfo.name || currentUser.email !== userInfo.email) }
       >
         Редактировать
       </button>
