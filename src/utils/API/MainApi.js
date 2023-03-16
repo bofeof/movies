@@ -1,4 +1,4 @@
-import { beatFilmUrl } from '../moviesConstants';
+import { BEAT_MAIN_URL } from '../moviesConstants';
 
 export default class MainApi {
   constructor(configAPI) {
@@ -57,11 +57,11 @@ export default class MainApi {
       description: movieData?.description,
       trailerLink: movieData?.trailerLink,
       image:
-        `${beatFilmUrl}/${movieData?.image?.formats?.thumbnail?.url}` ||
-        `${beatFilmUrl}/${movieData?.image?.formats?.small?.url}`,
+        `${BEAT_MAIN_URL}/${movieData?.image?.formats?.thumbnail?.url}` ||
+        `${BEAT_MAIN_URL}/${movieData?.image?.formats?.small?.url}`,
       thumbnail:
-        `${beatFilmUrl}/${movieData?.image?.formats?.small?.url}` ||
-        `${beatFilmUrl}/${movieData?.image?.formats?.thumbnail?.url}`,
+        `${BEAT_MAIN_URL}/${movieData?.image?.formats?.small?.url}` ||
+        `${BEAT_MAIN_URL}/${movieData?.image?.formats?.thumbnail?.url}`,
     };
     return fetch(`${this._configAPI.mainMoviesUrl}/movies`, {
       method: 'POST',

@@ -18,18 +18,19 @@ import ProtectedRoute from '../ProtectedRoute/ProtectedRoute';
 import MoviesApi from '../../utils/API/MoviesApi';
 import MainApi from '../../utils/API/MainApi';
 import UserAuth from '../../utils/API/UserAuth';
-import { configMainAPI } from '../../utils/API/mainApiConfig';
+
 import WindowContext from '../../contexts/WindowContext';
 import { CurrentUserContext } from '../../contexts/CurrentUserContext';
 
+import { REACT_API_CONFIG } from '../../utils/API/mainApiConfig';
 import showLoadMoreButton from '../../utils/showLoadMoreButton';
 import defineCurrentWindowSize from '../../utils/defineCurrentWindowSize';
 import filterMovieData from '../../utils/filterMovieData';
 
 function App() {
   const BeatFilmAPI = new MoviesApi();
-  const MainAPI = new MainApi(configMainAPI);
-  const UserAPI = new UserAuth(configMainAPI);
+  const MainAPI = new MainApi(REACT_API_CONFIG);
+  const UserAPI = new UserAuth(REACT_API_CONFIG);
 
   const navigate = useNavigate();
 
@@ -169,10 +170,10 @@ function App() {
 
               setBeatMovies(updatedBeat);
             })
-            .catch((err) => {
+            .catch(() => {
               setIsLoadError(() => true);
               setInfoPopUpTitle('Внимание!');
-              setInfoMessage(err.message);
+              setInfoMessage('Что-то пошло не так...');
               setIsInfoPopupOpen(!isInfoPopupOpen);
               setIsPreloaderActive(false);
             })
@@ -269,6 +270,7 @@ function App() {
     filterSavedMovies();
   }, [isShortsSaved, savedMovies]);
 
+  // show all saved movies if input is empty
   useEffect(() => {
     if (searchInputValueSaved === '') {
       setIsShortsSaved(!isShortsSaved);
@@ -305,7 +307,14 @@ function App() {
   useEffect(() => {
     const isMoreVisibleStatusSaved = showLoadMoreButton(windowWidth, savedMoviesFiltered, currentGalleryHeightSaved);
     setIsMoreButtonVisibleSaved(isMoreVisibleStatusSaved);
-  }, [windowWidth, moreButtonCounterSaved, currentGalleryHeightSaved, movieGalleryHeighSaved, savedMoviesFiltered]);
+  }, [
+    windowWidth,
+    moreButtonCounterSaved,
+    currentGalleryHeightSaved,
+    movieGalleryHeighSaved,
+    savedMoviesFiltered,
+    navigate,
+  ]);
 
   useEffect(() => {
     setMoreButtonCounterSaved(0);

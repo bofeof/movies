@@ -1,4 +1,4 @@
-import { beatFilmUrlAPI } from '../moviesConstants';
+import { BEAT_URL_API } from '../moviesConstants';
 
 export default class MoviesApi {
   _getResponse(res) {
@@ -6,7 +6,7 @@ export default class MoviesApi {
   }
 
   getBeatMovies() {
-    return fetch(`${beatFilmUrlAPI}`, {
+    return fetch(`${BEAT_URL_API}`, {
       method: 'GET',
     }).then((res) => this._getResponse(res));
   }

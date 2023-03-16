@@ -1,6 +1,6 @@
 import MoviesCard from '../MoviesCard/MoviesCard';
 import './MoviesCardList.css';
-import errorMessages from '../../utils/errorMessages';
+import ERROR_MESSAGES from '../../utils/errorMessages';
 
 export default function MoviesCardList({
   isSavedSection,
@@ -18,11 +18,11 @@ export default function MoviesCardList({
     <section className="movies-preloader" aria-label="Список фильмов" style={galleryHeightStyle}>
       {(() => {
         if (isLoadError) {
-          return <p className="movies-preloader__message">{errorMessages.loadError}</p>;
+          return <p className="movies-preloader__message">{ERROR_MESSAGES.loadError}</p>;
         }
 
         if (movies.length === 0) {
-          return <p className="movies-preloader__message">{errorMessages.notFoundError}</p>;
+          return <p className="movies-preloader__message">{ERROR_MESSAGES.notFoundError}</p>;
         }
 
         return (

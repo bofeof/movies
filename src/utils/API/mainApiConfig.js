@@ -1,5 +1,5 @@
 const REACT_APP_BASE_URL = 'http://localhost:3005/api';
-const configMainAPI = {
+const REACT_API_CONFIG = {
   mainMoviesUrl: REACT_APP_BASE_URL,
   headers: {
     'Content-Type': 'application/json',
@@ -8,4 +8,4 @@ const configMainAPI = {
   }
 };
 
-export { configMainAPI, REACT_APP_BASE_URL };
+export { REACT_API_CONFIG, REACT_APP_BASE_URL };

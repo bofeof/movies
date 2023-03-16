@@ -1,5 +1,5 @@
 import './MoviesCard.css';
-import { beatFilmUrl } from '../../utils/moviesConstants';
+import { BEAT_MAIN_URL } from '../../utils/moviesConstants';
 
 function convertMins(mins) {
   const h = Math.trunc(mins / 60);
@@ -10,7 +10,7 @@ function convertMins(mins) {
 export default function MoviesCard({ card, cardKey, isSavedSection, onCreateMovie, onRemoveMovie }) {
   const thumbnail = isSavedSection
     ? card.image
-    : `${beatFilmUrl}/${card?.image?.formats?.thumbnail?.url || card?.image?.formats?.small?.url}`;
+    : `${BEAT_MAIN_URL}/${card?.image?.formats?.thumbnail?.url || card?.image?.formats?.small?.url}`;
 
   function handleSaveRemoveMovie(evt) {
     if (evt.target.checked && !isSavedSection) {
