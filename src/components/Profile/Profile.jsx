@@ -54,6 +54,16 @@ export default function Profile({ onHandleSubmit, onHandleLogOut }) {
     onHandleSubmit({ name: userInfo.name, email: userInfo.email });
   }
 
+  function handleInputBlur(evt) {
+    const { name, value } = evt.target;
+    if (currentUser[name] === value) {
+      setInputsValidation((prevInuptsValidation) => ({
+        ...prevInuptsValidation,
+        [name]: { isValid: false, errorText: '' },
+      }));
+    }
+  }
+
   return (
     <div className="profile">
       <p className="profile__greeting">{`Привет, ${currentUser.name}`}</p>
@@ -70,6 +80,7 @@ export default function Profile({ onHandleSubmit, onHandleLogOut }) {
             maxLength="30"
             placeholder="Введите имя"
             onChange={handleInputChange}
+            onBlur={handleInputBlur}
             value={userInfo.name || ''}
           />
         </label>
@@ -85,6 +96,7 @@ export default function Profile({ onHandleSubmit, onHandleLogOut }) {
             required
             placeholder="Введите почту"
             onChange={handleInputChange}
+            onBlur={handleInputBlur}
             value={userInfo.email || ''}
           />
         </label>
@@ -95,7 +107,11 @@ export default function Profile({ onHandleSubmit, onHandleLogOut }) {
         className="profile__button profile__button-edit"
         type="submit"
         onClick={handleFormSubmit}
-        disabled={buttonStatus && !(currentUser.name !== userInfo.name || currentUser.email !== userInfo.email) }
+        disabled={
+          (buttonStatus && !(currentUser.name !== userInfo.name || currentUser.email !== userInfo.email)) ||
+          inputsValidation.email.errorText ||
+          inputsValidation.name.errorText
+        }
       >
         Редактировать
       </button>
