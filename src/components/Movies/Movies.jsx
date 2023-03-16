@@ -1,8 +1,3 @@
-
-import { useCallback } from 'react';
-
-// import WindowContext from '../../contexts/WindowContext';
-
 import './Movies.css';
 import SearchForm from '../SearchForm/SearchForm';
 import MoviesCardList from '../MoviesCardList/MoviesCardList';
@@ -26,13 +21,8 @@ export default function Movies({
 
   onClickMoreButton,
   currentGalleryHeight,
-  isMoreButtonVisible
+  isMoreButtonVisible,
 }) {
-
-  const hideAllMovies = useCallback(() => {
-    onSetBeatMoviesFiltered(() => []);
-  }, []);
-
   return (
     <div className="movies">
       <SearchForm
@@ -41,8 +31,6 @@ export default function Movies({
         onSearchSubmit={onSetBeatMoviesFiltered}
         searchInputValue={searchInputValue}
         onSetSearchInputValue={onSetSearchInputValue}
-        onShowAllMovies={null}
-        onHideAllMovies={hideAllMovies}
       />
 
       {isPreloaderActive ? (
@@ -56,9 +44,9 @@ export default function Movies({
             onCreateMovie={onCreateMovie}
             onRemoveMovie={onRemoveMovie}
             isPreloaderActive={isPreloaderActive}
-            currentGalleryHeight = {currentGalleryHeight}
+            currentGalleryHeight={currentGalleryHeight}
           />
-          {isMoreButtonVisible && <ShowMoreButton onClickMoreButton = {onClickMoreButton} />}
+          {isMoreButtonVisible && <ShowMoreButton onClickMoreButton={onClickMoreButton} />}
         </>
       )}
     </div>

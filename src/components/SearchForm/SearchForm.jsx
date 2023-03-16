@@ -5,15 +5,12 @@ import FilterCheckbox from '../FilterCheckbox/FilterCheckbox';
 
 export default function SearchForm({
   isSavedSection,
-  onShowAllMovies,
-  // onHideAllMovies,
   onSearchSubmit,
   onClickFilter,
   filterStatus,
   searchInputValue,
   onSetSearchInputValue,
 }) {
-
   const [inputsValidation, setInputsValidation] = useState({ searchinput: { isValid: true, errorText: '' } });
   const isFormInvalid = inputsValidation.searchinput.isValid;
 
@@ -58,16 +55,17 @@ export default function SearchForm({
   }
 
   function handleBlur(evt) {
+    evt.preventDefault();
     setDefaultInputsValidation();
 
     const { name, value } = evt.target;
 
-    if (value === "" && isSavedSection){
+    if (value === '' && isSavedSection) {
       onSetSearchInputValue((prevState) => ({
         ...prevState,
         [name]: value,
       }));
-      onShowAllMovies()
+      onSearchSubmit();
     }
   }
 

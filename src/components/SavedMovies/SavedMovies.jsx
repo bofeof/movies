@@ -1,5 +1,4 @@
 import './SavedMovies.css';
-import { useCallback } from 'react';
 import SearchForm from '../SearchForm/SearchForm';
 import MoviesCardList from '../MoviesCardList/MoviesCardList';
 import ShowMoreButton from '../ShowMoreButton/ShowMoreButton';
@@ -21,14 +20,8 @@ export default function SavedMovies({
 
   onClickMoreButton,
   currentGalleryHeight,
-  isMoreButtonVisibleSaved
+  isMoreButtonVisibleSaved,
 }) {
-
-  const showAllMoviesSaved = useCallback(() => {
-
-    onSetFilterSavedMovies();
-  }, []);
-
   return (
     <div className="saved-movies">
       <SearchForm
@@ -38,8 +31,6 @@ export default function SavedMovies({
         onSearchSubmit={onSetFilterSavedMovies}
         searchInputValue={searchInputValue}
         onSetSearchInputValue={onSetSearchInputValue}
-        onShowAllMovies={showAllMoviesSaved}
-        onHideAllMovies={null}
       />
 
       {isPreloaderActive ? (
@@ -52,9 +43,9 @@ export default function SavedMovies({
             isLoadError={isLoadError}
             onCreateMovie={onCreateMovie}
             onRemoveMovie={onRemoveMovie}
-            currentGalleryHeight = {currentGalleryHeight}
+            currentGalleryHeight={currentGalleryHeight}
           />
-          {isMoreButtonVisibleSaved && <ShowMoreButton onClickMoreButton = {onClickMoreButton} />}
+          {isMoreButtonVisibleSaved && <ShowMoreButton onClickMoreButton={onClickMoreButton} />}
         </>
       )}
     </div>

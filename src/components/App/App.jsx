@@ -265,21 +265,13 @@ function App() {
     handleSetSavedMoviesFiltered(updatedFilteredSavedMovies);
   }
 
+  const handleSetIsShortsSaved = useCallback(() => {
+    setIsShortsSaved((prevState) => !prevState);
+  }, []);
+
   useEffect(() => {
     filterSavedMovies();
   }, [isShortsSaved, savedMovies]);
-
-  // show all saved movies if input is empty
-  useEffect(() => {
-    if (searchInputValueSaved === '') {
-      setIsShortsSaved(!isShortsSaved);
-      filterSavedMovies();
-    }
-  }, [searchInputValueSaved]);
-
-  const handleSetIsShortsSaved = useCallback(() => {
-    setIsShortsSaved(!isShortsSaved);
-  }, [isShortsSaved]);
 
   // Saved more button
   function handleSetMoreButtonCounterSaved() {
