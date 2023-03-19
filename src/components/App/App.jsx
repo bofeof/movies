@@ -49,7 +49,7 @@ function App() {
   const [isLoadError, setIsLoadError] = useState(false);
   const [beatMoviesFiltered, setBeatMoviesFiltered] = useState([]);
   const [searchInputValue, setSearchInputValue] = useState({
-    searchinput: (localStorage.getItem('searchInputValue') || ''),
+    searchinput: '' || localStorage.getItem('searchInputValue'),
   });
   const [isShorts, setIsShorts] = useState(localStorage.getItem('isShorts') === "true" && true || false);
 
@@ -66,7 +66,7 @@ function App() {
   // saved movies
   const [savedMovies, setSavedMovies] = useState([]);
   const [searchInputValueSaved, setSearchInputValueSaved] = useState({
-    searchinput: (localStorage.getItem('searchInputValueSaved') || ''),
+    searchinput: '' || localStorage.getItem('searchInputValueSaved'),
   });
   const [savedMoviesFiltered, setSavedMoviesFiltered] = useState([]);
   const [isShortsSaved, setIsShortsSaved] = useState(localStorage.getItem('isShortsSaved') === "true" && true || false);
@@ -128,18 +128,6 @@ function App() {
     localStorage.removeItem('isShorts');
     localStorage.removeItem('isShortsSaved');
   }
-
-  // First run: set search inputs
-  useEffect(() => {
-    setSearchInputValue((prevValue) => ({
-      ...prevValue,
-      searchinput: localStorage.getItem('searchInputValue') || '',
-    }));
-    setSearchInputValueSaved((prevValue) => ({
-      ...prevValue,
-      searchinput: localStorage.getItem('searchInputValueSaved') || '',
-    }));
-  }, []);
 
   // First run: get current window size
   useEffect(() => {

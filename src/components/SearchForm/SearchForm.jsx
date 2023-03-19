@@ -12,12 +12,11 @@ export default function SearchForm({
   onSetSearchInputValue,
 }) {
   const [inputsValidation, setInputsValidation] = useState({ searchinput: { isValid: true, errorText: '' } });
-  const [isFormInvalid, setIsFormInvalid] = useState(true)
-  // const isFormInvalid = inputsValidation.searchinput.isValid;
+  const [isFormInvalid, setIsFormInvalid] = useState(true);
 
-  useEffect(()=>{
-    setIsFormInvalid(inputsValidation.searchinput.isValid)
-  },[inputsValidation])
+  useEffect(() => {
+    setIsFormInvalid(inputsValidation.searchinput.isValid);
+  }, [inputsValidation]);
 
   function validateSearchInput(value) {
     const validationResult = searchValidator(value);
@@ -32,17 +31,17 @@ export default function SearchForm({
       ...prevValue,
       searchinput: { isValid: true, errorText: '' },
     }));
-    setIsFormInvalid(true)
+    setIsFormInvalid(true);
   }
 
   function handleSearch(evt) {
     evt.preventDefault();
     validateSearchInput(searchInputValue.searchinput);
-    if (searchInputValue.searchinput !== ""){
+    if (searchInputValue.searchinput !== '') {
       return onSearchSubmit();
     }
-    setIsFormInvalid(false)
-    return null
+    setIsFormInvalid(false);
+    return null;
   }
 
   function handleChange(evt) {
