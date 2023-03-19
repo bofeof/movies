@@ -48,8 +48,10 @@ function App() {
   const [beatMovies, setBeatMovies] = useState([]);
   const [isLoadError, setIsLoadError] = useState(false);
   const [beatMoviesFiltered, setBeatMoviesFiltered] = useState([]);
-  const [searchInputValue, setSearchInputValue] = useState({ searchinput: '' });
-  const [isShorts, setIsShorts] = useState(false);
+  const [searchInputValue, setSearchInputValue] = useState({
+    searchinput: (localStorage.getItem('searchInputValue') || ''),
+  });
+  const [isShorts, setIsShorts] = useState(localStorage.getItem('isShorts') === "true" && true || false);
 
   // show-more button for movie section
   const [isMoreButtonVisible, setIsMoreButtonVisible] = useState(false);
@@ -63,9 +65,11 @@ function App() {
 
   // saved movies
   const [savedMovies, setSavedMovies] = useState([]);
-  const [searchInputValueSaved, setSearchInputValueSaved] = useState({ searchinput: '' });
+  const [searchInputValueSaved, setSearchInputValueSaved] = useState({
+    searchinput: (localStorage.getItem('searchInputValueSaved') || ''),
+  });
   const [savedMoviesFiltered, setSavedMoviesFiltered] = useState([]);
-  const [isShortsSaved, setIsShortsSaved] = useState(false);
+  const [isShortsSaved, setIsShortsSaved] = useState(localStorage.getItem('isShortsSaved') === "true" && true || false);
 
   // show-more button for saved-movie section
   const [isMoreButtonVisibleSaved, setIsMoreButtonVisibleSaved] = useState(false);
@@ -117,15 +121,23 @@ function App() {
     setWindowWidth(window.innerWidth);
   }
 
+  function clearLocalStorage() {
+    localStorage.removeItem('moviesToken');
+    localStorage.removeItem('searchInputValue');
+    localStorage.removeItem('searchInputValueSaved');
+    localStorage.removeItem('isShorts');
+    localStorage.removeItem('isShortsSaved');
+  }
+
   // First run: set search inputs
   useEffect(() => {
     setSearchInputValue((prevValue) => ({
       ...prevValue,
-      searchinput: '',
+      searchinput: localStorage.getItem('searchInputValue') || '',
     }));
     setSearchInputValueSaved((prevValue) => ({
       ...prevValue,
-      searchinput: '',
+      searchinput: localStorage.getItem('searchInputValueSaved') || '',
     }));
   }, []);
 
@@ -143,7 +155,7 @@ function App() {
         .then((res) => {
           // if jwt secret key is changed by dev while user has active session
           if (!res || !res.data) {
-            localStorage.clear();
+            clearLocalStorage();
             setLoggedIn(false);
             handleRedirectToSignIn();
             return;
@@ -206,14 +218,19 @@ function App() {
   }
 
   // MOVIES
-  function handleSetBeatMoviesFiltered(updatedbeatMoviesFiltered) {
-    setBeatMoviesFiltered(updatedbeatMoviesFiltered);
+  function handleSetBeatMoviesFiltered(updatedBeatMoviesFiltered) {
+    setBeatMoviesFiltered(updatedBeatMoviesFiltered);
   }
 
   function filterBeatMovies() {
-    const updatedbeatMoviesFiltered = filterMovieData(beatMovies, searchInputValue, isShorts, false);
-    handleSetBeatMoviesFiltered(updatedbeatMoviesFiltered);
+    const updatedBeatMoviesFiltered = filterMovieData(beatMovies, searchInputValue, isShorts, false);
+    handleSetBeatMoviesFiltered(updatedBeatMoviesFiltered);
   }
+
+  // // filter data - first run + if prev filter exists (local storage)
+  useEffect(() => {
+    filterBeatMovies();
+  }, [beatMovies]);
 
   // filter movies
   useEffect(() => {
@@ -269,6 +286,11 @@ function App() {
     setIsShortsSaved((prevState) => !prevState);
   }, []);
 
+  // filter data - first run + if prev filter exists (local storage)
+  useEffect(() => {
+    filterSavedMovies();
+  }, []);
+
   useEffect(() => {
     filterSavedMovies();
   }, [isShortsSaved, savedMovies]);
@@ -310,6 +332,14 @@ function App() {
   useEffect(() => {
     setMoreButtonCounterSaved(0);
   }, [searchInputValueSaved, isShortsSaved]);
+
+  useEffect(() => {
+    localStorage.setItem('searchInputValue', searchInputValue.searchinput || '');
+    localStorage.setItem('searchInputValueSaved', searchInputValueSaved.searchinput || '');
+    localStorage.setItem('isShorts', isShorts);
+    localStorage.setItem('isShortsSaved', isShortsSaved);
+
+  }, [searchInputValue, searchInputValueSaved, isShorts, isShortsSaved]);
 
   // CARDS
   function handleCreateMovie(movieData) {
@@ -401,8 +431,20 @@ function App() {
       });
   }
 
+  function clearStates() {
+    setCurrentUser({});
+    setBeatMovies([]);
+    setSavedMovies([]);
+    setSearchInputValue('');
+    setSearchInputValueSaved('');
+    setIsShorts(false);
+    setIsShortsSaved(false);
+  }
+
   function handleUserLogout() {
-    localStorage.clear();
+    clearLocalStorage();
+    clearStates();
+
     setLoggedIn(false);
     handleRedirectToMain();
   }

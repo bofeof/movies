@@ -1,4 +1,5 @@
-const REACT_APP_BASE_URL = 'https://api.bofeof-movies.nomoredomains.work/api';
+// const REACT_APP_BASE_URL = 'https://api.bofeof-movies.nomoredomains.work/api';
+const REACT_APP_BASE_URL = 'http://localhost:3005/api';
 const REACT_API_CONFIG = {
   mainMoviesUrl: REACT_APP_BASE_URL,
   headers: {
