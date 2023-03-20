@@ -51,7 +51,12 @@ function App() {
   const [searchInputValue, setSearchInputValue] = useState({
     searchinput: '' || localStorage.getItem('searchInputValue'),
   });
-  const [isShorts, setIsShorts] = useState(localStorage.getItem('isShorts') === "true" && true || false);
+  const [isShorts, setIsShorts] = useState(localStorage.getItem('isShorts') === 'true');
+
+  const [isNotFoundMovies, setIsNotFoundMovies] = useState(!localStorage.getItem('isNotFoundMovies') === 'true');
+  const [isFirstRunMovies, setIsFirstRunMovies] = useState(
+    localStorage.getItem('isFirstRunMovies') ? localStorage.getItem('isFirstRunMovies') === 'true' : true
+  );
 
   // show-more button for movie section
   const [isMoreButtonVisible, setIsMoreButtonVisible] = useState(false);
@@ -69,7 +74,12 @@ function App() {
     searchinput: '' || localStorage.getItem('searchInputValueSaved'),
   });
   const [savedMoviesFiltered, setSavedMoviesFiltered] = useState([]);
-  const [isShortsSaved, setIsShortsSaved] = useState(localStorage.getItem('isShortsSaved') === "true" && true || false);
+  const [isShortsSaved, setIsShortsSaved] = useState(localStorage.getItem('isShortsSaved') === 'true');
+
+  const [isNotFoundSaved, setIsNotFoundSaved] = useState(localStorage.getItem('isNotFoundSaved') === 'true');
+  const [isFirstRunSaved, setIsFirstRunSaved] = useState(
+    localStorage.getItem('isFirstRunSaved') ? localStorage.getItem('isFirstRunSaved') === 'true' : true
+  );
 
   // show-more button for saved-movie section
   const [isMoreButtonVisibleSaved, setIsMoreButtonVisibleSaved] = useState(false);
@@ -127,6 +137,11 @@ function App() {
     localStorage.removeItem('searchInputValueSaved');
     localStorage.removeItem('isShorts');
     localStorage.removeItem('isShortsSaved');
+
+    localStorage.removeItem('isNotFoundMovies');
+    localStorage.removeItem('isFirstRunMovies');
+    localStorage.removeItem('isNotFoundSaved');
+    localStorage.removeItem('isFirstRunSaved');
   }
 
   // First run: get current window size
@@ -213,6 +228,14 @@ function App() {
   function filterBeatMovies() {
     const updatedBeatMoviesFiltered = filterMovieData(beatMovies, searchInputValue, isShorts, false);
     handleSetBeatMoviesFiltered(updatedBeatMoviesFiltered);
+    setIsNotFoundMovies(updatedBeatMoviesFiltered.length === 0);
+    localStorage.setItem('isNotFoundMovies', updatedBeatMoviesFiltered.length === 0);
+  }
+
+  function startFilterBeatMovies() {
+    setIsFirstRunMovies(false);
+    localStorage.setItem('isFirstRunMovies', false);
+    filterBeatMovies();
   }
 
   // // filter data - first run + if prev filter exists (local storage)
@@ -223,7 +246,7 @@ function App() {
   // filter movies
   useEffect(() => {
     filterBeatMovies();
-  }, [isShorts]);
+  }, [isShorts, navigate]);
 
   const handleSetIsShorts = useCallback(() => {
     setIsShorts(!isShorts);
@@ -268,6 +291,14 @@ function App() {
   function filterSavedMovies() {
     const updatedFilteredSavedMovies = filterMovieData(savedMovies, searchInputValueSaved, isShortsSaved, true);
     handleSetSavedMoviesFiltered(updatedFilteredSavedMovies);
+    setIsNotFoundSaved(updatedFilteredSavedMovies.length === 0);
+    localStorage.setItem('isNotFoundSaved', updatedFilteredSavedMovies.length === 0);
+  }
+
+  function startFilterSavedMovies() {
+    setIsFirstRunSaved(false);
+    localStorage.setItem('isFirstRunSaved', false);
+    filterSavedMovies();
   }
 
   const handleSetIsShortsSaved = useCallback(() => {
@@ -281,7 +312,7 @@ function App() {
 
   useEffect(() => {
     filterSavedMovies();
-  }, [isShortsSaved, savedMovies]);
+  }, [isShortsSaved, savedMovies, navigate]);
 
   // Saved more button
   function handleSetMoreButtonCounterSaved() {
@@ -326,7 +357,6 @@ function App() {
     localStorage.setItem('searchInputValueSaved', searchInputValueSaved.searchinput || '');
     localStorage.setItem('isShorts', isShorts);
     localStorage.setItem('isShortsSaved', isShortsSaved);
-
   }, [searchInputValue, searchInputValueSaved, isShorts, isShortsSaved]);
 
   // CARDS
@@ -537,13 +567,15 @@ function App() {
                             filterStatus={isShorts}
                             isLoadError={isLoadError}
                             beatMoviesFiltered={beatMoviesFiltered}
-                            onSetBeatMoviesFiltered={filterBeatMovies}
+                            onSetBeatMoviesFiltered={startFilterBeatMovies}
                             onCreateMovie={handleCreateMovie}
                             onRemoveMovie={handleRemoveMovie}
                             isPreloaderActive={isPreloaderActive}
                             onClickMoreButton={handleSetMoreButtonCounter}
                             currentGalleryHeight={currentGalleryHeight}
                             isMoreButtonVisible={isMoreButtonVisible}
+                            isNotFound={isNotFoundMovies}
+                            isFirstRun={isFirstRunMovies}
                           />
                         </main>
 
@@ -580,13 +612,15 @@ function App() {
                             onSetSearchInputValue={setSearchInputValueSaved}
                             isLoadError={isLoadError}
                             savedMoviesFiltered={savedMoviesFiltered}
-                            onSetFilterSavedMovies={filterSavedMovies}
+                            onSetFilterSavedMovies={startFilterSavedMovies}
                             onCreateMovie={handleCreateMovie}
                             onRemoveMovie={handleRemoveMovie}
                             isPreloaderActive={isPreloaderActive}
                             onClickMoreButton={handleSetMoreButtonCounterSaved}
                             currentGalleryHeight={currentGalleryHeightSaved}
                             isMoreButtonVisibleSaved={isMoreButtonVisibleSaved}
+                            isNotFound={isNotFoundSaved}
+                            isFirstRun={isFirstRunSaved}
                           />
                         </main>
 

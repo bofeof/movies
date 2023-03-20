@@ -21,6 +21,8 @@ export default function SavedMovies({
   onClickMoreButton,
   currentGalleryHeight,
   isMoreButtonVisibleSaved,
+  isNotFound,
+  isFirstRun
 }) {
   return (
     <div className="saved-movies">
@@ -44,6 +46,8 @@ export default function SavedMovies({
             onCreateMovie={onCreateMovie}
             onRemoveMovie={onRemoveMovie}
             currentGalleryHeight={currentGalleryHeight}
+            isNotFound={isNotFound}
+            isFirstRun={isFirstRun}
           />
           {isMoreButtonVisibleSaved && <ShowMoreButton onClickMoreButton={onClickMoreButton} />}
         </>

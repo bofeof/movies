@@ -22,6 +22,8 @@ export default function Movies({
   onClickMoreButton,
   currentGalleryHeight,
   isMoreButtonVisible,
+  isNotFound,
+  isFirstRun
 }) {
   return (
     <div className="movies">
@@ -45,6 +47,8 @@ export default function Movies({
             onRemoveMovie={onRemoveMovie}
             isPreloaderActive={isPreloaderActive}
             currentGalleryHeight={currentGalleryHeight}
+            isNotFound={isNotFound}
+            isFirstRun={isFirstRun}
           />
           {isMoreButtonVisible && <ShowMoreButton onClickMoreButton={onClickMoreButton} />}
         </>

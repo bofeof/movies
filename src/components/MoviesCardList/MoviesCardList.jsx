@@ -9,6 +9,8 @@ export default function MoviesCardList({
   onCreateMovie,
   onRemoveMovie,
   currentGalleryHeight,
+  isNotFound,
+  isFirstRun
 }) {
   const galleryHeightStyle = {
     maxHeight: currentGalleryHeight,
@@ -21,7 +23,7 @@ export default function MoviesCardList({
           return <p className="movies-preloader__message">{ERROR_MESSAGES.loadError}</p>;
         }
 
-        if (movies.length === 0) {
+        if (isNotFound && !isFirstRun) {
           return <p className="movies-preloader__message">{ERROR_MESSAGES.notFoundError}</p>;
         }
 
