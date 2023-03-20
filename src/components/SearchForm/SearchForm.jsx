@@ -74,6 +74,7 @@ export default function SearchForm({
         ...prevState,
         [name]: value,
       }));
+
       onSearchSubmit();
     }
   }

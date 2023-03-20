@@ -1,4 +1,4 @@
-import { Route, Routes, useNavigate } from 'react-router-dom';
+import { Route, Routes, useNavigate, useLocation } from 'react-router-dom';
 import { useCallback, useEffect, useState } from 'react';
 
 import './App.css';
@@ -28,6 +28,8 @@ import defineCurrentWindowSize from '../../utils/defineCurrentWindowSize';
 import filterMovieData from '../../utils/filterMovieData';
 
 function App() {
+  const location = useLocation();
+
   const BeatFilmAPI = new MoviesApi();
   const MainAPI = new MainApi(REACT_API_CONFIG);
   const UserAPI = new UserAuth(REACT_API_CONFIG);
@@ -127,6 +129,15 @@ function App() {
     navigate(-1);
   }, [navigate]);
 
+  function redirectToSelectedUrl() {
+    // for logged-in user
+    if (['/signup', '/signin'].includes(location.pathname)) {
+      handleRedirectToMovies();
+      return;
+    }
+    navigate(location.pathname);
+  }
+
   function updateSize() {
     setWindowWidth(window.innerWidth);
   }
@@ -142,6 +153,31 @@ function App() {
     localStorage.removeItem('isFirstRunMovies');
     localStorage.removeItem('isNotFoundSaved');
     localStorage.removeItem('isFirstRunSaved');
+  }
+
+  // check filters after refreshing
+  function checkNotFoundFiltersSaved() {
+    if (
+      savedMovies.length === 0 &&
+      localStorage.getItem('searchInputValueSaved') === '' &&
+      localStorage.getItem('isShortsSaved') === 'false'
+    ) {
+      setIsFirstRunSaved(true);
+      localStorage.setItem('isFirstRunSaved', true);
+    } else {
+      setIsFirstRunSaved(false);
+      localStorage.setItem('isFirstRunSaved', false);
+    }
+  }
+
+  function checkNotFoundFiltersMovies() {
+    if (localStorage.getItem('searchInputValue') === '' && localStorage.getItem('isShorts') === 'false') {
+      setIsFirstRunMovies(true);
+      localStorage.setItem('isFirstRunMovies', true);
+    } else {
+      setIsFirstRunMovies(false);
+      localStorage.setItem('isFirstRunMovies', false);
+    }
   }
 
   // First run: get current window size
@@ -166,7 +202,8 @@ function App() {
 
           setLoggedIn(true);
           setCurrentUser(res.data);
-          handleRedirectToMovies();
+
+          redirectToSelectedUrl();
 
           setIsPreloaderActive(true);
 
@@ -201,6 +238,11 @@ function App() {
         });
     }
   }, [loggedIn]);
+
+  useEffect(() => {
+    checkNotFoundFiltersSaved();
+    checkNotFoundFiltersMovies();
+  }, []);
 
   const closeInfoPopUp = useCallback(() => {
     setIsInfoPopupOpen(!isInfoPopupOpen);
@@ -296,8 +338,7 @@ function App() {
   }
 
   function startFilterSavedMovies() {
-    setIsFirstRunSaved(false);
-    localStorage.setItem('isFirstRunSaved', false);
+    checkNotFoundFiltersSaved();
     filterSavedMovies();
   }
 
@@ -434,12 +475,12 @@ function App() {
     UserAPI.signup(userRegisterData)
       .then((res) => {
         if (res.data) {
-          handleRedirectToSignIn();
+          handleLoggedIn({ email: userRegisterData.email, password: userRegisterData.password });
         }
       })
       .then(() => {
         setInfoPopUpTitle('Ура!');
-        setInfoMessage('Вы успешно зарегистрированы');
+        setInfoMessage('Вы успешно зарегистрированы и вошли в систему');
         setIsInfoPopupOpen(!isInfoPopupOpen);
       })
       .catch((err) => {
@@ -518,6 +559,7 @@ function App() {
                 }
               />
               <Route
+                exact
                 path="/signin"
                 element={
                   <main>
@@ -530,6 +572,7 @@ function App() {
                 }
               />
               <Route
+                exact
                 path="/signup"
                 element={
                   <main>
@@ -541,7 +584,9 @@ function App() {
                   </main>
                 }
               />
+
               <Route
+                exact
                 path="/movies"
                 element={
                   <ProtectedRoute
@@ -586,7 +631,9 @@ function App() {
                 }
               />
               <Route />
+
               <Route
+                exact
                 path="/saved-movies"
                 element={
                   <ProtectedRoute
@@ -631,6 +678,7 @@ function App() {
                 }
               />
               <Route
+                exact
                 path="/profile"
                 element={
                   <ProtectedRoute
@@ -658,14 +706,9 @@ function App() {
               <Route
                 path="*"
                 element={
-                  <ProtectedRoute
-                    loggedIn={loggedIn}
-                    element={
-                      <main>
-                        <PageNotFound onRedirectNotFoundToBack={handleRedirectNotFoundToBack} />
-                      </main>
-                    }
-                  />
+                  <main>
+                    <PageNotFound onRedirectNotFoundToBack={handleRedirectNotFoundToBack} />
+                  </main>
                 }
               />
             </Routes>
