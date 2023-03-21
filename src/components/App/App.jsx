@@ -268,30 +268,29 @@ function App() {
   }
 
   function filterBeatMovies() {
+    checkNotFoundFiltersMovies();
     const updatedBeatMoviesFiltered = filterMovieData(beatMovies, searchInputValue, isShorts, false);
     handleSetBeatMoviesFiltered(updatedBeatMoviesFiltered);
     setIsNotFoundMovies(updatedBeatMoviesFiltered.length === 0);
     localStorage.setItem('isNotFoundMovies', updatedBeatMoviesFiltered.length === 0);
   }
 
-  function startFilterBeatMovies() {
-    setIsFirstRunMovies(false);
-    localStorage.setItem('isFirstRunMovies', false);
-    filterBeatMovies();
-  }
-
   // // filter data - first run + if prev filter exists (local storage)
   useEffect(() => {
+    checkNotFoundFiltersMovies();
     filterBeatMovies();
   }, [beatMovies]);
 
   // filter movies
   useEffect(() => {
+    checkNotFoundFiltersMovies();
     filterBeatMovies();
   }, [isShorts, navigate]);
 
   const handleSetIsShorts = useCallback(() => {
+    localStorage.setItem('isShorts', !isShorts)
     setIsShorts(!isShorts);
+    checkNotFoundFiltersMovies();
   }, [isShorts]);
 
   // show more button
@@ -331,19 +330,15 @@ function App() {
   }
 
   function filterSavedMovies() {
+    checkNotFoundFiltersSaved();
     const updatedFilteredSavedMovies = filterMovieData(savedMovies, searchInputValueSaved, isShortsSaved, true);
     handleSetSavedMoviesFiltered(updatedFilteredSavedMovies);
     setIsNotFoundSaved(updatedFilteredSavedMovies.length === 0);
     localStorage.setItem('isNotFoundSaved', updatedFilteredSavedMovies.length === 0);
   }
 
-  function startFilterSavedMovies() {
-    checkNotFoundFiltersSaved();
-    filterSavedMovies();
-  }
-
   const handleSetIsShortsSaved = useCallback(() => {
-    setIsShortsSaved((prevState) => !prevState);
+    setIsShortsSaved((prev) => !prev);
   }, []);
 
   // filter data - first run + if prev filter exists (local storage)
@@ -352,6 +347,8 @@ function App() {
   }, []);
 
   useEffect(() => {
+    checkNotFoundFiltersSaved();
+    localStorage.setItem('isShortsSaved', isShortsSaved)
     filterSavedMovies();
   }, [isShortsSaved, savedMovies, navigate]);
 
@@ -612,7 +609,7 @@ function App() {
                             filterStatus={isShorts}
                             isLoadError={isLoadError}
                             beatMoviesFiltered={beatMoviesFiltered}
-                            onSetBeatMoviesFiltered={startFilterBeatMovies}
+                            onSetBeatMoviesFiltered={filterBeatMovies}
                             onCreateMovie={handleCreateMovie}
                             onRemoveMovie={handleRemoveMovie}
                             isPreloaderActive={isPreloaderActive}
@@ -659,7 +656,7 @@ function App() {
                             onSetSearchInputValue={setSearchInputValueSaved}
                             isLoadError={isLoadError}
                             savedMoviesFiltered={savedMoviesFiltered}
-                            onSetFilterSavedMovies={startFilterSavedMovies}
+                            onSetFilterSavedMovies={filterSavedMovies}
                             onCreateMovie={handleCreateMovie}
                             onRemoveMovie={handleRemoveMovie}
                             isPreloaderActive={isPreloaderActive}

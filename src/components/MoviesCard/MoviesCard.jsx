@@ -12,6 +12,8 @@ export default function MoviesCard({ card, cardKey, isSavedSection, onCreateMovi
     ? card.image
     : `${BEAT_MAIN_URL}/${card?.image?.formats?.thumbnail?.url || card?.image?.formats?.small?.url}`;
 
+  const duration = convertMins(card?.duration || 0);
+
   function handleSaveRemoveMovie(evt) {
     if (evt.target.checked && !isSavedSection) {
       onCreateMovie(card);
@@ -31,7 +33,12 @@ export default function MoviesCard({ card, cardKey, isSavedSection, onCreateMovi
 
           {isSavedSection ? (
             <label className="movie-card__label" htmlFor={cardKey}>
-              <input className="movie-card__checkbox movie-card__checkbox_hidden" type="checkbox" id={cardKey} onChange={handleSaveRemoveMovie}/>
+              <input
+                className="movie-card__checkbox movie-card__checkbox_hidden"
+                type="checkbox"
+                id={cardKey}
+                onChange={handleSaveRemoveMovie}
+              />
               <span className="movie-card__remove-button" />
             </label>
           ) : (
@@ -47,7 +54,7 @@ export default function MoviesCard({ card, cardKey, isSavedSection, onCreateMovi
             </label>
           )}
         </div>
-        <p className="movie-card__duration">{convertMins(card?.duration || 0)}</p>
+        <p className="movie-card__duration">{duration}</p>
       </div>
     </li>
   );
