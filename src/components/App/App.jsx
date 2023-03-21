@@ -155,7 +155,12 @@ function App() {
   }, [navigate]);
 
   const handleRedirectNotFoundToBack = useCallback(() => {
-    navigate(-1);
+    const hasPreviousRoute = location.key !== 'default';
+    if (hasPreviousRoute) {
+      navigate(-1);
+    } else {
+      handleRedirectToMain();
+    }
   }, [navigate]);
 
   function redirectToSelectedUrl() {
@@ -301,7 +306,7 @@ function App() {
   useEffect(() => {
     checkNotFoundFiltersMovies();
     filterBeatMovies();
-  }, [isShorts, navigate]);
+  }, [isShorts]);
 
   const handleSetIsShorts = useCallback(() => {
     localStorage.setItem('isShorts', !isShorts);
@@ -345,7 +350,7 @@ function App() {
   useEffect(() => {
     const isMoreVisibleStatus = showLoadMoreButton(windowWidth, beatMoviesFiltered, currentGalleryHeight);
     setIsMoreButtonVisible(isMoreVisibleStatus);
-  }, [windowWidth, moreButtonCounter, currentGalleryHeight, movieGalleryHeigh, navigate]);
+  }, [windowWidth, moreButtonCounter, currentGalleryHeight, movieGalleryHeigh]);
 
   useEffect(() => {
     setMoreButtonCounter(0);
@@ -376,7 +381,7 @@ function App() {
     checkNotFoundFiltersSaved();
     localStorage.setItem('isShortsSaved', isShortsSaved);
     filterSavedMovies();
-  }, [isShortsSaved, savedMovies, navigate]);
+  }, [isShortsSaved, savedMovies]);
 
   function handleSetMoreButtonCounterSaved() {
     setMoreButtonCounterSaved((prevConter) => prevConter + 1);
@@ -412,14 +417,7 @@ function App() {
   useEffect(() => {
     const isMoreVisibleStatusSaved = showLoadMoreButton(windowWidth, savedMoviesFiltered, currentGalleryHeightSaved);
     setIsMoreButtonVisibleSaved(isMoreVisibleStatusSaved);
-  }, [
-    windowWidth,
-    moreButtonCounterSaved,
-    currentGalleryHeightSaved,
-    movieGalleryHeighSaved,
-    savedMoviesFiltered,
-    navigate,
-  ]);
+  }, [windowWidth, moreButtonCounterSaved, currentGalleryHeightSaved, movieGalleryHeighSaved, savedMoviesFiltered]);
 
   useEffect(() => {
     setMoreButtonCounterSaved(0);
@@ -741,7 +739,7 @@ function App() {
                 path="*"
                 element={
                   <main>
-                    <PageNotFound onRedirectNotFoundToBack={handleRedirectNotFoundToBack} />
+                    <PageNotFound onClick={handleRedirectNotFoundToBack} />
                   </main>
                 }
               />
