@@ -22,10 +22,13 @@ import UserAuth from '../../utils/API/UserAuth';
 import WindowContext from '../../contexts/WindowContext';
 import { CurrentUserContext } from '../../contexts/CurrentUserContext';
 
-import { REACT_API_CONFIG } from '../../utils/API/mainApiConfig';
 import showLoadMoreButton from '../../utils/showLoadMoreButton';
 import defineCurrentWindowSize from '../../utils/defineCurrentWindowSize';
 import filterMovieData from '../../utils/filterMovieData';
+import clearLocalStorage from '../../utils/clearLocalStorsge';
+import MOVIE_CARD_PARAMS from '../../utils/movieConstants';
+import WINDOW_WIDTH from '../../utils/windowConstants';
+import { REACT_API_CONFIG } from '../../utils/API/mainApiConfig';
 
 function App() {
   const location = useLocation();
@@ -42,11 +45,11 @@ function App() {
   const [isPreloaderActive, setIsPreloaderActive] = useState(false);
   const [infoPopUpTitle, setInfoPopUpTitle] = useState('Внимание!');
 
-  // user
+  // User
   const [loggedIn, setLoggedIn] = useState(false);
   const [currentUser, setCurrentUser] = useState({});
 
-  // beat movies
+  // Beat movies
   const [beatMovies, setBeatMovies] = useState([]);
   const [isLoadError, setIsLoadError] = useState(false);
   const [beatMoviesFiltered, setBeatMoviesFiltered] = useState([]);
@@ -60,17 +63,30 @@ function App() {
     localStorage.getItem('isFirstRunMovies') ? localStorage.getItem('isFirstRunMovies') === 'true' : true
   );
 
-  // show-more button for movie section
+  // Show-more button for movie section
   const [isMoreButtonVisible, setIsMoreButtonVisible] = useState(false);
   const [currentGalleryHeight, setCurrentGalleryHeight] = useState(0);
   const [moreButtonCounter, setMoreButtonCounter] = useState(0);
   const [movieGalleryHeigh, setMovieGalleryHeigh] = useState({
-    large: 1068 + moreButtonCounter * (218 + 32),
-    medium: 1236 + moreButtonCounter * (257 + 36),
-    small: 1315 + moreButtonCounter * (235 + 20),
+    // start h + n click * card h + gap * n row
+    large:
+      WINDOW_WIDTH.large +
+      moreButtonCounter *
+        (MOVIE_CARD_PARAMS.large.movieHeight + MOVIE_CARD_PARAMS.large.movieGap) *
+        MOVIE_CARD_PARAMS.large.movieRow,
+    medium:
+      WINDOW_WIDTH.medium +
+      moreButtonCounter *
+        (MOVIE_CARD_PARAMS.medium.movieHeight + MOVIE_CARD_PARAMS.medium.movieGap) *
+        MOVIE_CARD_PARAMS.medium.movieRow,
+    small:
+      WINDOW_WIDTH.small +
+      moreButtonCounter *
+        (MOVIE_CARD_PARAMS.small.movieHeight + MOVIE_CARD_PARAMS.small.movieGap) *
+        MOVIE_CARD_PARAMS.small.movieRow,
   });
 
-  // saved movies
+  // Saved movies
   const [savedMovies, setSavedMovies] = useState([]);
   const [searchInputValueSaved, setSearchInputValueSaved] = useState({
     searchinput: '' || localStorage.getItem('searchInputValueSaved'),
@@ -83,17 +99,30 @@ function App() {
     localStorage.getItem('isFirstRunSaved') ? localStorage.getItem('isFirstRunSaved') === 'true' : true
   );
 
-  // show-more button for saved-movie section
+  // Show-more button for saved-movie section
   const [isMoreButtonVisibleSaved, setIsMoreButtonVisibleSaved] = useState(false);
   const [currentGalleryHeightSaved, setCurrentGalleryHeightSaved] = useState(0);
   const [moreButtonCounterSaved, setMoreButtonCounterSaved] = useState(0);
   const [movieGalleryHeighSaved, setMovieGalleryHeighSaved] = useState({
-    large: 1068 + moreButtonCounterSaved * (218 + 32),
-    medium: 1236 + moreButtonCounterSaved * (257 + 36),
-    small: 1315 + moreButtonCounterSaved * (235 + 20),
+    // start h + n click save section * card h + gap * n row
+    large:
+      WINDOW_WIDTH.large +
+      moreButtonCounterSaved *
+        (MOVIE_CARD_PARAMS.large.movieHeight + MOVIE_CARD_PARAMS.large.movieGap) *
+        MOVIE_CARD_PARAMS.large.movieRow,
+    medium:
+      WINDOW_WIDTH.medium +
+      moreButtonCounterSaved *
+        (MOVIE_CARD_PARAMS.medium.movieHeight + MOVIE_CARD_PARAMS.medium.movieGap) *
+        MOVIE_CARD_PARAMS.medium.movieRow,
+    small:
+      WINDOW_WIDTH.small +
+      moreButtonCounterSaved *
+        (MOVIE_CARD_PARAMS.small.movieHeight + MOVIE_CARD_PARAMS.small.movieGap) *
+        MOVIE_CARD_PARAMS.small.movieRow,
   });
 
-  // window width
+  // Window width
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
   // Redirect
@@ -142,20 +171,7 @@ function App() {
     setWindowWidth(window.innerWidth);
   }
 
-  function clearLocalStorage() {
-    localStorage.removeItem('moviesToken');
-    localStorage.removeItem('searchInputValue');
-    localStorage.removeItem('searchInputValueSaved');
-    localStorage.removeItem('isShorts');
-    localStorage.removeItem('isShortsSaved');
-
-    localStorage.removeItem('isNotFoundMovies');
-    localStorage.removeItem('isFirstRunMovies');
-    localStorage.removeItem('isNotFoundSaved');
-    localStorage.removeItem('isFirstRunSaved');
-  }
-
-  // check filters after refreshing
+  // Check localstorage and filters after refreshing
   function checkNotFoundFiltersSaved() {
     if (
       savedMovies.length === 0 &&
@@ -212,7 +228,6 @@ function App() {
               setSavedMovies(savedMoviesData.data);
               setSavedMoviesFiltered(savedMoviesData.data.reverse());
 
-              // check if movie is saved
               const savedList = savedMoviesData.data.map((savedMovie) => savedMovie.movieId);
               const updatedBeat = beatMoviesData.map((beatMovie) =>
                 savedList.includes(beatMovie.id)
@@ -239,6 +254,7 @@ function App() {
     }
   }, [loggedIn]);
 
+  // First run: check local storage and filters
   useEffect(() => {
     checkNotFoundFiltersSaved();
     checkNotFoundFiltersMovies();
@@ -288,12 +304,11 @@ function App() {
   }, [isShorts, navigate]);
 
   const handleSetIsShorts = useCallback(() => {
-    localStorage.setItem('isShorts', !isShorts)
+    localStorage.setItem('isShorts', !isShorts);
     setIsShorts(!isShorts);
     checkNotFoundFiltersMovies();
   }, [isShorts]);
 
-  // show more button
   function handleSetMoreButtonCounter() {
     setMoreButtonCounter((prevConter) => prevConter + 1);
   }
@@ -303,9 +318,21 @@ function App() {
     setMovieGalleryHeigh((prevState) => ({
       ...prevState,
       // start h + n click * card h + gap * n row
-      large: 1068 + moreButtonCounter * (218 + 32) * 1,
-      medium: 1236 + moreButtonCounter * (257 + 36) * 1,
-      small: 1315 + moreButtonCounter * (235 + 20) * 5,
+      large:
+        WINDOW_WIDTH.large +
+        moreButtonCounter *
+          (MOVIE_CARD_PARAMS.large.movieHeight + MOVIE_CARD_PARAMS.large.movieGap) *
+          MOVIE_CARD_PARAMS.large.movieRow,
+      medium:
+        WINDOW_WIDTH.medium +
+        moreButtonCounter *
+          (MOVIE_CARD_PARAMS.medium.movieHeight + MOVIE_CARD_PARAMS.medium.movieGap) *
+          MOVIE_CARD_PARAMS.medium.movieRow,
+      small:
+        WINDOW_WIDTH.small +
+        moreButtonCounter *
+          (MOVIE_CARD_PARAMS.small.movieHeight + MOVIE_CARD_PARAMS.small.movieGap) *
+          MOVIE_CARD_PARAMS.small.movieRow,
     }));
   }, [windowWidth, moreButtonCounter, isShorts, beatMoviesFiltered]);
 
@@ -341,30 +368,38 @@ function App() {
     setIsShortsSaved((prev) => !prev);
   }, []);
 
-  // filter data - first run + if prev filter exists (local storage)
   useEffect(() => {
     filterSavedMovies();
   }, []);
 
   useEffect(() => {
     checkNotFoundFiltersSaved();
-    localStorage.setItem('isShortsSaved', isShortsSaved)
+    localStorage.setItem('isShortsSaved', isShortsSaved);
     filterSavedMovies();
   }, [isShortsSaved, savedMovies, navigate]);
 
-  // Saved more button
   function handleSetMoreButtonCounterSaved() {
     setMoreButtonCounterSaved((prevConter) => prevConter + 1);
   }
 
-  // define size of saved-movie section
   useEffect(() => {
     setMovieGalleryHeighSaved((prevState) => ({
       ...prevState,
-      // start h + n click * card h + gap * n row
-      large: 1068 + moreButtonCounterSaved * (218 + 32) * 1,
-      medium: 1236 + moreButtonCounterSaved * (257 + 36) * 1,
-      small: 1315 + moreButtonCounterSaved * (235 + 20) * 5,
+      large:
+        WINDOW_WIDTH.large +
+        moreButtonCounterSaved *
+          (MOVIE_CARD_PARAMS.large.movieHeight + MOVIE_CARD_PARAMS.large.movieGap) *
+          MOVIE_CARD_PARAMS.large.movieRow,
+      medium:
+        WINDOW_WIDTH.medium +
+        moreButtonCounterSaved *
+          (MOVIE_CARD_PARAMS.medium.movieHeight + MOVIE_CARD_PARAMS.medium.movieGap) *
+          MOVIE_CARD_PARAMS.medium.movieRow,
+      small:
+        WINDOW_WIDTH.small +
+        moreButtonCounterSaved *
+          (MOVIE_CARD_PARAMS.small.movieHeight + MOVIE_CARD_PARAMS.small.movieGap) *
+          MOVIE_CARD_PARAMS.small.movieRow,
     }));
   }, [windowWidth, moreButtonCounterSaved, isShortsSaved, savedMoviesFiltered]);
 
@@ -491,6 +526,8 @@ function App() {
     setCurrentUser({});
     setBeatMovies([]);
     setSavedMovies([]);
+    setSavedMoviesFiltered([]);
+    setBeatMoviesFiltered([]);
     setSearchInputValue('');
     setSearchInputValueSaved('');
     setIsShorts(false);

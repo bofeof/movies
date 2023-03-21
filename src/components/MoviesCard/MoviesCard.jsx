@@ -1,11 +1,6 @@
 import './MoviesCard.css';
 import { BEAT_MAIN_URL } from '../../utils/moviesConstants';
-
-function convertMins(mins) {
-  const h = Math.trunc(mins / 60);
-  const min = mins % 60;
-  return `${h}ч${min}м`;
-}
+import convertMins from '../../utils/convertMins';
 
 export default function MoviesCard({ card, cardKey, isSavedSection, onCreateMovie, onRemoveMovie }) {
   const thumbnail = isSavedSection
