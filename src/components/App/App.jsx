@@ -155,12 +155,14 @@ function App() {
   }, [navigate]);
 
   const handleRedirectNotFoundToBack = useCallback(() => {
+
     const hasPreviousRoute = location.key !== 'default';
     if (hasPreviousRoute) {
       navigate(-1);
     } else {
       handleRedirectToMain();
     }
+
   }, [navigate]);
 
   function redirectToSelectedUrl() {
@@ -306,7 +308,7 @@ function App() {
   useEffect(() => {
     checkNotFoundFiltersMovies();
     filterBeatMovies();
-  }, [isShorts]);
+  }, [isShorts, navigate]);
 
   const handleSetIsShorts = useCallback(() => {
     localStorage.setItem('isShorts', !isShorts);
@@ -350,7 +352,7 @@ function App() {
   useEffect(() => {
     const isMoreVisibleStatus = showLoadMoreButton(windowWidth, beatMoviesFiltered, currentGalleryHeight);
     setIsMoreButtonVisible(isMoreVisibleStatus);
-  }, [windowWidth, moreButtonCounter, currentGalleryHeight, movieGalleryHeigh]);
+  }, [windowWidth, moreButtonCounter, currentGalleryHeight, movieGalleryHeigh, navigate]);
 
   useEffect(() => {
     setMoreButtonCounter(0);
@@ -381,7 +383,7 @@ function App() {
     checkNotFoundFiltersSaved();
     localStorage.setItem('isShortsSaved', isShortsSaved);
     filterSavedMovies();
-  }, [isShortsSaved, savedMovies]);
+  }, [isShortsSaved, savedMovies, navigate]);
 
   function handleSetMoreButtonCounterSaved() {
     setMoreButtonCounterSaved((prevConter) => prevConter + 1);
@@ -417,7 +419,14 @@ function App() {
   useEffect(() => {
     const isMoreVisibleStatusSaved = showLoadMoreButton(windowWidth, savedMoviesFiltered, currentGalleryHeightSaved);
     setIsMoreButtonVisibleSaved(isMoreVisibleStatusSaved);
-  }, [windowWidth, moreButtonCounterSaved, currentGalleryHeightSaved, movieGalleryHeighSaved, savedMoviesFiltered]);
+  }, [
+    windowWidth,
+    moreButtonCounterSaved,
+    currentGalleryHeightSaved,
+    movieGalleryHeighSaved,
+    savedMoviesFiltered,
+    navigate,
+  ]);
 
   useEffect(() => {
     setMoreButtonCounterSaved(0);
