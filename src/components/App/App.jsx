@@ -155,14 +155,12 @@ function App() {
   }, [navigate]);
 
   const handleRedirectNotFoundToBack = useCallback(() => {
-
     const hasPreviousRoute = location.key !== 'default';
     if (hasPreviousRoute) {
       navigate(-1);
     } else {
       handleRedirectToMain();
     }
-
   }, [navigate]);
 
   function redirectToSelectedUrl() {
