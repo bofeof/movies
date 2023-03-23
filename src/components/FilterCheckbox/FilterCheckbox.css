@@ -78,6 +78,7 @@
   opacity: 0.5;
 }
 
+.filter__dot_active,
 .filter__checkbox_hidden:checked + .filter__checkbox_visible .filter__dot {
   background-color: #3ddc84;
   animation: filter_dot_shorts 0.1s ease-in-out forwards;

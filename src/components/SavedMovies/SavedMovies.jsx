@@ -2,14 +2,56 @@ import './SavedMovies.css';
 import SearchForm from '../SearchForm/SearchForm';
 import MoviesCardList from '../MoviesCardList/MoviesCardList';
 import ShowMoreButton from '../ShowMoreButton/ShowMoreButton';
-// import Preloader from '../Preloader/Preloader';
+import Preloader from '../Preloader/Preloader';
 
-export default function SavedMovies({ isSavedSection }) {
+export default function SavedMovies({
+  isSavedSection,
+
+  onClickFilter,
+  filterStatus,
+  searchInputValue,
+  onSetSearchInputValue,
+  isLoadError,
+  savedMoviesFiltered,
+  onSetFilterSavedMovies,
+  onCreateMovie,
+  onRemoveMovie,
+  isPreloaderActive,
+
+  onClickMoreButton,
+  currentGalleryHeight,
+  isMoreButtonVisibleSaved,
+  isNotFound,
+  isFirstRun
+}) {
   return (
     <div className="saved-movies">
-      <SearchForm />
-      <MoviesCardList isSavedSection={isSavedSection} />
-      <ShowMoreButton />
+      <SearchForm
+        isSavedSection={isSavedSection}
+        onClickFilter={onClickFilter}
+        filterStatus={filterStatus}
+        onSearchSubmit={onSetFilterSavedMovies}
+        searchInputValue={searchInputValue}
+        onSetSearchInputValue={onSetSearchInputValue}
+      />
+
+      {isPreloaderActive ? (
+        <Preloader />
+      ) : (
+        <>
+          <MoviesCardList
+            isSavedSection={isSavedSection}
+            movies={savedMoviesFiltered}
+            isLoadError={isLoadError}
+            onCreateMovie={onCreateMovie}
+            onRemoveMovie={onRemoveMovie}
+            currentGalleryHeight={currentGalleryHeight}
+            isNotFound={isNotFound}
+            isFirstRun={isFirstRun}
+          />
+          {isMoreButtonVisibleSaved && <ShowMoreButton onClickMoreButton={onClickMoreButton} />}
+        </>
+      )}
     </div>
   );
 }
