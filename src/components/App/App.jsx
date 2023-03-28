@@ -210,53 +210,50 @@ function App() {
 
   // First run: check login, get movies data
   useEffect(() => {
-    if (localStorage.getItem('moviesToken')) {
-      UserAPI.checkToken(localStorage.getItem('moviesToken'))
-        .then((res) => {
-          // if jwt secret key is changed by dev while user has active session
-          if (!res || !res.data) {
-            clearLocalStorage();
-            setLoggedIn(false);
-            handleRedirectToSignIn();
-            return;
-          }
-
-          setLoggedIn(true);
-          setCurrentUser(res.data);
-
-          redirectToSelectedUrl();
-
-          setIsPreloaderActive(true);
-
-          Promise.all([MainAPI.getAllMovies(), BeatFilmAPI.getBeatMovies()])
-            .then(([savedMoviesData, beatMoviesData]) => {
-              setSavedMovies(savedMoviesData.data);
-              setSavedMoviesFiltered(savedMoviesData.data.reverse());
-
-              const savedList = savedMoviesData.data.map((savedMovie) => savedMovie.movieId);
-              const updatedBeat = beatMoviesData.map((beatMovie) =>
-                savedList.includes(beatMovie.id)
-                  ? Object.assign(beatMovie, { isMovieSaved: true })
-                  : Object.assign(beatMovie, { isMovieSaved: false })
-              );
-
-              setBeatMovies(updatedBeat);
-            })
-            .catch(() => {
-              setIsLoadError(() => true);
-              setInfoPopUpTitle('Внимание!');
-              setInfoMessage('Что-то пошло не так...');
-              setIsInfoPopupOpen(!isInfoPopupOpen);
-              setIsPreloaderActive(false);
-            })
-            .finally(() => {
-              setIsPreloaderActive(false);
-            });
-        })
-        .catch(() => {
+    UserAPI.checkUser()
+      .then((res) => {
+        if (!res || !res.data) {
+          clearLocalStorage();
+          setLoggedIn(false);
           handleRedirectToSignIn();
-        });
-    }
+          return;
+        }
+
+        setLoggedIn(true);
+        setCurrentUser(res.data);
+
+        redirectToSelectedUrl();
+
+        setIsPreloaderActive(true);
+
+        Promise.all([MainAPI.getAllMovies(), BeatFilmAPI.getBeatMovies()])
+          .then(([savedMoviesData, beatMoviesData]) => {
+            setSavedMovies(savedMoviesData.data);
+            setSavedMoviesFiltered(savedMoviesData.data.reverse());
+
+            const savedList = savedMoviesData.data.map((savedMovie) => savedMovie.movieId);
+            const updatedBeat = beatMoviesData.map((beatMovie) =>
+              savedList.includes(beatMovie.id)
+                ? Object.assign(beatMovie, { isMovieSaved: true })
+                : Object.assign(beatMovie, { isMovieSaved: false })
+            );
+
+            setBeatMovies(updatedBeat);
+          })
+          .catch(() => {
+            setIsLoadError(() => true);
+            setInfoPopUpTitle('Внимание!');
+            setInfoMessage('Что-то пошло не так...');
+            setIsInfoPopupOpen(!isInfoPopupOpen);
+            setIsPreloaderActive(false);
+          })
+          .finally(() => {
+            setIsPreloaderActive(false);
+          });
+      })
+      .catch(() => {
+        handleRedirectToSignIn();
+      });
   }, [loggedIn]);
 
   // First run: check local storage and filters
@@ -481,10 +478,9 @@ function App() {
   function handleLoggedIn(loggedInData) {
     UserAPI.signin(loggedInData)
       .then((res) => {
-        if (res.token) {
-          localStorage.setItem('moviesToken', res.token);
-
-          UserAPI.checkToken(localStorage.getItem('moviesToken'))
+        if (res.message === 'Пользователь зашел в аккаунт') {
+          // check user
+          UserAPI.checkUser()
             .then(() => {
               setLoggedIn(true);
               handleRedirectToMovies();
@@ -496,9 +492,7 @@ function App() {
             });
         } else {
           setLoggedIn(false);
-          setInfoPopUpTitle('Внимание!');
-          setInfoMessage('Непредвиденная ошибка. Повторите свое действие еще раз');
-          setIsInfoPopupOpen(!isInfoPopupOpen);
+          throw new Error(res.message);
         }
       })
       .catch((err) => {
@@ -540,11 +534,18 @@ function App() {
   }
 
   function handleUserLogout() {
-    clearLocalStorage();
-    clearStates();
-
-    setLoggedIn(false);
-    handleRedirectToMain();
+    UserAPI.signout()
+      .then(() => {
+        clearLocalStorage();
+        clearStates();
+        setLoggedIn(false);
+        handleRedirectToMain();
+      })
+      .catch((err) => {
+        setInfoPopUpTitle('Внимание!');
+        setInfoMessage(err.message);
+        setIsInfoPopupOpen(!isInfoPopupOpen);
+      });
   }
 
   function handleUserUpdate(userData) {

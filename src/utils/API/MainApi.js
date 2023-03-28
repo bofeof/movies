@@ -5,10 +5,6 @@ export default class MainApi {
     this._configAPI = configAPI;
   }
 
-  _getToken() {
-    this._configAPI.headers.authorization = `Bearer ${localStorage.getItem('moviesToken')}`;
-  }
-
   async _getResponse(res) {
     if (res.ok) {
       return res.json();
@@ -19,33 +15,32 @@ export default class MainApi {
 
   // users
   getUserInfo() {
-    this._getToken();
     return fetch(`${this._configAPI.mainMoviesUrl}/users/me`, {
       method: 'GET',
       headers: this._configAPI.headers,
+      credentials: this._configAPI.credentials,
     }).then((res) => this._getResponse(res));
   }
 
   updateUserInfo(userData) {
-    this._getToken();
     return fetch(`${this._configAPI.mainMoviesUrl}/users/me`, {
       method: 'PATCH',
       headers: this._configAPI.headers,
+      credentials: this._configAPI.credentials,
       body: JSON.stringify(userData),
     }).then((res) => this._getResponse(res));
   }
 
   // movies
   getAllMovies() {
-    this._getToken();
     return fetch(`${this._configAPI.mainMoviesUrl}/movies`, {
       method: 'GET',
       headers: this._configAPI.headers,
+      credentials: this._configAPI.credentials,
     }).then((res) => this._getResponse(res));
   }
 
   createMovie(movieData) {
-    this._getToken();
     const newCard = {
       movieId: movieData?.id,
       nameRU: movieData?.nameRU,
@@ -66,15 +61,16 @@ export default class MainApi {
     return fetch(`${this._configAPI.mainMoviesUrl}/movies`, {
       method: 'POST',
       headers: this._configAPI.headers,
+      credentials: this._configAPI.credentials,
       body: JSON.stringify(newCard),
     }).then((res) => this._getResponse(res));
   }
 
   removeMovie(movieId) {
-    this._getToken();
     return fetch(`${this._configAPI.mainMoviesUrl}/movies/${movieId}`, {
       method: 'DELETE',
       headers: this._configAPI.headers,
+      credentials: this._configAPI.credentials,
     }).then((res) => this._getResponse(res));
   }
 }
