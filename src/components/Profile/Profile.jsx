@@ -1,6 +1,6 @@
 import './Profile.css';
 import { useState, useEffect, useContext } from 'react';
-import { CurrentUserContext } from '../../contexts/CurrentUserContext';
+import CurrentUserContext  from '../../contexts/CurrentUserContext';
 import formValidator from '../../utils/formValidator';
 
 export default function Profile({ onHandleSubmit, onHandleLogOut }) {

@@ -20,24 +20,22 @@ import MainApi from '../../utils/API/MainApi';
 import UserAuth from '../../utils/API/UserAuth';
 
 import WindowContext from '../../contexts/WindowContext';
-import { CurrentUserContext } from '../../contexts/CurrentUserContext';
+import CurrentUserContext  from '../../contexts/CurrentUserContext';
 
 import showLoadMoreButton from '../../utils/showLoadMoreButton';
 import defineCurrentWindowSize from '../../utils/defineCurrentWindowSize';
 import filterMovieData from '../../utils/filterMovieData';
 import clearLocalStorage from '../../utils/clearLocalStorsge';
-import MOVIE_CARD_PARAMS from '../../utils/movieConstants';
-import WINDOW_WIDTH from '../../utils/windowConstants';
+import defineGalleryHeight from '../../utils/defineGalleryHeight';
 import { REACT_API_CONFIG } from '../../utils/API/mainApiConfig';
 
 function App() {
   const location = useLocation();
+  const navigate = useNavigate();
 
   const BeatFilmAPI = new MoviesApi();
   const MainAPI = new MainApi(REACT_API_CONFIG);
   const UserAPI = new UserAuth(REACT_API_CONFIG);
-
-  const navigate = useNavigate();
 
   const [isInfoPopupOpen, setIsInfoPopupOpen] = useState(false);
   const [infoMessage, setInfoMessage] = useState('');
@@ -67,24 +65,7 @@ function App() {
   const [isMoreButtonVisible, setIsMoreButtonVisible] = useState(false);
   const [currentGalleryHeight, setCurrentGalleryHeight] = useState(0);
   const [moreButtonCounter, setMoreButtonCounter] = useState(0);
-  const [movieGalleryHeigh, setMovieGalleryHeigh] = useState({
-    // start h + n click * card h + gap * n row
-    large:
-      WINDOW_WIDTH.large +
-      moreButtonCounter *
-        (MOVIE_CARD_PARAMS.large.movieHeight + MOVIE_CARD_PARAMS.large.movieGap) *
-        MOVIE_CARD_PARAMS.large.movieRow,
-    medium:
-      WINDOW_WIDTH.medium +
-      moreButtonCounter *
-        (MOVIE_CARD_PARAMS.medium.movieHeight + MOVIE_CARD_PARAMS.medium.movieGap) *
-        MOVIE_CARD_PARAMS.medium.movieRow,
-    small:
-      WINDOW_WIDTH.small +
-      moreButtonCounter *
-        (MOVIE_CARD_PARAMS.small.movieHeight + MOVIE_CARD_PARAMS.small.movieGap) *
-        MOVIE_CARD_PARAMS.small.movieRow,
-  });
+  const [movieGalleryHeigh, setMovieGalleryHeight] = useState(defineGalleryHeight(moreButtonCounter));
 
   // Saved movies
   const [savedMovies, setSavedMovies] = useState([]);
@@ -103,24 +84,7 @@ function App() {
   const [isMoreButtonVisibleSaved, setIsMoreButtonVisibleSaved] = useState(false);
   const [currentGalleryHeightSaved, setCurrentGalleryHeightSaved] = useState(0);
   const [moreButtonCounterSaved, setMoreButtonCounterSaved] = useState(0);
-  const [movieGalleryHeighSaved, setMovieGalleryHeighSaved] = useState({
-    // start h + n click save section * card h + gap * n row
-    large:
-      WINDOW_WIDTH.large +
-      moreButtonCounterSaved *
-        (MOVIE_CARD_PARAMS.large.movieHeight + MOVIE_CARD_PARAMS.large.movieGap) *
-        MOVIE_CARD_PARAMS.large.movieRow,
-    medium:
-      WINDOW_WIDTH.medium +
-      moreButtonCounterSaved *
-        (MOVIE_CARD_PARAMS.medium.movieHeight + MOVIE_CARD_PARAMS.medium.movieGap) *
-        MOVIE_CARD_PARAMS.medium.movieRow,
-    small:
-      WINDOW_WIDTH.small +
-      moreButtonCounterSaved *
-        (MOVIE_CARD_PARAMS.small.movieHeight + MOVIE_CARD_PARAMS.small.movieGap) *
-        MOVIE_CARD_PARAMS.small.movieRow,
-  });
+  const [movieGalleryHeighSaved, setMovieGalleryHeightSaved] = useState(defineGalleryHeight(moreButtonCounterSaved));
 
   // Window width
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
@@ -176,6 +140,12 @@ function App() {
     setWindowWidth(window.innerWidth);
   }
 
+  function showErrorPopUp(err){
+    setInfoPopUpTitle('Внимание!');
+    setInfoMessage(err.message);
+    setIsInfoPopupOpen(!isInfoPopupOpen);
+  }
+
   // Check localstorage and filters after refreshing
   function checkNotFoundFiltersSaved() {
     if (
@@ -221,9 +191,7 @@ function App() {
 
         setLoggedIn(true);
         setCurrentUser(res.data);
-
         redirectToSelectedUrl();
-
         setIsPreloaderActive(true);
 
         Promise.all([MainAPI.getAllMovies(), BeatFilmAPI.getBeatMovies()])
@@ -293,18 +261,6 @@ function App() {
     localStorage.setItem('isNotFoundMovies', updatedBeatMoviesFiltered.length === 0);
   }
 
-  // // filter data - first run + if prev filter exists (local storage)
-  useEffect(() => {
-    checkNotFoundFiltersMovies();
-    filterBeatMovies();
-  }, [beatMovies]);
-
-  // filter movies
-  useEffect(() => {
-    checkNotFoundFiltersMovies();
-    filterBeatMovies();
-  }, [isShorts, navigate]);
-
   const handleSetIsShorts = useCallback(() => {
     localStorage.setItem('isShorts', !isShorts);
     setIsShorts(!isShorts);
@@ -315,33 +271,23 @@ function App() {
     setMoreButtonCounter((prevConter) => prevConter + 1);
   }
 
-  // define size of movie section
   useEffect(() => {
-    setMovieGalleryHeigh((prevState) => ({
+    checkNotFoundFiltersMovies();
+    filterBeatMovies();
+  }, [beatMovies, isShorts, navigate]);
+
+  useEffect(() => {
+    const galleryHeightParams = defineGalleryHeight(moreButtonCounter);
+    setMovieGalleryHeight((prevState) => ({
       ...prevState,
-      // start h + n click * card h + gap * n row
-      large:
-        WINDOW_WIDTH.large +
-        moreButtonCounter *
-          (MOVIE_CARD_PARAMS.large.movieHeight + MOVIE_CARD_PARAMS.large.movieGap) *
-          MOVIE_CARD_PARAMS.large.movieRow,
-      medium:
-        WINDOW_WIDTH.medium +
-        moreButtonCounter *
-          (MOVIE_CARD_PARAMS.medium.movieHeight + MOVIE_CARD_PARAMS.medium.movieGap) *
-          MOVIE_CARD_PARAMS.medium.movieRow,
-      small:
-        WINDOW_WIDTH.small +
-        moreButtonCounter *
-          (MOVIE_CARD_PARAMS.small.movieHeight + MOVIE_CARD_PARAMS.small.movieGap) *
-          MOVIE_CARD_PARAMS.small.movieRow,
+      ...galleryHeightParams
     }));
-  }, [windowWidth, moreButtonCounter, isShorts, beatMoviesFiltered]);
+  }, [windowWidth, moreButtonCounter, beatMoviesFiltered]);
 
   useEffect(() => {
     const size = defineCurrentWindowSize(windowWidth);
     setCurrentGalleryHeight(movieGalleryHeigh[size]);
-  }, [windowWidth, moreButtonCounter, movieGalleryHeigh]);
+  }, [windowWidth, movieGalleryHeigh]);
 
   // check hiddens for movie section
   useEffect(() => {
@@ -367,8 +313,12 @@ function App() {
   }
 
   const handleSetIsShortsSaved = useCallback(() => {
-    setIsShortsSaved((prev) => !prev);
+    setIsShortsSaved(!isShortsSaved);
   }, []);
+
+  function handleSetMoreButtonCounterSaved() {
+    setMoreButtonCounterSaved((prevConter) => prevConter + 1);
+  }
 
   useEffect(() => {
     filterSavedMovies();
@@ -380,28 +330,11 @@ function App() {
     filterSavedMovies();
   }, [isShortsSaved, savedMovies, navigate]);
 
-  function handleSetMoreButtonCounterSaved() {
-    setMoreButtonCounterSaved((prevConter) => prevConter + 1);
-  }
-
   useEffect(() => {
-    setMovieGalleryHeighSaved((prevState) => ({
+    const galleryHeight = defineGalleryHeight(moreButtonCounterSaved)
+    setMovieGalleryHeightSaved((prevState) => ({
       ...prevState,
-      large:
-        WINDOW_WIDTH.large +
-        moreButtonCounterSaved *
-          (MOVIE_CARD_PARAMS.large.movieHeight + MOVIE_CARD_PARAMS.large.movieGap) *
-          MOVIE_CARD_PARAMS.large.movieRow,
-      medium:
-        WINDOW_WIDTH.medium +
-        moreButtonCounterSaved *
-          (MOVIE_CARD_PARAMS.medium.movieHeight + MOVIE_CARD_PARAMS.medium.movieGap) *
-          MOVIE_CARD_PARAMS.medium.movieRow,
-      small:
-        WINDOW_WIDTH.small +
-        moreButtonCounterSaved *
-          (MOVIE_CARD_PARAMS.small.movieHeight + MOVIE_CARD_PARAMS.small.movieGap) *
-          MOVIE_CARD_PARAMS.small.movieRow,
+      ...galleryHeight
     }));
   }, [windowWidth, moreButtonCounterSaved, isShortsSaved, savedMoviesFiltered]);
 
@@ -447,9 +380,7 @@ function App() {
         setSavedMoviesFiltered((prevSate) => [newMovie.data, ...prevSate]);
       })
       .catch((err) => {
-        setInfoPopUpTitle('Внимание!');
-        setInfoMessage(err.message);
-        setIsInfoPopupOpen(!isInfoPopupOpen);
+        showErrorPopUp(err)
       });
   }
 
@@ -468,9 +399,7 @@ function App() {
         );
       })
       .catch((err) => {
-        setInfoPopUpTitle('Внимание!');
-        setInfoMessage(err.message);
-        setIsInfoPopupOpen(!isInfoPopupOpen);
+        showErrorPopUp(err)
       });
   }
 
@@ -486,9 +415,7 @@ function App() {
               handleRedirectToMovies();
             })
             .catch((err) => {
-              setInfoPopUpTitle('Внимание!');
-              setInfoMessage(err.message);
-              setIsInfoPopupOpen(!isInfoPopupOpen);
+              showErrorPopUp(err)
             });
         } else {
           setLoggedIn(false);
@@ -496,9 +423,7 @@ function App() {
         }
       })
       .catch((err) => {
-        setInfoPopUpTitle('Внимание!');
-        setInfoMessage(err.message);
-        setIsInfoPopupOpen(!isInfoPopupOpen);
+        showErrorPopUp(err)
       });
   }
 
@@ -515,9 +440,7 @@ function App() {
         setIsInfoPopupOpen(!isInfoPopupOpen);
       })
       .catch((err) => {
-        setInfoPopUpTitle('Внимание!');
-        setInfoMessage(err.message);
-        setIsInfoPopupOpen(!isInfoPopupOpen);
+        showErrorPopUp(err)
       });
   }
 
@@ -542,9 +465,7 @@ function App() {
         handleRedirectToMain();
       })
       .catch((err) => {
-        setInfoPopUpTitle('Внимание!');
-        setInfoMessage(err.message);
-        setIsInfoPopupOpen(!isInfoPopupOpen);
+        showErrorPopUp(err)
       });
   }
 
@@ -563,9 +484,7 @@ function App() {
         setIsInfoPopupOpen(!isInfoPopupOpen);
       })
       .catch((err) => {
-        setInfoPopUpTitle('Внимание!');
-        setInfoMessage(err.message);
-        setIsInfoPopupOpen(!isInfoPopupOpen);
+        showErrorPopUp(err)
       });
   }
 
