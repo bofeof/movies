@@ -263,11 +263,9 @@ function App() {
     const updatedBeatMoviesFiltered = filterMovieData(beatMovies, searchInputValue, isShorts, false);
     handleSetBeatMoviesFiltered(updatedBeatMoviesFiltered);
     setIsNotFoundMovies(updatedBeatMoviesFiltered.length === 0);
-    localStorage.setItem('isNotFoundMovies', updatedBeatMoviesFiltered.length === 0);
   }
 
   const handleSetIsShorts = useCallback(() => {
-    localStorage.setItem('isShorts', !isShorts);
     setIsShorts(!isShorts);
     checkNotFoundFiltersMovies();
   }, [isShorts]);
@@ -314,21 +312,13 @@ function App() {
     const updatedFilteredSavedMovies = filterMovieData(savedMovies, searchInputValueSaved, isShortsSaved, true);
     handleSetSavedMoviesFiltered(updatedFilteredSavedMovies);
     setIsNotFoundSaved(updatedFilteredSavedMovies.length === 0);
-    localStorage.setItem('isNotFoundSaved', updatedFilteredSavedMovies.length === 0);
   }
 
   const handleSetIsShortsSaved = useCallback(() => {
     setIsShortsSaved(!isShortsSaved);
-  }, []);
-
-  // show all saved movies
-  useEffect(() => {
-    filterSavedMovies();
-  }, []);
+  }, [isShortsSaved]);
 
   useEffect(() => {
-    checkNotFoundFiltersSaved();
-    localStorage.setItem('isShortsSaved', isShortsSaved);
     filterSavedMovies();
   }, [isShortsSaved, savedMovies, navigate]);
 
@@ -361,12 +351,15 @@ function App() {
     setMoreButtonCounterSaved(0);
   }, [searchInputValueSaved, isShortsSaved]);
 
+  // save all states locally
   useEffect(() => {
     localStorage.setItem('searchInputValue', searchInputValue.searchinput || '');
     localStorage.setItem('searchInputValueSaved', searchInputValueSaved.searchinput || '');
     localStorage.setItem('isShorts', isShorts);
     localStorage.setItem('isShortsSaved', isShortsSaved);
-  }, [searchInputValue, searchInputValueSaved, isShorts, isShortsSaved]);
+    localStorage.setItem('isNotFoundMovies', beatMoviesFiltered.length === 0);
+    localStorage.setItem('isNotFoundSaved', savedMoviesFiltered.length === 0);
+  }, [searchInputValue, searchInputValueSaved, isShorts, isShortsSaved, savedMoviesFiltered]);
 
   // CARDS
   function handleCreateMovie(movieData) {
