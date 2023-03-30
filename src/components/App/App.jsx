@@ -20,30 +20,29 @@ import MainApi from '../../utils/API/MainApi';
 import UserAuth from '../../utils/API/UserAuth';
 
 import WindowContext from '../../contexts/WindowContext';
-import { CurrentUserContext } from '../../contexts/CurrentUserContext';
+import CurrentUserContext from '../../contexts/CurrentUserContext';
 
 import showLoadMoreButton from '../../utils/showLoadMoreButton';
 import defineCurrentWindowSize from '../../utils/defineCurrentWindowSize';
 import filterMovieData from '../../utils/filterMovieData';
 import clearLocalStorage from '../../utils/clearLocalStorsge';
-import MOVIE_CARD_PARAMS from '../../utils/movieConstants';
-import WINDOW_WIDTH from '../../utils/windowConstants';
+import defineGalleryHeight from '../../utils/defineGalleryHeight';
 import { REACT_API_CONFIG } from '../../utils/API/mainApiConfig';
+import USER_MESSAGES from '../../utils/userMessages';
 
 function App() {
   const location = useLocation();
+  const navigate = useNavigate();
 
   const BeatFilmAPI = new MoviesApi();
   const MainAPI = new MainApi(REACT_API_CONFIG);
   const UserAPI = new UserAuth(REACT_API_CONFIG);
 
-  const navigate = useNavigate();
-
   const [isInfoPopupOpen, setIsInfoPopupOpen] = useState(false);
   const [infoMessage, setInfoMessage] = useState('');
 
   const [isPreloaderActive, setIsPreloaderActive] = useState(false);
-  const [infoPopUpTitle, setInfoPopUpTitle] = useState('Внимание!');
+  const [infoPopUpTitle, setInfoPopUpTitle] = useState(USER_MESSAGES.errorHeader);
 
   // User
   const [loggedIn, setLoggedIn] = useState(false);
@@ -67,24 +66,7 @@ function App() {
   const [isMoreButtonVisible, setIsMoreButtonVisible] = useState(false);
   const [currentGalleryHeight, setCurrentGalleryHeight] = useState(0);
   const [moreButtonCounter, setMoreButtonCounter] = useState(0);
-  const [movieGalleryHeigh, setMovieGalleryHeigh] = useState({
-    // start h + n click * card h + gap * n row
-    large:
-      WINDOW_WIDTH.large +
-      moreButtonCounter *
-        (MOVIE_CARD_PARAMS.large.movieHeight + MOVIE_CARD_PARAMS.large.movieGap) *
-        MOVIE_CARD_PARAMS.large.movieRow,
-    medium:
-      WINDOW_WIDTH.medium +
-      moreButtonCounter *
-        (MOVIE_CARD_PARAMS.medium.movieHeight + MOVIE_CARD_PARAMS.medium.movieGap) *
-        MOVIE_CARD_PARAMS.medium.movieRow,
-    small:
-      WINDOW_WIDTH.small +
-      moreButtonCounter *
-        (MOVIE_CARD_PARAMS.small.movieHeight + MOVIE_CARD_PARAMS.small.movieGap) *
-        MOVIE_CARD_PARAMS.small.movieRow,
-  });
+  const [movieGalleryHeigh, setMovieGalleryHeight] = useState(defineGalleryHeight(moreButtonCounter));
 
   // Saved movies
   const [savedMovies, setSavedMovies] = useState([]);
@@ -103,24 +85,7 @@ function App() {
   const [isMoreButtonVisibleSaved, setIsMoreButtonVisibleSaved] = useState(false);
   const [currentGalleryHeightSaved, setCurrentGalleryHeightSaved] = useState(0);
   const [moreButtonCounterSaved, setMoreButtonCounterSaved] = useState(0);
-  const [movieGalleryHeighSaved, setMovieGalleryHeighSaved] = useState({
-    // start h + n click save section * card h + gap * n row
-    large:
-      WINDOW_WIDTH.large +
-      moreButtonCounterSaved *
-        (MOVIE_CARD_PARAMS.large.movieHeight + MOVIE_CARD_PARAMS.large.movieGap) *
-        MOVIE_CARD_PARAMS.large.movieRow,
-    medium:
-      WINDOW_WIDTH.medium +
-      moreButtonCounterSaved *
-        (MOVIE_CARD_PARAMS.medium.movieHeight + MOVIE_CARD_PARAMS.medium.movieGap) *
-        MOVIE_CARD_PARAMS.medium.movieRow,
-    small:
-      WINDOW_WIDTH.small +
-      moreButtonCounterSaved *
-        (MOVIE_CARD_PARAMS.small.movieHeight + MOVIE_CARD_PARAMS.small.movieGap) *
-        MOVIE_CARD_PARAMS.small.movieRow,
-  });
+  const [movieGalleryHeighSaved, setMovieGalleryHeightSaved] = useState(defineGalleryHeight(moreButtonCounterSaved));
 
   // Window width
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
@@ -176,6 +141,12 @@ function App() {
     setWindowWidth(window.innerWidth);
   }
 
+  function showErrorPopUp(err) {
+    setInfoPopUpTitle(USER_MESSAGES.errorHeader);
+    setInfoMessage(err.message);
+    setIsInfoPopupOpen(!isInfoPopupOpen);
+  }
+
   // Check localstorage and filters after refreshing
   function checkNotFoundFiltersSaved() {
     if (
@@ -210,53 +181,48 @@ function App() {
 
   // First run: check login, get movies data
   useEffect(() => {
-    if (localStorage.getItem('moviesToken')) {
-      UserAPI.checkToken(localStorage.getItem('moviesToken'))
-        .then((res) => {
-          // if jwt secret key is changed by dev while user has active session
-          if (!res || !res.data) {
-            clearLocalStorage();
-            setLoggedIn(false);
-            handleRedirectToSignIn();
-            return;
-          }
-
-          setLoggedIn(true);
-          setCurrentUser(res.data);
-
-          redirectToSelectedUrl();
-
-          setIsPreloaderActive(true);
-
-          Promise.all([MainAPI.getAllMovies(), BeatFilmAPI.getBeatMovies()])
-            .then(([savedMoviesData, beatMoviesData]) => {
-              setSavedMovies(savedMoviesData.data);
-              setSavedMoviesFiltered(savedMoviesData.data.reverse());
-
-              const savedList = savedMoviesData.data.map((savedMovie) => savedMovie.movieId);
-              const updatedBeat = beatMoviesData.map((beatMovie) =>
-                savedList.includes(beatMovie.id)
-                  ? Object.assign(beatMovie, { isMovieSaved: true })
-                  : Object.assign(beatMovie, { isMovieSaved: false })
-              );
-
-              setBeatMovies(updatedBeat);
-            })
-            .catch(() => {
-              setIsLoadError(() => true);
-              setInfoPopUpTitle('Внимание!');
-              setInfoMessage('Что-то пошло не так...');
-              setIsInfoPopupOpen(!isInfoPopupOpen);
-              setIsPreloaderActive(false);
-            })
-            .finally(() => {
-              setIsPreloaderActive(false);
-            });
-        })
-        .catch(() => {
+    UserAPI.checkUser()
+      .then((res) => {
+        if (!res || !res.data) {
+          clearLocalStorage();
+          setLoggedIn(false);
           handleRedirectToSignIn();
-        });
-    }
+          return;
+        }
+
+        setLoggedIn(true);
+        setCurrentUser(res.data);
+        redirectToSelectedUrl();
+        setIsPreloaderActive(true);
+
+        Promise.all([MainAPI.getAllMovies(), BeatFilmAPI.getBeatMovies()])
+          .then(([savedMoviesData, beatMoviesData]) => {
+            setSavedMovies(savedMoviesData.data);
+            setSavedMoviesFiltered(savedMoviesData.data.reverse());
+
+            const savedList = savedMoviesData.data.map((savedMovie) => savedMovie.movieId);
+            const updatedBeat = beatMoviesData.map((beatMovie) =>
+              savedList.includes(beatMovie.id)
+                ? Object.assign(beatMovie, { isMovieSaved: true })
+                : Object.assign(beatMovie, { isMovieSaved: false })
+            );
+
+            setBeatMovies(updatedBeat);
+          })
+          .catch(() => {
+            setIsLoadError(() => true);
+            setInfoPopUpTitle(USER_MESSAGES.errorHeader);
+            setInfoMessage(USER_MESSAGES.errorTextUnexpected);
+            setIsInfoPopupOpen(!isInfoPopupOpen);
+            setIsPreloaderActive(false);
+          })
+          .finally(() => {
+            setIsPreloaderActive(false);
+          });
+      })
+      .catch(() => {
+        handleRedirectToSignIn();
+      });
   }, [loggedIn]);
 
   // First run: check local storage and filters
@@ -288,70 +254,46 @@ function App() {
     setBeatMoviesFiltered(updatedBeatMoviesFiltered);
   }
 
+  function handleSetMoreButtonCounter() {
+    setMoreButtonCounter((prevConter) => prevConter + 1);
+  }
+
   function filterBeatMovies() {
     checkNotFoundFiltersMovies();
     const updatedBeatMoviesFiltered = filterMovieData(beatMovies, searchInputValue, isShorts, false);
     handleSetBeatMoviesFiltered(updatedBeatMoviesFiltered);
     setIsNotFoundMovies(updatedBeatMoviesFiltered.length === 0);
-    localStorage.setItem('isNotFoundMovies', updatedBeatMoviesFiltered.length === 0);
   }
 
-  // // filter data - first run + if prev filter exists (local storage)
-  useEffect(() => {
-    checkNotFoundFiltersMovies();
-    filterBeatMovies();
-  }, [beatMovies]);
-
-  // filter movies
-  useEffect(() => {
-    checkNotFoundFiltersMovies();
-    filterBeatMovies();
-  }, [isShorts, navigate]);
-
   const handleSetIsShorts = useCallback(() => {
-    localStorage.setItem('isShorts', !isShorts);
     setIsShorts(!isShorts);
     checkNotFoundFiltersMovies();
   }, [isShorts]);
 
-  function handleSetMoreButtonCounter() {
-    setMoreButtonCounter((prevConter) => prevConter + 1);
-  }
-
-  // define size of movie section
   useEffect(() => {
-    setMovieGalleryHeigh((prevState) => ({
+    checkNotFoundFiltersMovies();
+    filterBeatMovies();
+  }, [beatMovies, isShorts, navigate]);
+
+  useEffect(() => {
+    const galleryHeightParams = defineGalleryHeight(moreButtonCounter);
+    setMovieGalleryHeight((prevState) => ({
       ...prevState,
-      // start h + n click * card h + gap * n row
-      large:
-        WINDOW_WIDTH.large +
-        moreButtonCounter *
-          (MOVIE_CARD_PARAMS.large.movieHeight + MOVIE_CARD_PARAMS.large.movieGap) *
-          MOVIE_CARD_PARAMS.large.movieRow,
-      medium:
-        WINDOW_WIDTH.medium +
-        moreButtonCounter *
-          (MOVIE_CARD_PARAMS.medium.movieHeight + MOVIE_CARD_PARAMS.medium.movieGap) *
-          MOVIE_CARD_PARAMS.medium.movieRow,
-      small:
-        WINDOW_WIDTH.small +
-        moreButtonCounter *
-          (MOVIE_CARD_PARAMS.small.movieHeight + MOVIE_CARD_PARAMS.small.movieGap) *
-          MOVIE_CARD_PARAMS.small.movieRow,
+      ...galleryHeightParams,
     }));
-  }, [windowWidth, moreButtonCounter, isShorts, beatMoviesFiltered]);
+  }, [windowWidth, moreButtonCounter, beatMoviesFiltered]);
 
   useEffect(() => {
     const size = defineCurrentWindowSize(windowWidth);
     setCurrentGalleryHeight(movieGalleryHeigh[size]);
-  }, [windowWidth, moreButtonCounter, movieGalleryHeigh]);
+  }, [windowWidth, movieGalleryHeigh]);
 
-  // check hiddens for movie section
   useEffect(() => {
     const isMoreVisibleStatus = showLoadMoreButton(windowWidth, beatMoviesFiltered, currentGalleryHeight);
     setIsMoreButtonVisible(isMoreVisibleStatus);
-  }, [windowWidth, moreButtonCounter, currentGalleryHeight, movieGalleryHeigh, navigate]);
+  }, [windowWidth, currentGalleryHeight, movieGalleryHeigh, moreButtonCounter, navigate]);
 
+  // reset counter if filter\input data is changed
   useEffect(() => {
     setMoreButtonCounter(0);
   }, [searchInputValue, isShorts]);
@@ -361,50 +303,30 @@ function App() {
     setSavedMoviesFiltered(() => updatedFilteredSavedMovies);
   }
 
+  function handleSetMoreButtonCounterSaved() {
+    setMoreButtonCounterSaved((prevConter) => prevConter + 1);
+  }
+
   function filterSavedMovies() {
     checkNotFoundFiltersSaved();
     const updatedFilteredSavedMovies = filterMovieData(savedMovies, searchInputValueSaved, isShortsSaved, true);
     handleSetSavedMoviesFiltered(updatedFilteredSavedMovies);
     setIsNotFoundSaved(updatedFilteredSavedMovies.length === 0);
-    localStorage.setItem('isNotFoundSaved', updatedFilteredSavedMovies.length === 0);
   }
 
   const handleSetIsShortsSaved = useCallback(() => {
-    setIsShortsSaved((prev) => !prev);
-  }, []);
+    setIsShortsSaved(!isShortsSaved);
+  }, [isShortsSaved]);
 
   useEffect(() => {
-    filterSavedMovies();
-  }, []);
-
-  useEffect(() => {
-    checkNotFoundFiltersSaved();
-    localStorage.setItem('isShortsSaved', isShortsSaved);
     filterSavedMovies();
   }, [isShortsSaved, savedMovies, navigate]);
 
-  function handleSetMoreButtonCounterSaved() {
-    setMoreButtonCounterSaved((prevConter) => prevConter + 1);
-  }
-
   useEffect(() => {
-    setMovieGalleryHeighSaved((prevState) => ({
+    const galleryHeight = defineGalleryHeight(moreButtonCounterSaved);
+    setMovieGalleryHeightSaved((prevState) => ({
       ...prevState,
-      large:
-        WINDOW_WIDTH.large +
-        moreButtonCounterSaved *
-          (MOVIE_CARD_PARAMS.large.movieHeight + MOVIE_CARD_PARAMS.large.movieGap) *
-          MOVIE_CARD_PARAMS.large.movieRow,
-      medium:
-        WINDOW_WIDTH.medium +
-        moreButtonCounterSaved *
-          (MOVIE_CARD_PARAMS.medium.movieHeight + MOVIE_CARD_PARAMS.medium.movieGap) *
-          MOVIE_CARD_PARAMS.medium.movieRow,
-      small:
-        WINDOW_WIDTH.small +
-        moreButtonCounterSaved *
-          (MOVIE_CARD_PARAMS.small.movieHeight + MOVIE_CARD_PARAMS.small.movieGap) *
-          MOVIE_CARD_PARAMS.small.movieRow,
+      ...galleryHeight,
     }));
   }, [windowWidth, moreButtonCounterSaved, isShortsSaved, savedMoviesFiltered]);
 
@@ -413,7 +335,6 @@ function App() {
     setCurrentGalleryHeightSaved(movieGalleryHeighSaved[size]);
   }, [windowWidth, moreButtonCounterSaved, movieGalleryHeighSaved]);
 
-  // check hiddens for saved-movie section
   useEffect(() => {
     const isMoreVisibleStatusSaved = showLoadMoreButton(windowWidth, savedMoviesFiltered, currentGalleryHeightSaved);
     setIsMoreButtonVisibleSaved(isMoreVisibleStatusSaved);
@@ -430,50 +351,41 @@ function App() {
     setMoreButtonCounterSaved(0);
   }, [searchInputValueSaved, isShortsSaved]);
 
+  // save all states locally
   useEffect(() => {
     localStorage.setItem('searchInputValue', searchInputValue.searchinput || '');
     localStorage.setItem('searchInputValueSaved', searchInputValueSaved.searchinput || '');
     localStorage.setItem('isShorts', isShorts);
     localStorage.setItem('isShortsSaved', isShortsSaved);
-  }, [searchInputValue, searchInputValueSaved, isShorts, isShortsSaved]);
+    localStorage.setItem('isNotFoundMovies', beatMoviesFiltered.length === 0);
+    localStorage.setItem('isNotFoundSaved', savedMoviesFiltered.length === 0);
+  }, [searchInputValue, searchInputValueSaved, isShorts, isShortsSaved, savedMoviesFiltered]);
 
   // CARDS
   function handleCreateMovie(movieData) {
     MainAPI.createMovie(movieData)
       .then((newMovie) => {
-        // update beatfilms
         updateSavingStatus(newMovie, true);
-
-        // add new movie to save-section
         setSavedMovies((prevSate) => [newMovie.data, ...prevSate]);
-        // check card for saved filter
         setSavedMoviesFiltered((prevSate) => [newMovie.data, ...prevSate]);
       })
       .catch((err) => {
-        setInfoPopUpTitle('Внимание!');
-        setInfoMessage(err.message);
-        setIsInfoPopupOpen(!isInfoPopupOpen);
+        showErrorPopUp(err);
       });
   }
 
   function handleRemoveMovie(movieData) {
     const movieIdRemoved = movieData._id || savedMovies.find((item) => item.movieId === movieData.id)._id;
-    // remove from db
     MainAPI.removeMovie(movieIdRemoved)
       .then((removedMovie) => {
-        // update beatfilms
         updateSavingStatus(removedMovie, false);
-
-        // saved section
         setSavedMovies((prev) => prev.filter((savedMovie) => movieIdRemoved !== savedMovie._id && { ...savedMovie }));
         setSavedMoviesFiltered((prev) =>
           prev.filter((savedMovie) => movieIdRemoved !== savedMovie._id && { ...savedMovie })
         );
       })
       .catch((err) => {
-        setInfoPopUpTitle('Внимание!');
-        setInfoMessage(err.message);
-        setIsInfoPopupOpen(!isInfoPopupOpen);
+        showErrorPopUp(err);
       });
   }
 
@@ -481,30 +393,22 @@ function App() {
   function handleLoggedIn(loggedInData) {
     UserAPI.signin(loggedInData)
       .then((res) => {
-        if (res.token) {
-          localStorage.setItem('moviesToken', res.token);
-
-          UserAPI.checkToken(localStorage.getItem('moviesToken'))
+        if (res.message === 'Пользователь зашел в аккаунт') {
+          UserAPI.checkUser()
             .then(() => {
               setLoggedIn(true);
               handleRedirectToMovies();
             })
             .catch((err) => {
-              setInfoPopUpTitle('Внимание!');
-              setInfoMessage(err.message);
-              setIsInfoPopupOpen(!isInfoPopupOpen);
+              showErrorPopUp(err);
             });
         } else {
           setLoggedIn(false);
-          setInfoPopUpTitle('Внимание!');
-          setInfoMessage('Непредвиденная ошибка. Повторите свое действие еще раз');
-          setIsInfoPopupOpen(!isInfoPopupOpen);
+          throw new Error(res.message);
         }
       })
       .catch((err) => {
-        setInfoPopUpTitle('Внимание!');
-        setInfoMessage(err.message);
-        setIsInfoPopupOpen(!isInfoPopupOpen);
+        showErrorPopUp(err);
       });
   }
 
@@ -516,14 +420,12 @@ function App() {
         }
       })
       .then(() => {
-        setInfoPopUpTitle('Ура!');
-        setInfoMessage('Вы успешно зарегистрированы и вошли в систему');
+        setInfoPopUpTitle(USER_MESSAGES.successHeader);
+        setInfoMessage(USER_MESSAGES.successTextRegister);
         setIsInfoPopupOpen(!isInfoPopupOpen);
       })
       .catch((err) => {
-        setInfoPopUpTitle('Внимание!');
-        setInfoMessage(err.message);
-        setIsInfoPopupOpen(!isInfoPopupOpen);
+        showErrorPopUp(err);
       });
   }
 
@@ -540,11 +442,16 @@ function App() {
   }
 
   function handleUserLogout() {
-    clearLocalStorage();
-    clearStates();
-
-    setLoggedIn(false);
-    handleRedirectToMain();
+    UserAPI.signout()
+      .then(() => {
+        clearLocalStorage();
+        clearStates();
+        setLoggedIn(false);
+        handleRedirectToMain();
+      })
+      .catch((err) => {
+        showErrorPopUp(err);
+      });
   }
 
   function handleUserUpdate(userData) {
@@ -557,14 +464,12 @@ function App() {
         }));
       })
       .then(() => {
-        setInfoPopUpTitle('Ура!');
-        setInfoMessage('Данные изменены');
+        setInfoPopUpTitle(USER_MESSAGES.successHeader);
+        setInfoMessage(USER_MESSAGES.successTextDataChanged);
         setIsInfoPopupOpen(!isInfoPopupOpen);
       })
       .catch((err) => {
-        setInfoPopUpTitle('Внимание!');
-        setInfoMessage(err.message);
-        setIsInfoPopupOpen(!isInfoPopupOpen);
+        showErrorPopUp(err);
       });
   }
 

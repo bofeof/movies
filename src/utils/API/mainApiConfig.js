@@ -4,8 +4,9 @@ const REACT_API_CONFIG = {
   headers: {
     'Content-Type': 'application/json',
     Accept: 'application/json',
-    authorization: "",
-  }
+    "Access-Control-Allow-Credentials": true
+  },
+  credentials: 'include',
 };
 
 export { REACT_API_CONFIG, REACT_APP_BASE_URL };

@@ -19,20 +19,29 @@ export default class UserAuth {
     }).then((res) => this._getResponse(res));
   }
 
+
   signin(userData) {
     return fetch(`${this._configAPI.mainMoviesUrl}/signin`, {
       method: 'POST',
       headers: this._configAPI.headers,
       body: JSON.stringify(userData),
+      credentials: this._configAPI.credentials,
     }).then((res) => this._getResponse(res));
   }
 
-  checkToken(token) {
+  signout(){
+    return fetch(`${this._configAPI.mainMoviesUrl}/signout`,{
+      method: 'GET',
+      headers: this._configAPI.headers,
+      credentials: this._configAPI.credentials,
+    })
+  }
+
+  checkUser() {
     return fetch(`${this._configAPI.mainMoviesUrl}/users/me`, {
       method: 'GET',
-      headers: {
-        authorization: `Bearer ${token}`,
-      },
+      headers: this._configAPI.headers,
+      credentials: this._configAPI.credentials,
     }).then((res) => this._getResponse(res));
   }
 }
