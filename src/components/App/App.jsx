@@ -20,7 +20,7 @@ import MainApi from '../../utils/API/MainApi';
 import UserAuth from '../../utils/API/UserAuth';
 
 import WindowContext from '../../contexts/WindowContext';
-import CurrentUserContext  from '../../contexts/CurrentUserContext';
+import CurrentUserContext from '../../contexts/CurrentUserContext';
 
 import showLoadMoreButton from '../../utils/showLoadMoreButton';
 import defineCurrentWindowSize from '../../utils/defineCurrentWindowSize';
@@ -28,6 +28,7 @@ import filterMovieData from '../../utils/filterMovieData';
 import clearLocalStorage from '../../utils/clearLocalStorsge';
 import defineGalleryHeight from '../../utils/defineGalleryHeight';
 import { REACT_API_CONFIG } from '../../utils/API/mainApiConfig';
+import USER_MESSAGES from '../../utils/userMessages';
 
 function App() {
   const location = useLocation();
@@ -41,7 +42,7 @@ function App() {
   const [infoMessage, setInfoMessage] = useState('');
 
   const [isPreloaderActive, setIsPreloaderActive] = useState(false);
-  const [infoPopUpTitle, setInfoPopUpTitle] = useState('Внимание!');
+  const [infoPopUpTitle, setInfoPopUpTitle] = useState(USER_MESSAGES.errorHeader);
 
   // User
   const [loggedIn, setLoggedIn] = useState(false);
@@ -140,8 +141,8 @@ function App() {
     setWindowWidth(window.innerWidth);
   }
 
-  function showErrorPopUp(err){
-    setInfoPopUpTitle('Внимание!');
+  function showErrorPopUp(err) {
+    setInfoPopUpTitle(USER_MESSAGES.errorHeader);
     setInfoMessage(err.message);
     setIsInfoPopupOpen(!isInfoPopupOpen);
   }
@@ -210,8 +211,8 @@ function App() {
           })
           .catch(() => {
             setIsLoadError(() => true);
-            setInfoPopUpTitle('Внимание!');
-            setInfoMessage('Что-то пошло не так...');
+            setInfoPopUpTitle(USER_MESSAGES.errorHeader);
+            setInfoMessage(USER_MESSAGES.errorTextUnexpected);
             setIsInfoPopupOpen(!isInfoPopupOpen);
             setIsPreloaderActive(false);
           })
@@ -253,6 +254,10 @@ function App() {
     setBeatMoviesFiltered(updatedBeatMoviesFiltered);
   }
 
+  function handleSetMoreButtonCounter() {
+    setMoreButtonCounter((prevConter) => prevConter + 1);
+  }
+
   function filterBeatMovies() {
     checkNotFoundFiltersMovies();
     const updatedBeatMoviesFiltered = filterMovieData(beatMovies, searchInputValue, isShorts, false);
@@ -267,10 +272,6 @@ function App() {
     checkNotFoundFiltersMovies();
   }, [isShorts]);
 
-  function handleSetMoreButtonCounter() {
-    setMoreButtonCounter((prevConter) => prevConter + 1);
-  }
-
   useEffect(() => {
     checkNotFoundFiltersMovies();
     filterBeatMovies();
@@ -280,7 +281,7 @@ function App() {
     const galleryHeightParams = defineGalleryHeight(moreButtonCounter);
     setMovieGalleryHeight((prevState) => ({
       ...prevState,
-      ...galleryHeightParams
+      ...galleryHeightParams,
     }));
   }, [windowWidth, moreButtonCounter, beatMoviesFiltered]);
 
@@ -289,12 +290,12 @@ function App() {
     setCurrentGalleryHeight(movieGalleryHeigh[size]);
   }, [windowWidth, movieGalleryHeigh]);
 
-  // check hiddens for movie section
   useEffect(() => {
     const isMoreVisibleStatus = showLoadMoreButton(windowWidth, beatMoviesFiltered, currentGalleryHeight);
     setIsMoreButtonVisible(isMoreVisibleStatus);
-  }, [windowWidth, moreButtonCounter, currentGalleryHeight, movieGalleryHeigh, navigate]);
+  }, [windowWidth, currentGalleryHeight, movieGalleryHeigh, moreButtonCounter, navigate]);
 
+  // reset counter if filter\input data is changed
   useEffect(() => {
     setMoreButtonCounter(0);
   }, [searchInputValue, isShorts]);
@@ -302,6 +303,10 @@ function App() {
   // SAVED MOVIES
   function handleSetSavedMoviesFiltered(updatedFilteredSavedMovies) {
     setSavedMoviesFiltered(() => updatedFilteredSavedMovies);
+  }
+
+  function handleSetMoreButtonCounterSaved() {
+    setMoreButtonCounterSaved((prevConter) => prevConter + 1);
   }
 
   function filterSavedMovies() {
@@ -316,10 +321,7 @@ function App() {
     setIsShortsSaved(!isShortsSaved);
   }, []);
 
-  function handleSetMoreButtonCounterSaved() {
-    setMoreButtonCounterSaved((prevConter) => prevConter + 1);
-  }
-
+  // show all saved movies
   useEffect(() => {
     filterSavedMovies();
   }, []);
@@ -331,10 +333,10 @@ function App() {
   }, [isShortsSaved, savedMovies, navigate]);
 
   useEffect(() => {
-    const galleryHeight = defineGalleryHeight(moreButtonCounterSaved)
+    const galleryHeight = defineGalleryHeight(moreButtonCounterSaved);
     setMovieGalleryHeightSaved((prevState) => ({
       ...prevState,
-      ...galleryHeight
+      ...galleryHeight,
     }));
   }, [windowWidth, moreButtonCounterSaved, isShortsSaved, savedMoviesFiltered]);
 
@@ -343,7 +345,6 @@ function App() {
     setCurrentGalleryHeightSaved(movieGalleryHeighSaved[size]);
   }, [windowWidth, moreButtonCounterSaved, movieGalleryHeighSaved]);
 
-  // check hiddens for saved-movie section
   useEffect(() => {
     const isMoreVisibleStatusSaved = showLoadMoreButton(windowWidth, savedMoviesFiltered, currentGalleryHeightSaved);
     setIsMoreButtonVisibleSaved(isMoreVisibleStatusSaved);
@@ -371,35 +372,27 @@ function App() {
   function handleCreateMovie(movieData) {
     MainAPI.createMovie(movieData)
       .then((newMovie) => {
-        // update beatfilms
         updateSavingStatus(newMovie, true);
-
-        // add new movie to save-section
         setSavedMovies((prevSate) => [newMovie.data, ...prevSate]);
-        // check card for saved filter
         setSavedMoviesFiltered((prevSate) => [newMovie.data, ...prevSate]);
       })
       .catch((err) => {
-        showErrorPopUp(err)
+        showErrorPopUp(err);
       });
   }
 
   function handleRemoveMovie(movieData) {
     const movieIdRemoved = movieData._id || savedMovies.find((item) => item.movieId === movieData.id)._id;
-    // remove from db
     MainAPI.removeMovie(movieIdRemoved)
       .then((removedMovie) => {
-        // update beatfilms
         updateSavingStatus(removedMovie, false);
-
-        // saved section
         setSavedMovies((prev) => prev.filter((savedMovie) => movieIdRemoved !== savedMovie._id && { ...savedMovie }));
         setSavedMoviesFiltered((prev) =>
           prev.filter((savedMovie) => movieIdRemoved !== savedMovie._id && { ...savedMovie })
         );
       })
       .catch((err) => {
-        showErrorPopUp(err)
+        showErrorPopUp(err);
       });
   }
 
@@ -408,14 +401,13 @@ function App() {
     UserAPI.signin(loggedInData)
       .then((res) => {
         if (res.message === 'Пользователь зашел в аккаунт') {
-          // check user
           UserAPI.checkUser()
             .then(() => {
               setLoggedIn(true);
               handleRedirectToMovies();
             })
             .catch((err) => {
-              showErrorPopUp(err)
+              showErrorPopUp(err);
             });
         } else {
           setLoggedIn(false);
@@ -423,7 +415,7 @@ function App() {
         }
       })
       .catch((err) => {
-        showErrorPopUp(err)
+        showErrorPopUp(err);
       });
   }
 
@@ -435,12 +427,12 @@ function App() {
         }
       })
       .then(() => {
-        setInfoPopUpTitle('Ура!');
-        setInfoMessage('Вы успешно зарегистрированы и вошли в систему');
+        setInfoPopUpTitle(USER_MESSAGES.successHeader);
+        setInfoMessage(USER_MESSAGES.successTextRegister);
         setIsInfoPopupOpen(!isInfoPopupOpen);
       })
       .catch((err) => {
-        showErrorPopUp(err)
+        showErrorPopUp(err);
       });
   }
 
@@ -465,7 +457,7 @@ function App() {
         handleRedirectToMain();
       })
       .catch((err) => {
-        showErrorPopUp(err)
+        showErrorPopUp(err);
       });
   }
 
@@ -479,12 +471,12 @@ function App() {
         }));
       })
       .then(() => {
-        setInfoPopUpTitle('Ура!');
-        setInfoMessage('Данные изменены');
+        setInfoPopUpTitle(USER_MESSAGES.successHeader);
+        setInfoMessage(USER_MESSAGES.successTextDataChanged);
         setIsInfoPopupOpen(!isInfoPopupOpen);
       })
       .catch((err) => {
-        showErrorPopUp(err)
+        showErrorPopUp(err);
       });
   }
 
