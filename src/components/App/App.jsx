@@ -155,22 +155,39 @@ function App() {
       localStorage.getItem('isShortsSaved') === 'false'
     ) {
       setIsFirstRunSaved(true);
-      localStorage.setItem('isFirstRunSaved', true);
     } else {
       setIsFirstRunSaved(false);
-      localStorage.setItem('isFirstRunSaved', false);
     }
   }
 
   function checkNotFoundFiltersMovies() {
     if (localStorage.getItem('searchInputValue') === '' && localStorage.getItem('isShorts') === 'false') {
       setIsFirstRunMovies(true);
-      localStorage.setItem('isFirstRunMovies', true);
     } else {
       setIsFirstRunMovies(false);
-      localStorage.setItem('isFirstRunMovies', false);
     }
   }
+
+  // save all states of saved and beat movies locally
+  useEffect(() => {
+    localStorage.setItem('searchInputValue', searchInputValue.searchinput || '');
+    localStorage.setItem('searchInputValueSaved', searchInputValueSaved.searchinput || '');
+    localStorage.setItem('isShorts', isShorts);
+    localStorage.setItem('isShortsSaved', isShortsSaved);
+    localStorage.setItem('isNotFoundMovies', beatMoviesFiltered.length === 0);
+    localStorage.setItem('isNotFoundSaved', savedMoviesFiltered.length === 0);
+
+    localStorage.setItem('isFirstRunMovies', isFirstRunMovies);
+    localStorage.setItem('isFirstRunSaved', isFirstRunSaved);
+  }, [
+    searchInputValue,
+    searchInputValueSaved,
+    isShorts,
+    isShortsSaved,
+    savedMoviesFiltered,
+    isFirstRunMovies,
+    isFirstRunSaved,
+  ]);
 
   // First run: get current window size
   useEffect(() => {
@@ -291,7 +308,7 @@ function App() {
   useEffect(() => {
     const isMoreVisibleStatus = showLoadMoreButton(windowWidth, beatMoviesFiltered, currentGalleryHeight);
     setIsMoreButtonVisible(isMoreVisibleStatus);
-  }, [windowWidth, currentGalleryHeight, movieGalleryHeigh, moreButtonCounter, navigate]);
+  }, [windowWidth, currentGalleryHeight, movieGalleryHeigh, beatMoviesFiltered, moreButtonCounter, navigate]);
 
   // reset counter if filter\input data is changed
   useEffect(() => {
@@ -350,16 +367,6 @@ function App() {
   useEffect(() => {
     setMoreButtonCounterSaved(0);
   }, [searchInputValueSaved, isShortsSaved]);
-
-  // save all states locally
-  useEffect(() => {
-    localStorage.setItem('searchInputValue', searchInputValue.searchinput || '');
-    localStorage.setItem('searchInputValueSaved', searchInputValueSaved.searchinput || '');
-    localStorage.setItem('isShorts', isShorts);
-    localStorage.setItem('isShortsSaved', isShortsSaved);
-    localStorage.setItem('isNotFoundMovies', beatMoviesFiltered.length === 0);
-    localStorage.setItem('isNotFoundSaved', savedMoviesFiltered.length === 0);
-  }, [searchInputValue, searchInputValueSaved, isShorts, isShortsSaved, savedMoviesFiltered]);
 
   // CARDS
   function handleCreateMovie(movieData) {
