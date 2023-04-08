@@ -30,3 +30,11 @@
 - ✅ Popups with error-messages.
 
 - 🔜 Popup to display some additional information about movie
+
+### How to run locally. All comands are located in package.json:
+
+You need to change value of REACT_APP_BASE_URL (frontend/src/utils/constants.js)
+
+- `npm install` Install all dependencies before start.
+- `npm run build` Builds the app for production to the `build` folder.
+- `npm run start` Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
