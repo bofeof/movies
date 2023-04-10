@@ -130,7 +130,7 @@ function App() {
 
   function redirectToSelectedUrl() {
     // for logged-in user
-    if (['/signup', '/signin'].includes(location.pathname)) {
+    if (['/signup', '/signin'].includes(location.pathname) && loggedIn) {
       handleRedirectToMovies();
       return;
     }
@@ -238,7 +238,7 @@ function App() {
           });
       })
       .catch(() => {
-        handleRedirectToSignIn();
+        redirectToSelectedUrl();
       });
   }, [loggedIn]);
 

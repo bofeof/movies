@@ -9,7 +9,7 @@
 - Backend: https://api.bofeof-movies.nomoredomains.work/api
 - Figma: https://www.figma.com/file/gtUKWXPuq72K8MHtAptK1r/Diploma-(Polina-Ch)?node-id=891%3A3857&t=Y1dyRhxLIZpRDX7H-0
 
-[Demo of Movies](https://github.com/bofeof/movies-explorer-frontend/issues/25)
+[Demo of Movies](https://github.com/bofeof/movies-explorer-frontend/issues/26)
 
 ## Available functionality runs through the server:
 
