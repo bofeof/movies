@@ -31,7 +31,7 @@ export default function Register({ registerOption }) {
         }
         isRegisterForm
         onRedirectToMain={redirectToMain}
-        onHandleSubmit={registerOption.onHandleUserRegister}
+        onHandleSubmit={registerOption.onUserRegister}
       />
     </div>
   );

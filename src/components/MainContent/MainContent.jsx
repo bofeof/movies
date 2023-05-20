@@ -7,12 +7,12 @@ export default function MainContent(props) {
       {props.isHeaderRequired && (
         <Header
           loggedIn={props.headerOptions.loggedIn}
-          onRedirectToMain={props.headerOptions.handleRedirectToMain}
-          onRedirectToMovies={props.headerOptions.handleRedirectToMovies}
-          onRedirectToSavedMovies={props.headerOptions.handleRedirectToSavedMovies}
-          onRedirectToProfile={props.headerOptions.handleRedirectToProfile}
-          onRedirectToSignIn={props.headerOptions.handleRedirectToSignIn}
-          onRedirectToSignUp={props.headerOptions.handleRedirectToSignUp}
+          onRedirectToMain={props.headerOptions.onRedirectToMain}
+          onRedirectToMovies={props.headerOptions.onRedirectToMovies}
+          onRedirectToSavedMovies={props.headerOptions.onRedirectToSavedMovies}
+          onRedirectToProfile={props.headerOptions.onRedirectToProfile}
+          onRedirectToSignIn={props.headerOptions.onRedirectToSignIn}
+          onRedirectToSignUp={props.headerOptions.onRedirectToSignUp}
         />
       )}
 

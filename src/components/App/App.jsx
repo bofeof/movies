@@ -483,24 +483,24 @@ function App() {
 
   const headerOptions = {
     loggedIn,
-    handleRedirectToMain: () => handleRedirectToMain,
-    handleRedirectToMovies: () => handleRedirectToMovies(),
-    handleRedirectToSavedMovies: () => handleRedirectToSavedMovies(),
-    handleRedirectToProfile: (evt) => handleRedirectToProfile(evt),
-    handleRedirectToSignIn: () => handleRedirectToSignIn(),
-    handleRedirectToSignUp: () => handleRedirectToSignUp(),
+    onRedirectToMain: () => handleRedirectToMain,
+    onRedirectToMovies: () => handleRedirectToMovies(),
+    onRedirectToSavedMovies: () => handleRedirectToSavedMovies(),
+    onRedirectToProfile: (evt) => handleRedirectToProfile(evt),
+    onRedirectToSignIn: () => handleRedirectToSignIn(),
+    onRedirectToSignUp: () => handleRedirectToSignUp(),
   };
 
   const loginOptions = {
-    handleRedirectToMain: () => handleRedirectToMain(),
-    handleLoggedIn: () => handleLoggedIn(),
-    handleRedirectToSignUp: () => handleRedirectToSignUp(),
+    onRedirectToMain: () => handleRedirectToMain(),
+    onLoggedIn: (loggedInData) => handleLoggedIn(loggedInData),
+    onRedirectToAuth: () => handleRedirectToSignUp(),
   };
 
   const registerOption = {
-    handleRedirectToMain: () => handleRedirectToMain(),
-    handleUserRegister: () => handleUserRegister(),
-    handleRedirectToSignIn: () => handleRedirectToSignIn(),
+    onRedirectToMain: () => handleRedirectToMain(),
+    onUserRegister: (userRegisterData) => handleUserRegister(userRegisterData),
+    onRedirectToAuth: () => handleRedirectToSignIn(),
   };
 
   return (

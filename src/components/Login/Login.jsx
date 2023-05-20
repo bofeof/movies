@@ -3,6 +3,7 @@ import { useCallback } from 'react';
 import IdentityForm from '../IdentityForm/IdentityForm';
 
 export default function Login({ loginOptions }) {
+
   function redirectToAuth(evt) {
     evt.preventDefault();
     loginOptions.onRedirectToAuth();
@@ -31,7 +32,7 @@ export default function Login({ loginOptions }) {
         }
         isRegisterForm={false}
         onRedirectToMain={redirectToMain}
-        onHandleSubmit={loginOptions.onHandleLoggedIn}
+        onHandleSubmit={loginOptions.onLoggedIn}
       />
     </div>
   );
