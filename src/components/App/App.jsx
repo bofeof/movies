@@ -494,8 +494,14 @@ function App() {
   const loginOptions = {
     handleRedirectToMain: () => handleRedirectToMain(),
     handleLoggedIn: () => handleLoggedIn(),
-    handleRedirectToSignUp: () => handleRedirectToSignUp()
-  }
+    handleRedirectToSignUp: () => handleRedirectToSignUp(),
+  };
+
+  const registerOption = {
+    handleRedirectToMain: () => handleRedirectToMain(),
+    handleUserRegister: () => handleUserRegister(),
+    handleRedirectToSignIn: () => handleRedirectToSignIn(),
+  };
 
   return (
     <CurrentUserContext.Provider value={currentUser}>
@@ -517,11 +523,7 @@ function App() {
                   <MainContent
                     isHeaderRequired={false}
                     isFooterRequired={false}
-                    element={
-                      <Login
-                        loginOptions={loginOptions}
-                      />
-                    }
+                    element={<Login loginOptions={loginOptions} />}
                   />
                 }
               />
@@ -530,11 +532,7 @@ function App() {
                 path="/signup"
                 element={
                   <main>
-                    <Register
-                      onRedirectToMain={handleRedirectToMain}
-                      onHandleUserRegister={handleUserRegister}
-                      onRedirectToAuth={handleRedirectToSignIn}
-                    />
+                    <Register registerOption={registerOption} />
                   </main>
                 }
               />
