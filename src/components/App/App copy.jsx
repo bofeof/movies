@@ -14,7 +14,6 @@ import Register from '../Register/Register';
 import Footer from '../Footer/Footer';
 import InfoPopUp from '../InfoPopUp/InfoPopUp';
 import ProtectedRoute from '../ProtectedRoute/ProtectedRoute';
-import MainContent from '../MainContent/MainContent';
 
 import MoviesApi from '../../utils/API/MoviesApi';
 import MainApi from '../../utils/API/MainApi';
@@ -481,22 +480,6 @@ function App() {
       });
   }
 
-  const headerOptions = {
-    loggedIn,
-    handleRedirectToMain: () => handleRedirectToMain,
-    handleRedirectToMovies: () => handleRedirectToMovies(),
-    handleRedirectToSavedMovies: () => handleRedirectToSavedMovies(),
-    handleRedirectToProfile: (evt) => handleRedirectToProfile(evt),
-    handleRedirectToSignIn: () => handleRedirectToSignIn(),
-    handleRedirectToSignUp: () => handleRedirectToSignUp(),
-  };
-
-  const loginOptions = {
-    handleRedirectToMain: () => handleRedirectToMain(),
-    handleLoggedIn: () => handleLoggedIn(),
-    handleRedirectToSignUp: () => handleRedirectToSignUp()
-  }
-
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <WindowContext.Provider value={windowWidth}>
@@ -507,22 +490,36 @@ function App() {
                 exact
                 path="/"
                 element={
-                  <MainContent isHeaderRequired isFooterRequired headerOptions={headerOptions} element={<Main />} />
+                  <>
+                    <Header
+                      loggedIn={loggedIn}
+                      onRedirectToMain={handleRedirectToMain}
+                      onRedirectToMovies={handleRedirectToMovies}
+                      onRedirectToSavedMovies={handleRedirectToSavedMovies}
+                      onRedirectToProfile={handleRedirectToProfile}
+                      onRedirectToSignIn={handleRedirectToSignIn}
+                      onRedirectToSignUp={handleRedirectToSignUp}
+                    />
+
+                    <main>
+                      <Main />
+                    </main>
+
+                    <Footer />
+                  </>
                 }
               />
               <Route
                 exact
                 path="/signin"
                 element={
-                  <MainContent
-                    isHeaderRequired={false}
-                    isFooterRequired={false}
-                    element={
-                      <Login
-                        loginOptions={loginOptions}
-                      />
-                    }
-                  />
+                  <main>
+                    <Login
+                      onRedirectToMain={handleRedirectToMain}
+                      onHandleLoggedIn={handleLoggedIn}
+                      onRedirectToAuth={handleRedirectToSignUp}
+                    />
+                  </main>
                 }
               />
               <Route
