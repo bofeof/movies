@@ -521,7 +521,7 @@ function App() {
   };
 
   const moviesSavedOptions = {
-    // isSavedSection: true,
+    isSavedSection: true,
     onClickFilter: () => handleSetIsShortsSaved(),
     filterStatus: isShortsSaved,
     searchInputValue: searchInputValueSaved,
