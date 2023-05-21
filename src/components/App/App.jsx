@@ -479,9 +479,11 @@ function App() {
       });
   }
 
+  // OPTIONS FOR ELEMENTS
+
   const headerOptions = {
     loggedIn,
-    onRedirectToMain: () => handleRedirectToMain,
+    onRedirectToMain: () => handleRedirectToMain(),
     onRedirectToMovies: () => handleRedirectToMovies(),
     onRedirectToSavedMovies: () => handleRedirectToSavedMovies(),
     onRedirectToProfile: (evt) => handleRedirectToProfile(evt),
@@ -641,11 +643,11 @@ function App() {
               <Route
                 path="*"
                 element={
-                    <MainContent
-                      isHeaderRequired={false}
-                      isFooterRequired={false}
-                      element={<PageNotFound pageNotFoundOptions={pageNotFoundOptions} />}
-                    />
+                  <MainContent
+                    isHeaderRequired={false}
+                    isFooterRequired={false}
+                    element={<PageNotFound pageNotFoundOptions={pageNotFoundOptions} />}
+                  />
                 }
               />
             </Routes>
