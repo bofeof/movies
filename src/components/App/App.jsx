@@ -3,7 +3,6 @@ import { useCallback, useEffect, useState } from 'react';
 
 import './App.css';
 
-import Header from '../Header/Header';
 import Main from '../Main/Main';
 import Movies from '../Movies/Movies';
 import SavedMovies from '../SavedMovies/SavedMovies';
@@ -11,7 +10,6 @@ import Profile from '../Profile/Profile';
 import Login from '../Login/Login';
 import PageNotFound from '../NotFoundPage/PageNotFound';
 import Register from '../Register/Register';
-import Footer from '../Footer/Footer';
 import InfoPopUp from '../InfoPopUp/InfoPopUp';
 import ProtectedRoute from '../ProtectedRoute/ProtectedRoute';
 import MainContent from '../MainContent/MainContent';
@@ -522,6 +520,34 @@ function App() {
     isFirstRun: isFirstRunMovies,
   };
 
+  const moviesSavedOptions = {
+    // isSavedSection: true,
+    onClickFilter: () => handleSetIsShortsSaved(),
+    filterStatus: isShortsSaved,
+    searchInputValue: searchInputValueSaved,
+    onSetSearchInputValue: () => setSearchInputValueSaved(),
+    isLoadError,
+    savedMoviesFiltered,
+    onSetFilterSavedMovies: () => filterSavedMovies(),
+    onCreateMovie: (movieData) => handleCreateMovie(movieData),
+    onRemoveMovie: (movieData) => handleRemoveMovie(movieData),
+    isPreloaderActive,
+    onClickMoreButton: () => handleSetMoreButtonCounterSaved(),
+    currentGalleryHeight: currentGalleryHeightSaved,
+    isMoreButtonVisibleSaved,
+    isNotFound: isNotFoundSaved,
+    isFirstRun: isFirstRunSaved,
+  };
+
+  const profileOptions = {
+    onHandleSubmit: (userData) => handleUserUpdate(userData),
+    onHandleLogOut: () => handleUserLogout(),
+  };
+
+  const pageNotFoundOptions = {
+    onClick: () => handleRedirectNotFoundToBack(),
+  };
+
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <WindowContext.Provider value={windowWidth}>
@@ -584,40 +610,12 @@ function App() {
                   <ProtectedRoute
                     loggedIn={loggedIn}
                     element={
-                      <>
-                        <Header
-                          loggedIn={loggedIn}
-                          onRedirectToMain={handleRedirectToMain}
-                          onRedirectToMovies={handleRedirectToMovies}
-                          onRedirectToSavedMovies={handleRedirectToSavedMovies}
-                          onRedirectToProfile={handleRedirectToProfile}
-                          onRedirectToSignIn={handleRedirectToSignIn}
-                          onRedirectToSignUp={handleRedirectToSignUp}
-                        />
-
-                        <main>
-                          <SavedMovies
-                            isSavedSection
-                            onClickFilter={handleSetIsShortsSaved}
-                            filterStatus={isShortsSaved}
-                            searchInputValue={searchInputValueSaved}
-                            onSetSearchInputValue={setSearchInputValueSaved}
-                            isLoadError={isLoadError}
-                            savedMoviesFiltered={savedMoviesFiltered}
-                            onSetFilterSavedMovies={filterSavedMovies}
-                            onCreateMovie={handleCreateMovie}
-                            onRemoveMovie={handleRemoveMovie}
-                            isPreloaderActive={isPreloaderActive}
-                            onClickMoreButton={handleSetMoreButtonCounterSaved}
-                            currentGalleryHeight={currentGalleryHeightSaved}
-                            isMoreButtonVisibleSaved={isMoreButtonVisibleSaved}
-                            isNotFound={isNotFoundSaved}
-                            isFirstRun={isFirstRunSaved}
-                          />
-                        </main>
-
-                        <Footer />
-                      </>
+                      <MainContent
+                        isHeaderRequired
+                        isFooterRequired
+                        headerOptions={headerOptions}
+                        element={<SavedMovies moviesSavedOptions={moviesSavedOptions} />}
+                      />
                     }
                   />
                 }
@@ -629,20 +627,12 @@ function App() {
                   <ProtectedRoute
                     loggedIn={loggedIn}
                     element={
-                      <>
-                        <Header
-                          loggedIn={loggedIn}
-                          onRedirectToMain={handleRedirectToMain}
-                          onRedirectToMovies={handleRedirectToMovies}
-                          onRedirectToSavedMovies={handleRedirectToSavedMovies}
-                          onRedirectToProfile={handleRedirectToProfile}
-                          onRedirectToSignIn={handleRedirectToSignIn}
-                          onRedirectToSignUp={handleRedirectToSignUp}
-                        />
-                        <main>
-                          <Profile onHandleSubmit={handleUserUpdate} onHandleLogOut={handleUserLogout} />
-                        </main>
-                      </>
+                      <MainContent
+                        isHeaderRequired
+                        isFooterRequired={false}
+                        headerOptions={headerOptions}
+                        element={<Profile profileOptions={profileOptions} />}
+                      />
                     }
                   />
                 }
@@ -651,9 +641,11 @@ function App() {
               <Route
                 path="*"
                 element={
-                  <main>
-                    <PageNotFound onClick={handleRedirectNotFoundToBack} />
-                  </main>
+                    <MainContent
+                      isHeaderRequired={false}
+                      isFooterRequired={false}
+                      element={<PageNotFound pageNotFoundOptions={pageNotFoundOptions} />}
+                    />
                 }
               />
             </Routes>

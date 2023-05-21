@@ -3,7 +3,7 @@ import { useState, useEffect, useContext } from 'react';
 import CurrentUserContext  from '../../contexts/CurrentUserContext';
 import formValidator from '../../utils/formValidator';
 
-export default function Profile({ onHandleSubmit, onHandleLogOut }) {
+export default function Profile({ profileOptions }) {
   const currentUser = useContext(CurrentUserContext);
 
   const [userInfo, setUserInfo] = useState({ currentUser });
@@ -51,7 +51,7 @@ export default function Profile({ onHandleSubmit, onHandleLogOut }) {
 
   function handleFormSubmit(evt) {
     evt.preventDefault();
-    onHandleSubmit({ name: userInfo.name, email: userInfo.email });
+    profileOptions.onHandleSubmit({ name: userInfo.name, email: userInfo.email });
   }
 
   function handleInputBlur(evt) {
@@ -115,7 +115,7 @@ export default function Profile({ onHandleSubmit, onHandleLogOut }) {
       >
         Редактировать
       </button>
-      <button className="profile__button profile__button-signout" type="button" onClick={onHandleLogOut}>
+      <button className="profile__button profile__button-signout" type="button" onClick={profileOptions.onHandleLogOut}>
         Выйти из аккаунта
       </button>
     </div>
