@@ -5,52 +5,33 @@ import ShowMoreButton from '../ShowMoreButton/ShowMoreButton';
 
 import Preloader from '../Preloader/Preloader';
 
-export default function Movies({
-  isSavedSection,
-
-  onClickFilter,
-  filterStatus,
-  searchInputValue,
-  onSetSearchInputValue,
-  isLoadError,
-  beatMoviesFiltered,
-  onSetBeatMoviesFiltered,
-  onCreateMovie,
-  onRemoveMovie,
-  isPreloaderActive,
-
-  onClickMoreButton,
-  currentGalleryHeight,
-  isMoreButtonVisible,
-  isNotFound,
-  isFirstRun
-}) {
+export default function Movies({ moviesOptions }) {
   return (
     <div className="movies">
       <SearchForm
-        onClickFilter={onClickFilter}
-        filterStatus={filterStatus}
-        onSearchSubmit={onSetBeatMoviesFiltered}
-        searchInputValue={searchInputValue}
-        onSetSearchInputValue={onSetSearchInputValue}
+        onClickFilter={moviesOptions.onClickFilter}
+        filterStatus={moviesOptions.filterStatus}
+        onSearchSubmit={moviesOptions.onSetBeatMoviesFiltered}
+        searchInputValue={moviesOptions.searchInputValue}
+        onSetSearchInputValue={moviesOptions.onSetSearchInputValue}
       />
 
-      {isPreloaderActive ? (
+      {moviesOptions.isPreloaderActive ? (
         <Preloader />
       ) : (
         <>
           <MoviesCardList
-            isSavedSection={isSavedSection}
-            movies={beatMoviesFiltered}
-            isLoadError={isLoadError}
-            onCreateMovie={onCreateMovie}
-            onRemoveMovie={onRemoveMovie}
-            isPreloaderActive={isPreloaderActive}
-            currentGalleryHeight={currentGalleryHeight}
-            isNotFound={isNotFound}
-            isFirstRun={isFirstRun}
+            isSavedSection={moviesOptions.isSavedSection}
+            movies={moviesOptions.beatMoviesFiltered}
+            isLoadError={moviesOptions.isLoadError}
+            onCreateMovie={moviesOptions.onCreateMovie}
+            onRemoveMovie={moviesOptions.onRemoveMovie}
+            isPreloaderActive={moviesOptions.isPreloaderActive}
+            currentGalleryHeight={moviesOptions.currentGalleryHeight}
+            isNotFound={moviesOptions.isNotFound}
+            isFirstRun={moviesOptions.isFirstRun}
           />
-          {isMoreButtonVisible && <ShowMoreButton onClickMoreButton={onClickMoreButton} />}
+          {moviesOptions.isMoreButtonVisible && <ShowMoreButton onClickMoreButton={moviesOptions.onClickMoreButton} />}
         </>
       )}
     </div>

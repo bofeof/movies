@@ -503,6 +503,25 @@ function App() {
     onRedirectToAuth: () => handleRedirectToSignIn(),
   };
 
+  const moviesOptions = {
+    isSavedSection: false,
+    onClickFilter: () => handleSetIsShorts(),
+    searchInputValue,
+    onSetSearchInputValue: setSearchInputValue,
+    filterStatus: isShorts,
+    isLoadError,
+    beatMoviesFiltered,
+    onSetBeatMoviesFiltered: () => filterBeatMovies(),
+    onCreateMovie: (movieData) => handleCreateMovie(movieData),
+    onRemoveMovie: (movieData) => handleRemoveMovie(movieData),
+    isPreloaderActive,
+    onClickMoreButton: () => handleSetMoreButtonCounter(),
+    currentGalleryHeight,
+    isMoreButtonVisible,
+    isNotFound: isNotFoundMovies,
+    isFirstRun: isFirstRunMovies,
+  };
+
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <WindowContext.Provider value={windowWidth}>
@@ -531,9 +550,11 @@ function App() {
                 exact
                 path="/signup"
                 element={
-                  <main>
-                    <Register registerOption={registerOption} />
-                  </main>
+                  <MainContent
+                    isHeaderRequired={false}
+                    isFooterRequired={false}
+                    element={<Register registerOption={registerOption} />}
+                  />
                 }
               />
 
@@ -544,40 +565,12 @@ function App() {
                   <ProtectedRoute
                     loggedIn={loggedIn}
                     element={
-                      <>
-                        <Header
-                          loggedIn={loggedIn}
-                          onRedirectToMain={handleRedirectToMain}
-                          onRedirectToMovies={handleRedirectToMovies}
-                          onRedirectToSavedMovies={handleRedirectToSavedMovies}
-                          onRedirectToProfile={handleRedirectToProfile}
-                          onRedirectToSignIn={handleRedirectToSignIn}
-                          onRedirectToSignUp={handleRedirectToSignUp}
-                        />
-
-                        <main>
-                          <Movies
-                            isSavedSection={false}
-                            onClickFilter={handleSetIsShorts}
-                            searchInputValue={searchInputValue}
-                            onSetSearchInputValue={setSearchInputValue}
-                            filterStatus={isShorts}
-                            isLoadError={isLoadError}
-                            beatMoviesFiltered={beatMoviesFiltered}
-                            onSetBeatMoviesFiltered={filterBeatMovies}
-                            onCreateMovie={handleCreateMovie}
-                            onRemoveMovie={handleRemoveMovie}
-                            isPreloaderActive={isPreloaderActive}
-                            onClickMoreButton={handleSetMoreButtonCounter}
-                            currentGalleryHeight={currentGalleryHeight}
-                            isMoreButtonVisible={isMoreButtonVisible}
-                            isNotFound={isNotFoundMovies}
-                            isFirstRun={isFirstRunMovies}
-                          />
-                        </main>
-
-                        <Footer />
-                      </>
+                      <MainContent
+                        isHeaderRequired
+                        isFooterRequired
+                        headerOptions={headerOptions}
+                        element={<Movies moviesOptions={moviesOptions} />}
+                      />
                     }
                   />
                 }
