@@ -2,18 +2,18 @@ import './Register.css';
 import { useCallback } from 'react';
 import IdentityForm from '../IdentityForm/IdentityForm';
 
-export default function Register({ onRedirectToMain, onHandleUserRegister, onRedirectToAuth }) {
+export default function Register({ registerOption }) {
   function redirectToAuth(evt) {
     evt.preventDefault();
-    onRedirectToAuth();
+    registerOption.onRedirectToAuth();
   }
 
   const redirectToMain = useCallback(
     (evt) => {
       evt.preventDefault();
-      onRedirectToMain();
+      registerOption.onRedirectToMain();
     },
-    [onRedirectToMain]
+    [registerOption.onRedirectToMain]
   );
 
   return (
@@ -31,7 +31,7 @@ export default function Register({ onRedirectToMain, onHandleUserRegister, onRed
         }
         isRegisterForm
         onRedirectToMain={redirectToMain}
-        onHandleSubmit={onHandleUserRegister}
+        onHandleSubmit={registerOption.onUserRegister}
       />
     </div>
   );

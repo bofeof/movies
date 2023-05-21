@@ -4,52 +4,33 @@ import MoviesCardList from '../MoviesCardList/MoviesCardList';
 import ShowMoreButton from '../ShowMoreButton/ShowMoreButton';
 import Preloader from '../Preloader/Preloader';
 
-export default function SavedMovies({
-  isSavedSection,
-
-  onClickFilter,
-  filterStatus,
-  searchInputValue,
-  onSetSearchInputValue,
-  isLoadError,
-  savedMoviesFiltered,
-  onSetFilterSavedMovies,
-  onCreateMovie,
-  onRemoveMovie,
-  isPreloaderActive,
-
-  onClickMoreButton,
-  currentGalleryHeight,
-  isMoreButtonVisibleSaved,
-  isNotFound,
-  isFirstRun
-}) {
+export default function SavedMovies({ moviesSavedOptions }) {
   return (
     <div className="saved-movies">
       <SearchForm
-        isSavedSection={isSavedSection}
-        onClickFilter={onClickFilter}
-        filterStatus={filterStatus}
-        onSearchSubmit={onSetFilterSavedMovies}
-        searchInputValue={searchInputValue}
-        onSetSearchInputValue={onSetSearchInputValue}
+        isSavedSection={moviesSavedOptions.isSavedSection}
+        onClickFilter={moviesSavedOptions.onClickFilter}
+        filterStatus={moviesSavedOptions.filterStatus}
+        onSearchSubmit={moviesSavedOptions.onSetFilterSavedMovies}
+        searchInputValue={moviesSavedOptions.searchInputValue}
+        onSetSearchInputValue={moviesSavedOptions.onSetSearchInputValue}
       />
 
-      {isPreloaderActive ? (
+      {moviesSavedOptions.isPreloaderActive ? (
         <Preloader />
       ) : (
         <>
           <MoviesCardList
-            isSavedSection={isSavedSection}
-            movies={savedMoviesFiltered}
-            isLoadError={isLoadError}
-            onCreateMovie={onCreateMovie}
-            onRemoveMovie={onRemoveMovie}
-            currentGalleryHeight={currentGalleryHeight}
-            isNotFound={isNotFound}
-            isFirstRun={isFirstRun}
+            isSavedSection={moviesSavedOptions.isSavedSection}
+            movies={moviesSavedOptions.savedMoviesFiltered}
+            isLoadError={moviesSavedOptions.isLoadError}
+            onCreateMovie={moviesSavedOptions.onCreateMovie}
+            onRemoveMovie={moviesSavedOptions.onRemoveMovie}
+            currentGalleryHeight={moviesSavedOptions.currentGalleryHeight}
+            isNotFound={moviesSavedOptions.isNotFound}
+            isFirstRun={moviesSavedOptions.isFirstRun}
           />
-          {isMoreButtonVisibleSaved && <ShowMoreButton onClickMoreButton={onClickMoreButton} />}
+          {moviesSavedOptions.isMoreButtonVisibleSaved && <ShowMoreButton onClickMoreButton={moviesSavedOptions.onClickMoreButton} />}
         </>
       )}
     </div>
