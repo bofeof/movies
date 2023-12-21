@@ -14,7 +14,7 @@
   width: 320px;
   position: relative;
   top: 156px;
-  background-image: url('../../images/logo/logo-praktikum.svg');
+  background-image: url('../../images/logo/logo-movies.svg');
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center center;
@@ -36,7 +36,7 @@
   letter-spacing: -0.04em;
 
   position: absolute;
-  top: 53%;
+  top: 60%;
   left: 50%;
   transform: translate(-50%, -50%);
   z-index: 2;

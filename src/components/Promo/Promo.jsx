@@ -5,7 +5,7 @@ export default function PromoIntroduction() {
     <section className="promo">
       <div className="promo__background">
         <div className="promo__img" />
-        <h1 className="promo__text">Учебный проект студента факультета Веб-разработки.</h1>
+        {/* <h1 className="promo__text">Любимые фильмы</h1> */}
       </div>
     </section>
   );
