@@ -1,9 +1,6 @@
 # Movies
 
-[Movies](https://bofeof.nomoredomains.work) is an application where you can search and save your favorite movies. At this moment movies from Beat Film Festival are available for research. This app contains info-landing (available without auth) and the main part which includes working with movies (auth required)
-
-[Movies frontend repo](https://github.com/bofeof/movies-explorer-frontend)
-[Movies backend repo](https://github.com/bofeof/movies-explorer-api)
+[Movies](https://bofeof.nomoredomains.work) is an application for saving your favorite movies. At this moment movies from Beat Film Festival are available for research. This app contains info-landing (available without auth) and the main part which includes working with movies (auth required)
 
 - Frontend: https://bofeof.nomoredomains.work
 - Backend: https://api.bofeof-movies.nomoredomains.work/api
@@ -28,8 +25,6 @@
 - ✅ Close popup by Esc-button;
 - ✅ Classic and burger menu, it depends on screen width;
 - ✅ Popups with error-messages.
-
-- 🔜 Popup to display some additional information about movie
 
 ### How to run locally. All comands are located in package.json:
 
