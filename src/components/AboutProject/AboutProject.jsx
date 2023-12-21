@@ -6,7 +6,7 @@ export default function AboutProject() {
       <h2 className="proj__header">О&nbsp;проекте</h2>
       <div className="proj__steps">
         <div className="proj__step">
-          <h3 className="proj__step-header">Проект включал 5&nbsp;этапов</h3>
+          <h3 className="proj__step-header">Проект включал 5&nbsp;этапов работы с любимыми фильмами</h3>
           <p className="proj__step-paragraph">
             Составление плана, работу над бэкендом, вёрстку, добавление функциональности и&nbsp;финальные доработки.
           </p>
