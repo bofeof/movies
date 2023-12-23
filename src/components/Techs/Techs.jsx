@@ -8,7 +8,7 @@ export default function Techs() {
         <div className="techs__description">
           <h3 className="techs__description-header">7&nbsp;технологий</h3>
           <p className="techs__description-parargraph">
-            На&nbsp;курсе веб-разработки мы&nbsp;освоили технологии, которые применили в&nbsp;дипломном проекте.
+          которые были применены при разработке проекта
           </p>
           <ul className="techs__list">
             <li className="techs__item">HTML</li>

@@ -14,8 +14,7 @@
   width: 320px;
   position: relative;
   top: 156px;
-  background-image: url('../../images/logo/logo-praktikum.svg');
-  background-size: cover;
+  background-image: url('../../images/logo/logo-movies.svg');
   background-repeat: no-repeat;
   background-position: center center;
   background-size: 320px 320px;
@@ -36,7 +35,7 @@
   letter-spacing: -0.04em;
 
   position: absolute;
-  top: 53%;
+  top: 63%;
   left: 50%;
   transform: translate(-50%, -50%);
   z-index: 2;
@@ -70,6 +69,7 @@
   }
 
   .promo__text {
+    top: 55%;
     max-width: 300px;
     font-size: 31px;
     line-height: 126%;

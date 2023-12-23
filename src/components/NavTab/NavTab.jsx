@@ -14,11 +14,6 @@ export default function NavTab() {
             Технологии
           </a>
         </li>
-        <li>
-          <a className="navtab__link" href="#aboutme">
-            Студент
-          </a>
-        </li>
       </ul>
     </nav>
   );
